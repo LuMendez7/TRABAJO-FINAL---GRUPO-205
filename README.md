@@ -340,3 +340,9 @@ Contendrá diagramas, documentación técnica, informes y material relacionado c
 # Estado del proyecto
 
 Actualmente el proyecto se encuentra en la etapa inicial de definición de la problemática, alcance, tecnologías y planificación.
+
+---
+
+## Repositorio del proyecto
+
+Todo el desarrollo, documentación, base de datos, frontend y backend del Trabajo Final Integrador se mantendrá centralizado en este único repositorio de GitHub.
