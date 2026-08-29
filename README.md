@@ -20,7 +20,7 @@ Proyecto desarrollado en el marco del Trabajo Final Integrador de la Tecnicatura
 
 BiblioGest es una aplicación web destinada a facilitar la gestión administrativa y operativa de una biblioteca.
 
-El sistema permitirá centralizar la información relacionada con libros, ejemplares, usuarios, préstamos, devoluciones y reservas, reemplazando registros manuales o información distribuida en diferentes medios.
+El sistema permitirá centralizar la información relacionada con libros, ejemplares, usuarios, préstamos, devoluciones, reemplazando registros manuales o información distribuida en diferentes medios.
 
 La propuesta busca desarrollar una herramienta sencilla y accesible que pueda ser utilizada tanto por el personal de una biblioteca como por sus lectores.
 
@@ -28,11 +28,15 @@ La propuesta busca desarrollar una herramienta sencilla y accesible que pueda se
 
 ## Problemática
 
-En bibliotecas pequeñas, escolares o institucionales es habitual encontrar procesos de gestión que se realizan mediante planillas, registros manuales o herramientas independientes.
+En el relevamiento inicial se tomó como referencia el funcionamiento real de una biblioteca escolar en la que se desempeña uno de los integrantes del equipo.
 
-Esto puede dificultar tareas como conocer rápidamente la disponibilidad de un libro, controlar qué ejemplares se encuentran prestados, identificar préstamos vencidos, mantener actualizado el catálogo o consultar el historial de préstamos de un usuario.
+Actualmente, los préstamos y las devoluciones de libros se registran de forma manual en hojas A4 impresas. El catálogo de la biblioteca fue digitalizado previamente en una planilla de Excel, pero para el trabajo cotidiano también se utiliza una versión impresa.
 
-La ausencia de una herramienta centralizada puede generar duplicación de información, errores administrativos y dificultades para realizar el seguimiento de los materiales bibliográficos.
+Cuando un alumno o docente consulta por un determinado libro, el bibliotecario debe buscar la información en los registros disponibles para comprobar si el material forma parte del catálogo y verificar su situación. De la misma manera, el seguimiento de los préstamos se realiza consultando manualmente el registro para conocer cuándo una persona retiró un libro y cuándo fue devuelto.
+
+Esta forma de trabajo dificulta principalmente la búsqueda rápida de los materiales y hace que las consultas dependan de la intervención del bibliotecario. Actualmente, los alumnos y docentes no cuentan con una herramienta que les permita consultar por su cuenta el catálogo de la biblioteca.
+
+A partir de esta problemática surge la necesidad de centralizar la información en un sistema web que facilite la gestión de los libros, ejemplares, usuarios, préstamos y devoluciones, y que además permita consultar el catálogo de manera más sencilla.
 
 ---
 
@@ -48,109 +52,179 @@ El sistema contará con diferentes roles y permisos de acceso según el tipo de 
 
 ---
 
+## Actores involucrados
+
+Para definir las funcionalidades de BiblioGest se identifican los principales actores que intervienen en el funcionamiento de una biblioteca y que tendrán interacción con el sistema.
+
+---
+
+### Bibliotecario / Administrador
+
+Es el principal responsable de la gestión de la biblioteca y tendrá acceso a las funciones administrativas del sistema.
+
+Sus principales necesidades son:
+
+* Registrar y actualizar libros, autores y categorías.
+* Administrar los ejemplares físicos disponibles.
+* Registrar y gestionar usuarios de la biblioteca.
+* Registrar préstamos y devoluciones.
+* Consultar qué ejemplares se encuentran disponibles o prestados.
+* Identificar préstamos que hayan superado su fecha prevista de devolución.
+* Mantener centralizada y organizada la información de la biblioteca.
+
+---
+
+### Lector
+
+Es la persona que utiliza los servicios de la biblioteca y tendrá acceso a las funciones de consulta habilitadas por el sistema.
+
+Sus principales necesidades son:
+
+* Consultar el catálogo de libros.
+* Buscar libros por diferentes criterios.
+* Conocer la disponibilidad de ejemplares.
+* Consultar sus préstamos activos.
+* Conocer las fechas previstas de devolución.
+
+El lector no tendrá acceso a las funciones administrativas, como registrar o modificar libros, usuarios, ejemplares o préstamos.
+
+---
+
+### Usuario de referencia
+
+Para el relevamiento inicial del proyecto se cuenta con un usuario real vinculado al contexto de aplicación: uno de los integrantes del equipo se desempeña como bibliotecario en una institución educativa.
+
+Esta experiencia permite conocer de manera directa tareas habituales relacionadas con la organización del material bibliográfico, la consulta de disponibilidad y la gestión de préstamos y devoluciones.
+
+A partir de este contexto se utilizará la experiencia del usuario de referencia para relevar el funcionamiento actual, identificar necesidades concretas y validar las funcionalidades propuestas para BiblioGest.
+
+---
+
 ## Objetivo general
 
-Desarrollar una aplicación web que permita digitalizar, organizar y centralizar los principales procesos de administración y circulación de materiales dentro de una biblioteca.
+Desarrollar una aplicación web para centralizar y facilitar la gestión de una biblioteca escolar, permitiendo administrar libros, ejemplares, usuarios, préstamos y devoluciones, y brindando a los lectores la posibilidad de consultar el catálogo y la disponibilidad de los materiales.
 
 ---
 
 ## Objetivos específicos
 
-* Gestionar los usuarios registrados en la biblioteca.
-* Gestionar libros, autores y categorías.
-* Registrar los distintos ejemplares disponibles.
-* Registrar préstamos y devoluciones.
-* Controlar la disponibilidad de los ejemplares.
-* Detectar préstamos vencidos.
-* Permitir la búsqueda de materiales dentro del catálogo.
-* Implementar diferentes permisos según el rol del usuario.
-* Mantener la información centralizada en una base de datos.
-* Proporcionar una interfaz web sencilla y accesible.
+* Centralizar en una única aplicación la información relacionada con libros, autores, categorías, ejemplares, usuarios y préstamos.
+
+* Facilitar el registro y seguimiento de los préstamos y devoluciones realizados en la biblioteca.
+
+* Permitir conocer el estado de los ejemplares para identificar cuáles se encuentran disponibles o prestados.
+
+* Facilitar la búsqueda de libros mediante diferentes criterios, como título, autor o categoría.
+
+* Permitir que los lectores consulten el catálogo y la disponibilidad de los materiales sin depender exclusivamente de la consulta al bibliotecario.
+
+* Permitir que los lectores registrados consulten la información correspondiente a sus propios préstamos.
+
+* Diferenciar las funcionalidades disponibles según el rol del usuario, separando las tareas administrativas de las funciones de consulta.
 
 ---
 
-## Alcance del proyecto
+## Alcance del sistema
 
-El sistema estará orientado inicialmente a la gestión de una única biblioteca.
+BiblioGest será una aplicación web orientada a la gestión de una biblioteca. El sistema contará con dos tipos principales de usuarios: Bibliotecario / Administrador y Lector, cada uno con funcionalidades diferentes según su rol.
 
-Se implementarán dos tipos principales de usuarios:
+### Funcionalidades del Bibliotecario / Administrador
 
-### Bibliotecario / Administrador
+#### Gestión de usuarios
 
-Podrá:
+Permitirá registrar nuevos usuarios de la biblioteca, consultar los usuarios existentes y modificar sus datos. Estos usuarios podrán ser asociados posteriormente a los préstamos realizados.
 
-* Gestionar usuarios.
-* Registrar libros.
-* Modificar información de libros.
-* Administrar autores.
-* Administrar categorías.
-* Registrar ejemplares.
-* Registrar préstamos.
-* Registrar devoluciones.
-* Consultar préstamos activos.
-* Consultar préstamos vencidos.
-* Consultar disponibilidad de ejemplares.
+#### Gestión de libros
 
-### Lector
+Permitirá registrar los libros que forman parte del catálogo de la biblioteca, consultar su información y modificar los datos registrados cuando sea necesario.
 
-Podrá:
+#### Gestión de autores
 
-* Iniciar sesión.
-* Consultar el catálogo.
-* Buscar libros.
-* Consultar autores y categorías.
-* Consultar la disponibilidad de los materiales.
-* Consultar sus préstamos.
+Permitirá registrar y consultar autores, asociándolos con los libros correspondientes del catálogo.
+
+#### Gestión de categorías
+
+Permitirá organizar los libros en diferentes categorías para facilitar su clasificación y posterior búsqueda dentro del sistema.
+
+#### Gestión de ejemplares
+
+Permitirá registrar los ejemplares físicos correspondientes a cada libro y consultar su estado para conocer si se encuentran disponibles o prestados.
+
+#### Gestión de préstamos
+
+Permitirá registrar el préstamo de un ejemplar a un usuario, almacenando la fecha en que se realiza y la información necesaria para efectuar su seguimiento. Solo podrán prestarse ejemplares que se encuentren disponibles.
+
+#### Gestión de devoluciones
+
+Permitirá registrar la devolución de un ejemplar previamente prestado. Una vez registrada la devolución, el ejemplar volverá a quedar disponible para futuros préstamos.
+
+#### Control de préstamos
+
+Permitirá consultar los préstamos registrados y conocer qué usuario posee cada ejemplar, la fecha en que fue retirado y si posteriormente fue devuelto.
+
+### Funcionalidades del Lector
+
+#### Consulta del catálogo
+
+Permitirá consultar los libros que forman parte del catálogo de la biblioteca sin necesidad de solicitar la búsqueda directamente al bibliotecario.
+
+#### Búsqueda de libros
+
+Permitirá buscar materiales dentro del catálogo utilizando criterios definidos por el sistema, como título, autor o categoría.
+
+#### Consulta de disponibilidad
+
+Permitirá conocer si un libro posee ejemplares disponibles para préstamo.
+
+#### Consulta de préstamos propios
+
+Los lectores que ingresen al sistema podrán consultar los préstamos asociados a su usuario y la información correspondiente a cada uno de ellos.
+
+### Acceso y roles
+
+El sistema contará con autenticación de usuarios y control de acceso según el rol. El Bibliotecario / Administrador tendrá acceso a las funciones de gestión, mientras que el Lector tendrá acceso únicamente a las funcionalidades de consulta habilitadas.
 
 ---
 
 ## Producto Mínimo Viable (MVP)
 
-Para considerar funcional la primera versión del sistema se implementarán los siguientes módulos:
+El Producto Mínimo Viable de BiblioGest estará compuesto por las funcionalidades esenciales necesarias para resolver la problemática identificada en la biblioteca tomada como referencia.
 
-* Autenticación de usuarios.
+El MVP incluirá:
+
+* Autenticación de usuarios y diferenciación de roles.
 * Gestión de usuarios.
 * Gestión de libros.
 * Gestión de autores.
 * Gestión de categorías.
 * Gestión de ejemplares.
-* Gestión de préstamos.
-* Gestión de devoluciones.
+* Registro de préstamos.
+* Registro de devoluciones.
+* Consulta y control de préstamos.
 * Consulta del catálogo.
-* Búsqueda de materiales.
-* Control de disponibilidad.
+* Búsqueda de libros.
+* Consulta de disponibilidad de ejemplares.
+* Consulta de préstamos propios por parte del lector.
 
-Una vez completadas estas funcionalidades podrán incorporarse características adicionales.
-
----
-
-## Funcionalidades adicionales
-
-En caso de disponer del tiempo necesario podrán implementarse:
-
-* Reservas de libros.
-* Historial de préstamos.
-* Estadísticas básicas.
-* Listado de libros más prestados.
-* Alertas visuales para préstamos vencidos.
-* Panel administrativo.
-
-Estas funcionalidades no forman parte del núcleo obligatorio del sistema.
+Estas funcionalidades permitirán centralizar la información que actualmente se encuentra distribuida entre registros en papel y planillas, facilitar las tareas administrativas del bibliotecario y brindar a los lectores una herramienta para consultar el catálogo y la disponibilidad de los materiales.
 
 ---
 
-## Fuera de alcance
+## Fuera de alcance del MVP
 
-En la primera versión no se contempla:
+Para mantener un alcance viable durante la primera versión del proyecto, las siguientes funcionalidades no formarán parte del MVP:
 
 * Aplicación móvil nativa.
-* Pagos electrónicos.
-* Integración con otras bibliotecas.
-* Chat entre usuarios.
-* Sistemas de recomendación mediante inteligencia artificial.
-* Integraciones con servicios externos complejos.
+* Gestión de múltiples bibliotecas o sucursales.
+* Integración con sistemas externos.
+* Pago de multas o sanciones en línea.
+* Notificaciones automáticas por correo electrónico o mensajería.
+* Recomendaciones automáticas de libros.
+* Estadísticas avanzadas y generación de reportes.
+* Lectura o generación de códigos de barras o códigos QR.
+* Reservas de libros.
 
-Estas funcionalidades podrían considerarse como mejoras futuras.
+Estas funcionalidades podrán evaluarse como posibles mejoras o ampliaciones futuras una vez que las funciones principales del sistema se encuentren implementadas y validadas.
 
 ---
 
