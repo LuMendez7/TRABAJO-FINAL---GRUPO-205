@@ -20,7 +20,7 @@ Proyecto desarrollado en el marco del Trabajo Final Integrador de la Tecnicatura
 
 BiblioGest es una aplicación web destinada a facilitar la gestión administrativa y operativa de una biblioteca.
 
-El sistema permitirá centralizar la información relacionada con libros, ejemplares, usuarios, préstamos, devoluciones, reemplazando registros manuales o información distribuida en diferentes medios.
+El sistema permitirá centralizar la información relacionada con libros, ejemplares, usuarios, préstamos y devoluciones, reemplazando registros manuales o información distribuida en diferentes medios.
 
 La propuesta busca desarrollar una herramienta sencilla y accesible que pueda ser utilizada tanto por el personal de una biblioteca como por sus lectores.
 
