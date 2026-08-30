@@ -56,8 +56,6 @@ El sistema contará con diferentes roles y permisos de acceso según el tipo de 
 
 Para definir las funcionalidades de BiblioGest se identifican los principales actores que intervienen en el funcionamiento de una biblioteca y que tendrán interacción con el sistema.
 
----
-
 ### Bibliotecario / Administrador
 
 Es el principal responsable de la gestión de la biblioteca y tendrá acceso a las funciones administrativas del sistema.
@@ -72,8 +70,6 @@ Sus principales necesidades son:
 * Identificar préstamos que hayan superado su fecha prevista de devolución.
 * Mantener centralizada y organizada la información de la biblioteca.
 
----
-
 ### Lector
 
 Es la persona que utiliza los servicios de la biblioteca y tendrá acceso a las funciones de consulta habilitadas por el sistema.
@@ -87,8 +83,6 @@ Sus principales necesidades son:
 * Conocer las fechas previstas de devolución.
 
 El lector no tendrá acceso a las funciones administrativas, como registrar o modificar libros, usuarios, ejemplares o préstamos.
-
----
 
 ### Usuario de referencia
 
@@ -109,17 +103,11 @@ Desarrollar una aplicación web para centralizar y facilitar la gestión de una 
 ## Objetivos específicos
 
 * Centralizar en una única aplicación la información relacionada con libros, autores, categorías, ejemplares, usuarios y préstamos.
-
 * Facilitar el registro y seguimiento de los préstamos y devoluciones realizados en la biblioteca.
-
 * Permitir conocer el estado de los ejemplares para identificar cuáles se encuentran disponibles o prestados.
-
 * Facilitar la búsqueda de libros mediante diferentes criterios, como título, autor o categoría.
-
 * Permitir que los lectores consulten el catálogo y la disponibilidad de los materiales sin depender exclusivamente de la consulta al bibliotecario.
-
 * Permitir que los lectores registrados consulten la información correspondiente a sus propios préstamos.
-
 * Diferenciar las funcionalidades disponibles según el rol del usuario, separando las tareas administrativas de las funciones de consulta.
 
 ---
@@ -296,6 +284,122 @@ El frontend consumirá los servicios proporcionados por una API REST desarrollad
 
 ---
 
+# Propuesta de valor
+
+BiblioGest busca simplificar y centralizar tareas que actualmente se realizan mediante registros en papel y planillas de cálculo dentro de la biblioteca escolar tomada como referencia.
+
+La propuesta de valor no consiste solamente en digitalizar la información existente, sino en facilitar el acceso y la consulta de esa información. El bibliotecario podrá gestionar desde un mismo sistema los libros, ejemplares, usuarios, préstamos y devoluciones, reduciendo la necesidad de consultar diferentes registros para realizar las tareas habituales.
+
+Al mismo tiempo, los lectores podrán consultar el catálogo, buscar libros y conocer la disponibilidad de los materiales sin depender exclusivamente de la intervención del bibliotecario.
+
+De esta manera, BiblioGest busca aportar valor principalmente mediante la centralización de la información, la simplificación de las tareas de gestión y una mayor autonomía de los lectores para consultar los recursos disponibles en la biblioteca.
+
+## Análisis de alternativas y diferenciación
+
+Actualmente, en el contexto tomado como referencia, la gestión de la biblioteca se realiza principalmente mediante registros en papel y una planilla de Excel utilizada para el catálogo. Estas herramientas constituyen la alternativa actual frente al sistema propuesto.
+
+También existen sistemas de gestión bibliotecaria que ofrecen funcionalidades más amplias. Sin embargo, BiblioGest se plantea como una solución enfocada específicamente en las necesidades relevadas para una biblioteca escolar y con un alcance adecuado a los recursos y tiempos disponibles para el proyecto.
+
+### Alternativas identificadas
+
+**Alternativa indirecta:** el método utilizado actualmente en la biblioteca tomada como referencia, basado en registros impresos y una planilla de Excel para el catálogo. Esta alternativa permite realizar las tareas básicas, pero requiere la intervención del bibliotecario para consultar la información y no centraliza todos los procesos en una única aplicación.
+
+**Competencia directa:** existen sistemas de gestión bibliotecaria que permiten administrar catálogos, usuarios y circulación de materiales. Para esta etapa del proyecto se los considera como referencia general, sin realizar todavía una comparación comercial exhaustiva, ya que BiblioGest se encuentra orientado específicamente al contexto y necesidades relevadas en una biblioteca escolar.
+
+Los principales aspectos de diferenciación de BiblioGest serán:
+
+* Centralización del catálogo, usuarios, ejemplares, préstamos y devoluciones en una única aplicación.
+* Acceso web al catálogo por parte de los lectores.
+* Consulta de disponibilidad de los materiales sin necesidad de solicitarla directamente al bibliotecario.
+* Interfaz orientada a las funcionalidades necesarias para una biblioteca escolar.
+* Separación de funciones mediante roles de Bibliotecario / Administrador y Lector.
+* Alcance acotado a las necesidades identificadas, evitando incorporar funcionalidades que no resulten necesarias para el MVP.
+
+La propuesta no busca competir por cantidad de funcionalidades con sistemas bibliotecarios de mayor escala, sino ofrecer una solución sencilla y adecuada al contexto relevado.
+
+## Viabilidad del proyecto
+
+Para determinar si BiblioGest puede desarrollarse dentro del contexto del Trabajo Final Integrador, se analiza su viabilidad desde tres aspectos principales: técnico, operativo y temporal.
+
+### Viabilidad técnica
+
+El proyecto se considera técnicamente viable debido a que el equipo utilizará tecnologías abordadas durante la carrera y herramientas sobre las que posee experiencia previa.
+
+El backend será desarrollado con Java y Spring Boot, el frontend con React y TypeScript y la información será almacenada en una base de datos relacional MySQL.
+
+El alcance definido para el MVP no requiere inicialmente integraciones con sistemas externos ni infraestructura de alta complejidad, lo que permite concentrar el desarrollo en las funcionalidades principales del sistema.
+
+### Viabilidad operativa
+
+BiblioGest responde a necesidades identificadas a partir del funcionamiento real de una biblioteca escolar tomada como referencia.
+
+Las funcionalidades propuestas buscan adaptarse a tareas que actualmente forman parte del trabajo cotidiano, como la consulta del catálogo, la búsqueda de materiales y el registro y seguimiento de préstamos y devoluciones.
+
+La aplicación buscará ofrecer una interfaz sencilla que pueda ser utilizada tanto por el personal bibliotecario para las tareas administrativas como por los lectores para consultar los materiales disponibles.
+
+### Viabilidad temporal
+
+El proyecto se considera viable dentro del período disponible para el Trabajo Final Integrador debido a que se definió un Producto Mínimo Viable con las funcionalidades esenciales.
+
+Las características de mayor complejidad o que no resultan indispensables para resolver la problemática inicial, como reservas, notificaciones automáticas, estadísticas avanzadas, recomendaciones e integraciones externas, fueron excluidas del MVP y podrán evaluarse como mejoras futuras.
+
+Esta delimitación permite priorizar el desarrollo de las funciones principales y disminuir el riesgo de que un alcance excesivo impida completar el proyecto dentro de los plazos establecidos.
+
+## Riesgos y estrategias de mitigación
+
+Durante el desarrollo de BiblioGest pueden presentarse diferentes situaciones que afecten el avance del proyecto. Por este motivo, se identifican inicialmente los siguientes riesgos y posibles acciones para reducir su impacto.
+
+### Alcance excesivo
+
+**Riesgo:** incorporar nuevas funcionalidades durante el desarrollo puede aumentar la complejidad del proyecto y dificultar el cumplimiento de los plazos establecidos.
+
+**Mitigación:** priorizar las funcionalidades definidas en el MVP y dejar las características adicionales para futuras versiones.
+
+### Dificultades técnicas
+
+**Riesgo:** pueden surgir problemas durante la integración entre el frontend, el backend y la base de datos.
+
+**Mitigación:** desarrollar e integrar el sistema de manera progresiva, realizando pruebas durante cada etapa y utilizando principalmente tecnologías conocidas por el equipo.
+
+### Errores o pérdida de información
+
+**Riesgo:** una incorrecta gestión de los datos podría producir inconsistencias en la información de libros, usuarios, ejemplares o préstamos.
+
+**Mitigación:** implementar validaciones, restricciones en la base de datos y pruebas sobre las principales operaciones del sistema.
+
+### Organización del equipo
+
+**Riesgo:** una distribución poco clara de las tareas o retrasos individuales pueden afectar el avance general del proyecto.
+
+**Mitigación:** dividir el desarrollo en tareas concretas, utilizar GitHub para centralizar el trabajo y realizar un seguimiento periódico del progreso del equipo.
+
+### Datos iniciales del catálogo
+
+**Riesgo:** la información proveniente de registros existentes puede contener datos incompletos, duplicados o con formatos diferentes al momento de incorporarla al sistema.
+
+**Mitigación:** revisar y normalizar los datos antes de incorporarlos a la base de datos de BiblioGest.
+
+## Criterios de éxito
+
+Se considerará que el MVP de BiblioGest cumple con su propósito cuando las funcionalidades principales definidas para resolver la problemática puedan utilizarse correctamente.
+
+Los criterios de éxito iniciales serán:
+
+* El bibliotecario puede registrar, consultar y modificar la información de los libros del catálogo.
+* El bibliotecario puede registrar y administrar los ejemplares asociados a cada libro.
+* El bibliotecario puede registrar usuarios de la biblioteca.
+* El sistema permite registrar un préstamo únicamente cuando el ejemplar se encuentra disponible.
+* El sistema permite registrar la devolución de un ejemplar y actualizar nuevamente su disponibilidad.
+* El bibliotecario puede consultar los préstamos registrados y conocer qué usuario posee cada ejemplar prestado.
+* Los lectores pueden consultar el catálogo sin depender de la intervención directa del bibliotecario.
+* Los lectores pueden buscar libros por los criterios definidos en el sistema.
+* Los lectores pueden conocer si existen ejemplares disponibles de un determinado libro.
+* Los usuarios autenticados pueden acceder únicamente a las funcionalidades correspondientes a su rol.
+* La información principal de libros, usuarios, ejemplares y préstamos se encuentra centralizada en el sistema.
+* Las funcionalidades principales del MVP pueden utilizarse sin errores que impidan completar las operaciones previstas.
+
+---
+
 # Entidades principales
 
 Inicialmente se consideran las siguientes entidades:
@@ -316,6 +420,22 @@ El modelo definitivo será establecido durante la etapa de diseño de base de da
 ---
 
 # Plan de trabajo
+
+El desarrollo de BiblioGest se organizará de manera progresiva mediante etapas. La planificación temporal podrá ajustarse de acuerdo con las fechas académicas y el avance real del equipo, priorizando en todo momento las funcionalidades definidas para el MVP.
+
+La estimación inicial es la siguiente:
+
+| Etapa | Tiempo estimado | Entregable principal |
+|---|---|---|
+| 1. Definición y planificación | 1 semana | Problemática, objetivos, alcance, actores, stack y propuesta definidos |
+| 2. Diseño y arquitectura | 1 semana | Modelo de datos, diagrama entidad-relación y arquitectura general |
+| 3. Desarrollo del backend | 3 semanas | API REST funcional con acceso a datos, validaciones y seguridad |
+| 4. Desarrollo del frontend | 3 semanas | Interfaces principales e integración con la API |
+| 5. Integración y pruebas | 2 semanas | MVP integrado, probado y con correcciones realizadas |
+| 6. Despliegue | 1 semana | Aplicación disponible en un entorno de prueba o producción |
+| 7. Documentación y presentación | 1 semana | Documentación final, video y material para la defensa |
+
+La planificación contempla aproximadamente 12 semanas de trabajo. Las etapas podrán superponerse parcialmente cuando resulte conveniente, especialmente durante el desarrollo del backend y frontend.
 
 ## Etapa 1 - Definición y planificación
 
