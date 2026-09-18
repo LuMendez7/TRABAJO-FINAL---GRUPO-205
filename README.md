@@ -218,49 +218,49 @@ Estas funcionalidades podrán evaluarse como posibles mejoras o ampliaciones fut
 
 # Tecnologías
 
+Para el desarrollo de BiblioGest se seleccionó un stack tecnológico acotado, priorizando herramientas conocidas por el equipo y adecuadas para el alcance del proyecto.
+
 ## Backend
 
-* Java 17
-* Spring Boot
-* Spring Web
-* Spring Data JPA
-* Hibernate
-* Spring Validation
-* Spring Security
-* Maven
+- Java 17
+- Spring Boot
+- Maven
+
+Spring Boot será utilizado para desarrollar la API REST y gestionar el acceso a datos, validaciones y seguridad de la aplicación.
 
 ## Frontend
 
-* HTML5
-* CSS3
-* TypeScript
-* React
-* Vite
+- React
+- TypeScript
+- Vite
+
+React y TypeScript se utilizarán para desarrollar la interfaz web, mientras que Vite se utilizará para la creación y ejecución del proyecto frontend.
 
 ## Base de datos
 
-* MySQL
+- MySQL
+
+Se utilizará una base de datos relacional debido a que la información principal del sistema presenta relaciones claras entre usuarios, libros, autores, categorías, ejemplares y préstamos.
 
 ## Herramientas de desarrollo
 
-* IntelliJ IDEA
-* Visual Studio Code
-* MySQL Workbench
-* Postman
-* Git
-* GitHub
+Como herramientas de apoyo se utilizarán:
+
+- IntelliJ IDEA
+- Visual Studio Code
+- MySQL Workbench
+- Postman
+- Git y GitHub
+
+Estas herramientas serán utilizadas para programación, administración de la base de datos, pruebas de la API y control de versiones, por lo que no se consideran tecnologías adicionales del sistema.
 
 ## Plataforma y despliegue
 
-El sistema será desarrollado como una aplicación web.
+BiblioGest será desarrollado como una aplicación web.
 
-Para el despliegue se analizará la utilización de servicios como:
+Para el despliegue se utilizarán servicios compatibles con las tecnologías seleccionadas. Se prevé utilizar Vercel para el frontend y un servicio compatible con Java y MySQL para el backend y la base de datos.
 
-* Vercel para el frontend.
-* Render o Railway para el backend.
-* Un servicio de base de datos MySQL en la nube.
-
-La plataforma definitiva será seleccionada durante la etapa de implementación de acuerdo con la disponibilidad y compatibilidad de los servicios.
+La plataforma definitiva será seleccionada durante la etapa de implementación según la disponibilidad y compatibilidad de los servicios.
 
 ---
 
