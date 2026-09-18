@@ -296,26 +296,39 @@ De esta manera, BiblioGest busca aportar valor principalmente mediante la centra
 
 ## Análisis de alternativas y diferenciación
 
-Actualmente, en el contexto tomado como referencia, la gestión de la biblioteca se realiza principalmente mediante registros en papel y una planilla de Excel utilizada para el catálogo. Estas herramientas constituyen la alternativa actual frente al sistema propuesto.
+Como parte del análisis de la propuesta se investigaron alternativas que actualmente permiten realizar tareas relacionadas con la gestión de bibliotecas.
 
-También existen sistemas de gestión bibliotecaria que ofrecen funcionalidades más amplias. Sin embargo, BiblioGest se plantea como una solución enfocada específicamente en las necesidades relevadas para una biblioteca escolar y con un alcance adecuado a los recursos y tiempos disponibles para el proyecto.
+### Alternativa utilizada actualmente
 
-### Alternativas identificadas
+En la biblioteca escolar tomada como referencia, la gestión se realiza principalmente mediante registros impresos y una planilla de Excel utilizada para el catálogo.
 
-**Alternativa indirecta:** el método utilizado actualmente en la biblioteca tomada como referencia, basado en registros impresos y una planilla de Excel para el catálogo. Esta alternativa permite realizar las tareas básicas, pero requiere la intervención del bibliotecario para consultar la información y no centraliza todos los procesos en una única aplicación.
+Este método permite realizar las tareas básicas, pero la información se encuentra distribuida en diferentes medios y las consultas dependen en gran medida de la intervención del bibliotecario.
 
-**Competencia directa:** existen sistemas de gestión bibliotecaria que permiten administrar catálogos, usuarios y circulación de materiales. Para esta etapa del proyecto se los considera como referencia general, sin realizar todavía una comparación comercial exhaustiva, ya que BiblioGest se encuentra orientado específicamente al contexto y necesidades relevadas en una biblioteca escolar.
+### Sistemas existentes
 
-Los principales aspectos de diferenciación de BiblioGest serán:
+Se identificaron sistemas de gestión bibliotecaria que permiten resolver problemáticas similares.
 
-* Centralización del catálogo, usuarios, ejemplares, préstamos y devoluciones en una única aplicación.
-* Acceso web al catálogo por parte de los lectores.
-* Consulta de disponibilidad de los materiales sin necesidad de solicitarla directamente al bibliotecario.
-* Interfaz orientada a las funcionalidades necesarias para una biblioteca escolar.
-* Separación de funciones mediante roles de Bibliotecario / Administrador y Lector.
-* Alcance acotado a las necesidades identificadas, evitando incorporar funcionalidades que no resulten necesarias para el MVP.
+Uno de ellos es **DigiBepé**, sistema integrado de gestión bibliotecaria ofrecido por la Comisión Nacional de Bibliotecas Populares (CONABIP). Se trata de una adaptación del software Koha orientada a bibliotecas populares. Permite administrar el catálogo, los usuarios y la circulación de materiales, además de contar con herramientas para informes y otras tareas de gestión.
 
-La propuesta no busca competir por cantidad de funcionalidades con sistemas bibliotecarios de mayor escala, sino ofrecer una solución sencilla y adecuada al contexto relevado.
+También se tomó como referencia **Koha**, un sistema de gestión bibliotecaria de código abierto que ofrece funcionalidades para la administración de catálogos, usuarios y circulación de materiales.
+
+Estos sistemas poseen un alcance más amplio y están preparados para cubrir diferentes procesos propios de la gestión bibliotecaria.
+
+### Diferenciación de BiblioGest
+
+BiblioGest no busca reemplazar ni competir por cantidad de funcionalidades con sistemas bibliotecarios de mayor escala. El proyecto se plantea como una aplicación de alcance acotado, desarrollada a partir de las necesidades observadas en una biblioteca escolar concreta.
+
+Los principales aspectos de diferenciación serán:
+
+- Centralización del catálogo, usuarios, ejemplares, préstamos y devoluciones en una única aplicación.
+- Acceso web al catálogo por parte de alumnos y docentes.
+- Consulta sencilla de la disponibilidad de los materiales.
+- Interfaz enfocada en las funciones necesarias para la biblioteca escolar tomada como referencia.
+- Separación de funciones mediante los roles Bibliotecario / Administrador y Lector.
+- Alcance limitado a las funcionalidades definidas para el MVP.
+- Desarrollo y validación tomando como referencia un caso real de uso.
+
+De esta manera, la principal diferencia de BiblioGest no estará en ofrecer una mayor cantidad de funcionalidades que los sistemas existentes, sino en desarrollar una solución sencilla y ajustada al problema concreto relevado por el equipo.
 
 ## Viabilidad del proyecto
 
