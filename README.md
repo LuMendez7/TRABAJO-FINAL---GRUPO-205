@@ -553,3 +553,33 @@ Actualmente el proyecto se encuentra en la etapa inicial de definición de la pr
 ## Repositorio del proyecto
 
 Todo el desarrollo, documentación, base de datos, frontend y backend del Trabajo Final Integrador se mantendrá centralizado en este único repositorio de GitHub.
+
+---
+
+# Diseño y módulos del sistema
+
+Como parte del diseño de BiblioGest se realizó el modelado inicial de la base de datos y se definieron los principales módulos que organizarán las funcionalidades del sistema.
+
+## Diseño de la base de datos
+
+Se definió un modelo de base de datos relacional utilizando MySQL. El diseño contempla las entidades necesarias para representar libros, autores, categorías, ejemplares, usuarios y préstamos.
+
+La documentación del modelo, sus relaciones, reglas de negocio y el Diagrama Entidad-Relación se encuentran en la carpeta:
+
+📁 [Base de datos de BiblioGest](database/README.md)
+
+## Módulos del sistema
+
+Se definieron los módulos principales que permitirán organizar las funcionalidades de BiblioGest y dividir el desarrollo según las responsabilidades de cada parte del sistema.
+
+La descripción de los módulos se encuentra en:
+
+📄 [Módulos de BiblioGest](docs/modulos.md)
+
+## Estado actual del diseño
+
+- Diseño inicial de la base de datos: completado.
+- Diagrama Entidad-Relación (DER): completado.
+- Definición de entidades y relaciones: completada.
+- Reglas de negocio iniciales: definidas.
+- Listado de módulos del sistema: completado.
