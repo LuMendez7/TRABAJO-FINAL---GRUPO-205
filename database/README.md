@@ -149,4 +149,6 @@ La elección de un modelo relacional permite representar mediante claves primari
 
 El modelo será representado mediante un Diagrama Entidad-Relación (DER), donde se visualizarán las entidades, sus principales atributos, claves primarias, claves foráneas y cardinalidades.
 
-El diagrama correspondiente será incorporado posteriormente dentro de la documentación del proyecto.
+El siguiente diagrama representa las entidades principales del sistema BiblioGest, sus atributos, claves primarias, claves foráneas y las relaciones definidas para el modelo de datos.
+
+![Diagrama Entidad-Relación de BiblioGest](DER-BiblioGest.png)
