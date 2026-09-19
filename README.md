@@ -136,7 +136,7 @@ Permitirá organizar los libros en diferentes categorías para facilitar su clas
 
 #### Gestión de ejemplares
 
-Permitirá registrar los ejemplares físicos correspondientes a cada libro y consultar su estado para conocer si se encuentran disponibles o prestados.
+Permitirá registrar los ejemplares físicos correspondientes a cada libro y consultar y gestionar su estado según su disponibilidad.
 
 #### Gestión de préstamos
 
@@ -415,20 +415,18 @@ Los criterios de éxito iniciales serán:
 
 # Entidades principales
 
-Inicialmente se consideran las siguientes entidades:
+El modelo de datos inicial de BiblioGest está compuesto por las siguientes entidades principales:
 
-* Usuario
-* Libro
-* Autor
-* Categoría
-* Ejemplar
-* Préstamo
+- Usuario
+- Libro
+- Autor
+- Categoría
+- Ejemplar
+- Préstamo
 
-En una etapa posterior se evaluará la incorporación de:
+Además, se utiliza la tabla intermedia `libro_autor` para representar la relación entre libros y autores.
 
-* Reserva
-
-El modelo definitivo será establecido durante la etapa de diseño de base de datos.
+La funcionalidad de reservas no forma parte del MVP y podrá evaluarse como una posible ampliación futura del sistema.
 
 ---
 
@@ -546,7 +544,9 @@ Contendrá diagramas, documentación técnica, informes y material relacionado c
 
 # Estado del proyecto
 
-Actualmente el proyecto se encuentra en la etapa inicial de definición de la problemática, alcance, tecnologías y planificación.
+Actualmente el proyecto se encuentra en la etapa de diseño y arquitectura. Se completó el diseño inicial de la base de datos, el Diagrama Entidad-Relación, la definición de entidades y relaciones, el script inicial de creación de la base de datos y el listado de módulos principales del sistema.
+
+La siguiente etapa del proyecto estará orientada al desarrollo e implementación del backend y la conexión con la base de datos.
 
 ---
 
