@@ -27,7 +27,6 @@ CREATE TABLE libro (
     isbn VARCHAR(20),
     editorial VARCHAR(150),
     anio_publicacion INT,
-    activo BOOLEAN NOT NULL DEFAULT TRUE,
     id_categoria BIGINT NOT NULL,
 
     CONSTRAINT fk_libro_categoria
