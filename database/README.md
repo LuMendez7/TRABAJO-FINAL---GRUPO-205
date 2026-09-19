@@ -152,3 +152,11 @@ El modelo será representado mediante un Diagrama Entidad-Relación (DER), donde
 El siguiente diagrama representa las entidades principales del sistema BiblioGest, sus atributos, claves primarias, claves foráneas y las relaciones definidas para el modelo de datos.
 
 ![Diagrama Entidad-Relación de BiblioGest](DER-BiblioGest.png)
+
+## Script de creación de la base de datos
+
+Además del diseño del modelo, se creó el script SQL inicial de la base de datos de BiblioGest. Este archivo permite crear la base de datos, sus tablas, claves primarias, claves foráneas y las relaciones definidas en el modelo.
+
+El script fue probado en MySQL Workbench para verificar su correcta ejecución y la creación de las tablas correspondientes.
+
+📄 [Ver script SQL de BiblioGest](schema.sql)
