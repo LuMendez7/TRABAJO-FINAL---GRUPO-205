@@ -39,7 +39,7 @@ Funciones principales:
 - Asociar cada ejemplar con un libro.
 - Identificar cada ejemplar mediante un código de inventario.
 - Consultar el estado de un ejemplar.
-- Indicar si un ejemplar se encuentra disponible o prestado.
+- Gestionar el estado de cada ejemplar según su disponibilidad.
 
 ## 4. Módulo de Préstamos y Devoluciones
 
