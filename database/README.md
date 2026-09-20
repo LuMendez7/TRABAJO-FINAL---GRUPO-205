@@ -32,7 +32,7 @@ Campos principales:
 - nombre: nombre del usuario.
 - apellido: apellido del usuario.
 - email: correo electrónico utilizado para identificar al usuario.
-- password: contraseña de acceso al sistema.
+- password: almacena el hash de la contraseña utilizada para la autenticación. La contraseña nunca se almacenará en texto plano. La implementación futura del backend utilizará mecanismos de hashing compatibles con Spring Security.
 - rol: indica si el usuario es Bibliotecario/Administrador o Lector.
 - activo: indica si el usuario se encuentra activo en el sistema.
 

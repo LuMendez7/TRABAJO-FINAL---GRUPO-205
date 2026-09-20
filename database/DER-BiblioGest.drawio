@@ -272,7 +272,7 @@
             <mxRectangle height="30" width="150" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="lWWkaaxddKX-1YE8wBdp-274" edge="1" parent="1" source="lWWkaaxddKX-1YE8wBdp-138" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=ERmany;endFill=0;" target="lWWkaaxddKX-1YE8wBdp-1">
+        <mxCell id="lWWkaaxddKX-1YE8wBdp-274" edge="1" parent="1" source="lWWkaaxddKX-1YE8wBdp-138" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=ERmany;startFill=0;" target="lWWkaaxddKX-1YE8wBdp-1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="lWWkaaxddKX-1YE8wBdp-138" parent="1" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;" value="PRESTAMO" vertex="1">
@@ -440,7 +440,7 @@
             <mxRectangle height="30" width="150" as="alternateBounds" />
           </mxGeometry>
         </mxCell>
-        <mxCell id="lWWkaaxddKX-1YE8wBdp-272" edge="1" parent="1" source="lWWkaaxddKX-1YE8wBdp-254" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;endArrow=ERmany;endFill=0;" target="lWWkaaxddKX-1YE8wBdp-93">
+        <mxCell id="lWWkaaxddKX-1YE8wBdp-272" edge="1" parent="1" source="lWWkaaxddKX-1YE8wBdp-254" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;startArrow=ERmany;startFill=0;" target="lWWkaaxddKX-1YE8wBdp-93">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="lWWkaaxddKX-1YE8wBdp-254" parent="1" style="shape=table;startSize=30;container=1;collapsible=1;childLayout=tableLayout;fixedRows=1;rowLines=0;fontStyle=1;align=center;resizeLast=1;html=1;whiteSpace=wrap;" value="&lt;span style=&quot;white-space: nowrap;&quot;&gt;LIBRO_AUTOR&lt;/span&gt;" vertex="1">
