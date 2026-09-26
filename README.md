@@ -62,7 +62,7 @@ Es el principal responsable de la gestión de la biblioteca y tendrá acceso a l
 Sus principales necesidades son:
 
 * Registrar y actualizar libros, autores y categorías.
-* Administrar los ejemplares físicos disponibles.
+* Administrar los ejemplares físicos de la biblioteca.
 * Registrar y gestionar usuarios de la biblioteca.
 * Registrar préstamos y devoluciones.
 * Consultar qué ejemplares se encuentran disponibles o prestados.
