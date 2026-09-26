@@ -411,6 +411,7 @@ Los criterios de éxito iniciales serán:
 * Los lectores pueden consultar el catálogo sin depender de la intervención directa del bibliotecario.
 * Los lectores pueden buscar libros por los criterios definidos en el sistema.
 * Los lectores pueden conocer si existen ejemplares disponibles de un determinado libro.
+* Los lectores pueden consultar los préstamos asociados a su propio usuario.
 * Los usuarios autenticados pueden acceder únicamente a las funcionalidades correspondientes a su rol.
 * La información principal de libros, usuarios, ejemplares y préstamos se encuentra centralizada en el sistema.
 * Las funcionalidades principales del MVP pueden utilizarse sin errores que impidan completar las operaciones previstas.
