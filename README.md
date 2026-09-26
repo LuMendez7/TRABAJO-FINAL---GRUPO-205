@@ -6,7 +6,6 @@ Proyecto desarrollado en el marco del Trabajo Final Integrador de la Tecnicatura
 
 ## Integrantes
 
-* Lautaro Lopez
 * Luciano David Mendez
 * Alejandro Pereyra
 
@@ -102,7 +101,7 @@ Desarrollar una aplicación web para centralizar y facilitar la gestión de una 
 
 ## Objetivos específicos
 
-* Centralizar en una única aplicación la información relacionada con libros, autores, categorías, ejemplares, usuarios y préstamos.
+* Centralizar en una única aplicación la información relacionada con libros, autores, editoriales, categorías, ejemplares, usuarios y préstamos.
 * Facilitar el registro y seguimiento de los préstamos y devoluciones realizados en la biblioteca.
 * Permitir conocer el estado de los ejemplares para identificar cuáles se encuentran disponibles o prestados.
 * Facilitar la búsqueda de libros mediante diferentes criterios, como título, autor o categoría.
@@ -129,6 +128,10 @@ Permitirá registrar los libros que forman parte del catálogo de la biblioteca,
 #### Gestión de autores
 
 Permitirá registrar y consultar autores, asociándolos con los libros correspondientes del catálogo.
+
+#### Gestión de editoriales
+
+Permitirá registrar y consultar editoriales, asociándolas con los libros correspondientes del catálogo.
 
 #### Gestión de categorías
 
@@ -184,6 +187,7 @@ El MVP incluirá:
 * Gestión de usuarios.
 * Gestión de libros.
 * Gestión de autores.
+* Gestión de editoriales.
 * Gestión de categorías.
 * Gestión de ejemplares.
 * Registro de préstamos.
@@ -420,6 +424,7 @@ El modelo de datos inicial de BiblioGest está compuesto por las siguientes enti
 - Usuario
 - Libro
 - Autor
+- Editorial
 - Categoría
 - Ejemplar
 - Préstamo
@@ -562,7 +567,7 @@ Como parte del diseño de BiblioGest se realizó el modelado inicial de la base 
 
 ## Diseño de la base de datos
 
-Se definió un modelo de base de datos relacional utilizando MySQL. El diseño contempla las entidades necesarias para representar libros, autores, categorías, ejemplares, usuarios y préstamos.
+Se definió un modelo de base de datos relacional utilizando MySQL. El diseño contempla las entidades necesarias para representar libros, autores, editoriales, categorías, ejemplares, usuarios y préstamos.
 
 La documentación del modelo, sus relaciones, reglas de negocio y el Diagrama Entidad-Relación se encuentran en la carpeta:
 
