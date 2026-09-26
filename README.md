@@ -139,7 +139,7 @@ Permitirá organizar los libros en diferentes categorías para facilitar su clas
 
 #### Gestión de ejemplares
 
-Permitirá registrar los ejemplares físicos correspondientes a cada libro y consultar y gestionar su estado según su disponibilidad.
+Permitirá registrar los ejemplares físicos correspondientes a cada libro, identificar su ubicación y registrar su estado físico. La disponibilidad de cada ejemplar se determinará a partir de los préstamos registrados en el sistema.
 
 #### Gestión de préstamos
 
