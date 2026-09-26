@@ -43,7 +43,7 @@ Funciones principales:
 
 ## 3. Módulo de Ejemplares
 
-Permitirá controlar los ejemplares físicos disponibles de cada libro.
+Permitirá controlar los ejemplares físicos correspondientes a cada libro.
 
 Funciones principales:
 
