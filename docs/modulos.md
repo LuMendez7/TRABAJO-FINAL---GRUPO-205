@@ -36,7 +36,10 @@ Funciones principales:
 - Modificar información de libros.
 - Consultar libros desde las funciones administrativas.
 - Mantener actualizada la información bibliográfica.
-- Organizar los libros por categorías y autores.
+- Organizar los libros por categorías, autores y editoriales.
+- Registrar y consultar autores.
+- Registrar y consultar categorías.
+- Registrar y consultar editoriales.
 
 ## 3. Módulo de Ejemplares
 
@@ -94,7 +97,7 @@ Los módulos presentan las siguientes dependencias funcionales:
 - Ejemplares depende del Catálogo, porque cada ejemplar debe pertenecer a un libro.
 - Consulta del Catálogo utiliza información proveniente del Catálogo y de Ejemplares para mostrar los libros y su disponibilidad.
 - Autenticación y Roles controla el acceso a las funcionalidades del sistema según el rol del usuario.
-- El módulo de Catálogo utiliza la información de autores y categorías para organizar y clasificar los libros.
+- El módulo de Catálogo utiliza la información de autores, categorías y editoriales para organizar y describir los libros.
 
 Estas dependencias representan relaciones funcionales entre los módulos y no implican que sean microservicios ni componentes independientes desplegables.
 
