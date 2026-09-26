@@ -43,7 +43,7 @@ A partir de esta problemática surge la necesidad de centralizar la información
 
 Se propone desarrollar BiblioGest, una aplicación web que permita centralizar los principales procesos de gestión de una biblioteca.
 
-El personal bibliotecario podrá administrar usuarios, libros, autores, categorías y ejemplares, además de registrar préstamos y devoluciones.
+El personal bibliotecario podrá administrar usuarios, libros, autores, editoriales, categorías y ejemplares, además de registrar préstamos y devoluciones.
 
 Los lectores podrán consultar el catálogo, realizar búsquedas y conocer la disponibilidad de los materiales.
 
