@@ -244,7 +244,7 @@ React y TypeScript se utilizarán para desarrollar la interfaz web, mientras que
 
 - MySQL
 
-Se utilizará una base de datos relacional debido a que la información principal del sistema presenta relaciones claras entre usuarios, libros, autores, categorías, ejemplares y préstamos.
+Se utilizará una base de datos relacional debido a que la información principal del sistema presenta relaciones claras entre usuarios, libros, autores, editoriales, categorías, ejemplares y préstamos.
 
 ## Herramientas de desarrollo
 
