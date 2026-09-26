@@ -169,7 +169,7 @@ El modelo será representado mediante un Diagrama Entidad-Relación (DER), donde
 
 El siguiente diagrama representa las entidades principales del sistema BiblioGest, sus atributos, claves primarias, claves foráneas y las relaciones definidas para el modelo de datos.
 
-[Diagrama Entidad-Relación de BiblioGest](https://github.com/LuMendez7/TRABAJO-FINAL---GRUPO-205/blob/main/database/DER-BiblioGest.png) ([image](https://github.com/LuMendez7/TRABAJO-FINAL---GRUPO-205/raw/main/database/DER-BiblioGest.png))
+![Diagrama Entidad-Relación de BiblioGest](DER-BiblioGest.png)
 
 ## Script de creación de la base de datos
 
