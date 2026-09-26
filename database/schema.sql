@@ -18,6 +18,15 @@ CREATE TABLE categoria (
 );
 
 -- =====================================================
+-- TABLA: EDITORIAL
+-- =====================================================
+
+CREATE TABLE editorial (
+    id_editorial BIGINT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(150) NOT NULL UNIQUE
+);
+
+-- =====================================================
 -- TABLA: LIBRO
 -- =====================================================
 
@@ -25,13 +34,17 @@ CREATE TABLE libro (
     id_libro BIGINT AUTO_INCREMENT PRIMARY KEY,
     titulo VARCHAR(200) NOT NULL,
     isbn VARCHAR(20),
-    editorial VARCHAR(150),
     anio_publicacion INT,
     id_categoria BIGINT NOT NULL,
+    id_editorial BIGINT NOT NULL,
 
     CONSTRAINT fk_libro_categoria
         FOREIGN KEY (id_categoria)
-        REFERENCES categoria(id_categoria)
+        REFERENCES categoria(id_categoria),
+
+    CONSTRAINT fk_libro_editorial
+        FOREIGN KEY (id_editorial)
+        REFERENCES editorial(id_editorial)
 );
 
 -- =====================================================
@@ -72,6 +85,7 @@ CREATE TABLE ejemplar (
     id_libro BIGINT NOT NULL,
     codigo_inventario VARCHAR(50) NOT NULL UNIQUE,
     estado VARCHAR(30) NOT NULL,
+    ubicacion VARCHAR(100) NOT NULL,
     activo BOOLEAN NOT NULL DEFAULT TRUE,
 
     CONSTRAINT fk_ejemplar_libro
@@ -104,7 +118,6 @@ CREATE TABLE prestamo (
     fecha_prestamo DATE NOT NULL,
     fecha_devolucion_prevista DATE NOT NULL,
     fecha_devolucion_real DATE,
-    estado VARCHAR(30) NOT NULL,
 
     CONSTRAINT fk_prestamo_usuario
         FOREIGN KEY (id_usuario)
