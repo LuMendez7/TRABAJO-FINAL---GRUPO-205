@@ -51,7 +51,8 @@ Funciones principales:
 - Asociar cada ejemplar con un libro.
 - Identificar cada ejemplar mediante un código de inventario.
 - Consultar el estado de un ejemplar.
-- Gestionar el estado de cada ejemplar según su disponibilidad.
+- Gestionar el estado físico de cada ejemplar.
+- Consultar la disponibilidad de cada ejemplar a partir de los préstamos registrados.
 
 ## 4. Módulo de Préstamos y Devoluciones
 
@@ -63,9 +64,10 @@ Funciones principales:
 - Asociar el préstamo con un usuario y un ejemplar.
 - Registrar la fecha del préstamo.
 - Registrar la fecha prevista de devolución.
-- Registrar la devolución del ejemplar.
+- Registrar la devolución del ejemplar mediante la fecha de devolución real del préstamo.
 - Consultar préstamos activos.
 - Consultar préstamos finalizados.
+- Permitir que el lector consulte sus propios préstamos.
 
 ## 5. Módulo de Autenticación y Roles
 
@@ -87,7 +89,7 @@ Funciones principales:
 - Visualizar el catálogo.
 - Buscar libros por título, autor o categoría.
 - Consultar información básica de cada libro.
-- Consultar si existen ejemplares disponibles.
+- Consultar la disponibilidad de ejemplares según los préstamos registrados.
 
 ## Dependencias principales entre módulos
 
