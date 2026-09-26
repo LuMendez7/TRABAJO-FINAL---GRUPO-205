@@ -103,7 +103,7 @@ Desarrollar una aplicación web para centralizar y facilitar la gestión de una 
 
 * Centralizar en una única aplicación la información relacionada con libros, autores, editoriales, categorías, ejemplares, usuarios y préstamos.
 * Facilitar el registro y seguimiento de los préstamos y devoluciones realizados en la biblioteca.
-* Permitir conocer el estado de los ejemplares para identificar cuáles se encuentran disponibles o prestados.
+* Permitir conocer la disponibilidad de los ejemplares para identificar cuáles se encuentran disponibles para préstamo.
 * Facilitar la búsqueda de libros mediante diferentes criterios, como título, autor o categoría.
 * Permitir que los lectores consulten el catálogo y la disponibilidad de los materiales sin depender exclusivamente de la consulta al bibliotecario.
 * Permitir que los lectores registrados consulten la información correspondiente a sus propios préstamos.
