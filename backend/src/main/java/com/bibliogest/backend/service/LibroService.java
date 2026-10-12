@@ -108,4 +108,8 @@ public class LibroService {
 
         libroRepository.delete(libro);
     }
+
+    public List<Libro> listarActivos() {
+        return libroRepository.findByActivoTrue();
+    }
 }

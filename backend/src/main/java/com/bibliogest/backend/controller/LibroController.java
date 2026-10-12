@@ -46,4 +46,9 @@ public class LibroController {
     public void eliminar(@PathVariable Long id) {
         libroService.eliminar(id);
     }
+
+    @GetMapping("/activos")
+    public List<Libro> listarActivos() {
+        return libroService.listarActivos();
+    }
 }

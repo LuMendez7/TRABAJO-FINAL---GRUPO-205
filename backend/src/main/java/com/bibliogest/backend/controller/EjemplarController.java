@@ -45,4 +45,9 @@ public class EjemplarController {
     public Ejemplar desactivar(@PathVariable Long id) {
         return ejemplarService.desactivar(id);
     }
+
+    @GetMapping("/activos")
+    public List<Ejemplar> listarActivos() {
+        return ejemplarService.listarActivos();
+    }
 }

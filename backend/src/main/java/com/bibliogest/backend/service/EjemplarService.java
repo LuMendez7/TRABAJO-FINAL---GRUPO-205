@@ -88,4 +88,8 @@ public class EjemplarService {
 
         return ejemplarRepository.save(ejemplar);
     }
+
+    public List<Ejemplar> listarActivos() {
+        return ejemplarRepository.findByActivoTrue();
+    }
 }

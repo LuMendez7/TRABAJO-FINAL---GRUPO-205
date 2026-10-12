@@ -64,4 +64,8 @@ public class UsuarioService {
 
         return usuarioRepository.save(usuario);
     }
+
+    public List<Usuario> listarActivos() {
+        return usuarioRepository.findByActivoTrue();
+    }
 }

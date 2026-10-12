@@ -45,4 +45,9 @@ public class UsuarioController {
     public Usuario desactivar(@PathVariable Long id) {
         return usuarioService.desactivar(id);
     }
+
+    @GetMapping("/activos")
+    public List<Usuario> listarActivos() {
+        return usuarioService.listarActivos();
+    }
 }
