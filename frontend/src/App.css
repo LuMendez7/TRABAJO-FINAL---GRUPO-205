@@ -1,0 +1,179 @@
+#root {
+  min-height: 100vh;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f4f6f8;
+  color: #24303f;
+}
+
+button {
+  font: inherit;
+}
+
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.encabezado {
+  background: #17324d;
+  color: white;
+  padding: 22px 7%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 30px;
+}
+
+.encabezado h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.encabezado p {
+  margin: 4px 0 0;
+  color: #d9e4ee;
+}
+
+.encabezado nav {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.encabezado nav button {
+  border: 0;
+  background: transparent;
+  color: white;
+  padding: 9px 12px;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.encabezado nav button:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.contenido {
+  flex: 1;
+}
+
+.bienvenida {
+  padding: 75px 7%;
+  background: #eaf0f5;
+}
+
+.etiqueta {
+  margin: 0 0 10px;
+  color: #35658d;
+  font-size: 0.85rem;
+  font-weight: bold;
+  letter-spacing: 1.5px;
+}
+
+.bienvenida h2 {
+  margin: 0 0 16px;
+  font-size: 2.5rem;
+  color: #17324d;
+}
+
+.bienvenida > p:not(.etiqueta) {
+  max-width: 680px;
+  font-size: 1.1rem;
+  line-height: 1.7;
+}
+
+.boton-principal {
+  margin-top: 14px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 7px;
+  background: #35658d;
+  color: white;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.boton-principal:hover {
+  background: #284f70;
+}
+
+.panel {
+  padding: 45px 7% 65px;
+}
+
+.panel h2 {
+  color: #17324d;
+  margin-bottom: 25px;
+}
+
+.tarjetas {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+}
+
+.tarjeta {
+  background: white;
+  padding: 25px;
+  border-radius: 10px;
+  border: 1px solid #dce3e8;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+}
+
+.tarjeta span {
+  font-size: 2rem;
+}
+
+.tarjeta h3 {
+  color: #17324d;
+  margin: 15px 0 8px;
+}
+
+.tarjeta p {
+  margin: 0;
+  line-height: 1.5;
+  color: #5c6773;
+}
+
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #17324d;
+  color: #d9e4ee;
+}
+
+@media (max-width: 850px) {
+  .encabezado {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .tarjetas {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .tarjetas {
+    grid-template-columns: 1fr;
+  }
+
+  .bienvenida h2 {
+    font-size: 2rem;
+  }
+}
+
+.mensaje-error {
+  padding: 15px;
+  border-radius: 7px;
+  background: #f8e7e7;
+  color: #8a2525;
+}
