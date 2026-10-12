@@ -32,4 +32,18 @@ public class LibroController {
     public Libro crear(@RequestBody Libro libro) {
         return libroService.crear(libro);
     }
+
+    @PutMapping("/{id}")
+    public Libro actualizar(
+            @PathVariable Long id,
+            @RequestBody Libro libro) {
+
+        return libroService.actualizar(id, libro);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminar(@PathVariable Long id) {
+        libroService.eliminar(id);
+    }
 }

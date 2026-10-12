@@ -32,4 +32,18 @@ public class CategoriaController {
     public Categoria crear(@RequestBody Categoria categoria) {
         return categoriaService.crear(categoria);
     }
+
+    @PutMapping("/{id}")
+    public Categoria actualizar(
+            @PathVariable Long id,
+            @RequestBody Categoria categoria) {
+
+        return categoriaService.actualizar(id, categoria);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void eliminar(@PathVariable Long id) {
+        categoriaService.eliminar(id);
+    }
 }

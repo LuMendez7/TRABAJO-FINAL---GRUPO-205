@@ -32,4 +32,17 @@ public class UsuarioController {
     public Usuario crear(@RequestBody Usuario usuario) {
         return usuarioService.crear(usuario);
     }
+
+    @PutMapping("/{id}")
+    public Usuario actualizar(
+            @PathVariable Long id,
+            @RequestBody Usuario usuario) {
+
+        return usuarioService.actualizar(id, usuario);
+    }
+
+    @PutMapping("/{id}/desactivar")
+    public Usuario desactivar(@PathVariable Long id) {
+        return usuarioService.desactivar(id);
+    }
 }

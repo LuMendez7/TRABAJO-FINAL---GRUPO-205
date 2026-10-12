@@ -32,4 +32,17 @@ public class EjemplarController {
     public Ejemplar crear(@RequestBody Ejemplar ejemplar) {
         return ejemplarService.crear(ejemplar);
     }
+
+    @PutMapping("/{id}")
+    public Ejemplar actualizar(
+            @PathVariable Long id,
+            @RequestBody Ejemplar ejemplar) {
+
+        return ejemplarService.actualizar(id, ejemplar);
+    }
+
+    @PutMapping("/{id}/desactivar")
+    public Ejemplar desactivar(@PathVariable Long id) {
+        return ejemplarService.desactivar(id);
+    }
 }
