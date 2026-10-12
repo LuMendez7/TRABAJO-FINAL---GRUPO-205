@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,6 +31,9 @@ public class Libro {
 
     @Column(name = "anio_publicacion")
     private Integer anioPublicacion;
+
+    @Column(nullable = false)
+    private Boolean activo = true;
 
     @ManyToOne
     @JoinColumn(name = "id_categoria", nullable = false)

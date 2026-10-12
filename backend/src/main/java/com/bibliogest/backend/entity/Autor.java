@@ -19,4 +19,7 @@ public class Autor {
 
     @Column(nullable = false, length = 150)
     private String nombre;
+
+    @Column(nullable = false, length = 150)
+    private String apellido;
 }

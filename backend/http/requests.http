@@ -1,0 +1,29 @@
+### Listar categorias
+GET http://localhost:8080/api/categorias
+
+###
+
+### Crear categoria
+POST http://localhost:8080/api/categorias
+Content-Type: application/json
+
+{
+  "nombre": "Literatura",
+  "descripcion": "Libros de literatura de la biblioteca"
+}
+
+###
+
+### Listar autores
+GET http://localhost:8080/api/autores
+
+###
+
+### Crear autor
+POST http://localhost:8080/api/autores
+Content-Type: application/json
+
+{
+  "nombre": "Julio",
+  "apellido": "Cortazar"
+}

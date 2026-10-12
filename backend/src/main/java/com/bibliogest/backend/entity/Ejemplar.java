@@ -26,4 +26,7 @@ public class Ejemplar {
 
     @Column(nullable = false, length = 30)
     private String estado;
+
+    @Column(nullable = false)
+    private Boolean activo = true;
 }
