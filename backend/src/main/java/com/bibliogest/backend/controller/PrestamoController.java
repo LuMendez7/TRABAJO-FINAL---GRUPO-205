@@ -4,9 +4,11 @@ import com.bibliogest.backend.entity.Prestamo;
 import com.bibliogest.backend.service.PrestamoService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController
 @RequestMapping("/api/prestamos")
 public class PrestamoController {
