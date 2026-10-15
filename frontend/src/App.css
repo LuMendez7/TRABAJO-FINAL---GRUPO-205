@@ -208,3 +208,44 @@ footer {
   border-color: #35658d;
   box-shadow: 0 0 0 2px rgba(53, 101, 141, 0.12);
 }
+
+.formulario-libro {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 550px;
+  margin: 25px 0;
+  padding: 25px;
+  background: white;
+  border: 1px solid #dce3e8;
+  border-radius: 10px;
+}
+
+.formulario-libro h3 {
+  margin: 0 0 10px;
+  color: #17324d;
+}
+
+.formulario-libro label {
+  font-weight: bold;
+}
+
+.formulario-libro input,
+.formulario-libro select {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #cbd5df;
+  border-radius: 7px;
+  background: white;
+  color: #24303f;
+  font: inherit;
+}
+
+.formulario-libro .boton-principal {
+  align-self: flex-start;
+}
+
+.formulario-libro button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
