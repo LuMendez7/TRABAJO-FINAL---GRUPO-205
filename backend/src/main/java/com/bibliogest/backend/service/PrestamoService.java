@@ -1,3 +1,4 @@
+
 package com.bibliogest.backend.service;
 
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,14 @@ public class PrestamoService {
 
     public Prestamo buscarPorId(Long id) {
         return prestamoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Préstamo no encontrado"));
+                .orElseThrow(() ->
+                        new RuntimeException("Préstamo no encontrado"));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Prestamo> listarMisPrestamos(String email) {
+
+        return prestamoRepository.findByUsuario_Email(email);
     }
 
     @Transactional

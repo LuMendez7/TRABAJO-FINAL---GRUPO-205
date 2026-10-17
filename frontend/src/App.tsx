@@ -126,7 +126,7 @@ interface Prestamo {
 
 
 
-type Vista = 'inicio' | 'catalogo' | 'prestamos' | 'usuarios' | 'login'
+type Vista = 'inicio' | 'catalogo' | 'prestamos' | 'mis-prestamos' | 'usuarios' | 'login'
 
 
 
@@ -140,6 +140,7 @@ function AppContenido() {
         inicio: '/',
         catalogo: '/catalogo',
         prestamos: '/prestamos',
+        'mis-prestamos': '/mis-prestamos',
         usuarios: '/usuarios',
         login: '/login',
     }
@@ -159,20 +160,24 @@ function AppContenido() {
 
 
     const esBibliotecario = sesion?.rol === 'BIBLIOTECARIO'
+    const esLector = sesion?.rol === 'LECTOR'
 
     // La URL identifica la pantalla. Las rutas administrativas se restringen por rol.
     useEffect(() => {
         if (rutaActual !== rutas[vista] ||
             ((vista === 'prestamos' || vista === 'usuarios') && !esBibliotecario) ||
+            (vista === 'mis-prestamos' && !esLector) ||
             (vista === 'login' && sesion)) {
             navigate('/', { replace: true })
         }
-    }, [rutaActual, vista, esBibliotecario, sesion, navigate])
+    }, [rutaActual, vista, esBibliotecario, esLector, sesion, navigate])
 
 
 
     const iniciarSesion = (nuevaSesion: Sesion) => {
 
+        setMisPrestamos([])
+        setErrorMisPrestamos('')
         setSesion(nuevaSesion)
 
         setVista('inicio')
@@ -188,6 +193,8 @@ function AppContenido() {
         setUsuarios([])
 
         setPrestamos([])
+        setMisPrestamos([])
+        setErrorMisPrestamos('')
 
         setMostrarFormulario(false)
         setMostrarFormularioEjemplar(false)
@@ -205,6 +212,9 @@ function AppContenido() {
     const [usuarios, setUsuarios] = useState<Usuario[]>([])
 
     const [prestamos, setPrestamos] = useState<Prestamo[]>([])
+    const [misPrestamos, setMisPrestamos] = useState<Prestamo[]>([])
+    const [cargandoMisPrestamos, setCargandoMisPrestamos] = useState(false)
+    const [errorMisPrestamos, setErrorMisPrestamos] = useState('')
 
     const [categorias, setCategorias] = useState<Categoria[]>([])
 
@@ -316,125 +326,63 @@ function AppContenido() {
 
 
 
-useEffect(() => {
+    useEffect(() => {
 
-    let cancelado = false
-
-
-
-    const cargarDatos = async () => {
-
-        setCargando(true)
-
-        setError('')
+        let cancelado = false
 
 
 
-        try {
+        const cargarDatos = async () => {
 
-            const [respuestaLibros, respuestaEjemplares,
+            setCargando(true)
 
-                respuestaCategorias, respuestaAutores] = await Promise.all([
-
-                fetch('http://localhost:8080/api/libros/activos'),
-
-                fetch('http://localhost:8080/api/ejemplares/activos'),
-
-                fetch('http://localhost:8080/api/categorias'),
-
-                fetch('http://localhost:8080/api/autores'),
-
-            ])
+            setError('')
 
 
 
-            if (
+            try {
 
-                !respuestaLibros.ok ||
+                const [respuestaLibros, respuestaEjemplares,
 
-                !respuestaEjemplares.ok ||
+                    respuestaCategorias, respuestaAutores] = await Promise.all([
 
-                !respuestaCategorias.ok ||
+                    fetch('http://localhost:8080/api/libros/activos'),
 
-                !respuestaAutores.ok
+                    fetch('http://localhost:8080/api/ejemplares/activos'),
 
-            ) {
+                    fetch('http://localhost:8080/api/categorias'),
 
-                throw new Error('No se pudieron cargar los datos públicos.')
+                    fetch('http://localhost:8080/api/autores'),
 
-            }
-
-
-
-            const datosLibros: Libro[] = await respuestaLibros.json()
-
-            const datosEjemplares: Ejemplar[] = await respuestaEjemplares.json()
-
-            const datosCategorias: Categoria[] = await respuestaCategorias.json()
-
-            const datosAutores: Autor[] = await respuestaAutores.json()
+                ])
 
 
 
-            if (cancelado) return
+                if (
 
+                    !respuestaLibros.ok ||
 
+                    !respuestaEjemplares.ok ||
 
-            setLibros(datosLibros)
+                    !respuestaCategorias.ok ||
 
-            setEjemplares(datosEjemplares)
+                    !respuestaAutores.ok
 
-            setCategorias(datosCategorias)
+                ) {
 
-            setAutores(datosAutores)
-
-
-
-            if (sesion?.rol === 'BIBLIOTECARIO') {
-
-                const [respuestaUsuarios, respuestaPrestamos] =
-
-                    await Promise.all([
-
-                        fetch('http://localhost:8080/api/usuarios/activos', {
-
-                            headers: {
-
-                                Authorization: sesion.autorizacion,
-
-                            },
-
-                        }),
-
-                        fetch('http://localhost:8080/api/prestamos', {
-
-                            headers: {
-
-                                Authorization: sesion.autorizacion,
-
-                            },
-
-                        }),
-
-                    ])
-
-
-
-                if (!respuestaUsuarios.ok || !respuestaPrestamos.ok) {
-
-                    throw new Error(
-
-                        'No se pudieron cargar los datos administrativos.'
-
-                    )
+                    throw new Error('No se pudieron cargar los datos públicos.')
 
                 }
 
 
 
-                const datosUsuarios: Usuario[] = await respuestaUsuarios.json()
+                const datosLibros: Libro[] = await respuestaLibros.json()
 
-                const datosPrestamos: Prestamo[] = await respuestaPrestamos.json()
+                const datosEjemplares: Ejemplar[] = await respuestaEjemplares.json()
+
+                const datosCategorias: Categoria[] = await respuestaCategorias.json()
+
+                const datosAutores: Autor[] = await respuestaAutores.json()
 
 
 
@@ -442,61 +390,183 @@ useEffect(() => {
 
 
 
-                setUsuarios(datosUsuarios)
+                setLibros(datosLibros)
 
-                setPrestamos(datosPrestamos)
+                setEjemplares(datosEjemplares)
 
-            } else {
+                setCategorias(datosCategorias)
 
-                setUsuarios([])
+                setAutores(datosAutores)
 
-                setPrestamos([])
 
-            }
 
-        } catch (error) {
+                if (sesion?.rol === 'BIBLIOTECARIO') {
 
-            if (!cancelado) {
+                    const [respuestaUsuarios, respuestaPrestamos] =
 
-                setError(
+                        await Promise.all([
 
-                    error instanceof Error
+                            fetch('http://localhost:8080/api/usuarios/activos', {
 
-                        ? error.message
+                                headers: {
 
-                        : 'No se pudo conectar con el servidor.'
+                                    Authorization: sesion.autorizacion,
 
-                )
+                                },
 
-            }
+                            }),
 
-        } finally {
+                            fetch('http://localhost:8080/api/prestamos', {
 
-            if (!cancelado) {
+                                headers: {
 
-                setCargando(false)
+                                    Authorization: sesion.autorizacion,
+
+                                },
+
+                            }),
+
+                        ])
+
+
+
+                    if (!respuestaUsuarios.ok || !respuestaPrestamos.ok) {
+
+                        throw new Error(
+
+                            'No se pudieron cargar los datos administrativos.'
+
+                        )
+
+                    }
+
+
+
+                    const datosUsuarios: Usuario[] = await respuestaUsuarios.json()
+
+                    const datosPrestamos: Prestamo[] = await respuestaPrestamos.json()
+
+
+
+                    if (cancelado) return
+
+
+
+                    setUsuarios(datosUsuarios)
+
+                    setPrestamos(datosPrestamos)
+
+                } else {
+
+                    setUsuarios([])
+
+                    setPrestamos([])
+
+                }
+
+            } catch (error) {
+
+                if (!cancelado) {
+
+                    setError(
+
+                        error instanceof Error
+
+                            ? error.message
+
+                            : 'No se pudo conectar con el servidor.'
+
+                    )
+
+                }
+
+            } finally {
+
+                if (!cancelado) {
+
+                    setCargando(false)
+
+                }
 
             }
 
         }
 
-    }
+
+
+        void cargarDatos()
 
 
 
-    void cargarDatos()
+        return () => {
+
+            cancelado = true
+
+        }
+
+    }, [sesion])
 
 
 
-    return () => {
+    // Solo consulta los préstamos del lector autenticado cuando abre su pantalla.
+    useEffect(() => {
+        if (vista !== 'mis-prestamos' || !esLector || !sesion) return
 
-        cancelado = true
+        const controlador = new AbortController()
+        const cargarMisPrestamos = async () => {
+            setCargandoMisPrestamos(true)
+            setErrorMisPrestamos('')
+            try {
+                const respuesta = await fetch('http://localhost:8080/api/prestamos/mis-prestamos', {
+                    headers: { Authorization: sesion.autorizacion },
+                    signal: controlador.signal,
+                })
+                if (!respuesta.ok) {
+                    throw new Error(respuesta.status === 401 || respuesta.status === 403
+                        ? 'Tu sesión no está autorizada. Cerrá sesión y volvé a ingresar.'
+                        : 'No se pudieron cargar tus préstamos.')
+                }
+                const datos: Prestamo[] = await respuesta.json()
+                if (!controlador.signal.aborted) setMisPrestamos(datos)
+            } catch (error) {
+                if (!controlador.signal.aborted) {
+                    setErrorMisPrestamos(error instanceof Error ? error.message : 'Error al consultar los préstamos.')
+                }
+            } finally {
+                if (!controlador.signal.aborted) setCargandoMisPrestamos(false)
+            }
+        }
+        void cargarMisPrestamos()
+        return () => controlador.abort()
+    }, [vista, esLector, sesion])
 
-    }
-
-}, [sesion])
-
-
+    const mostrarMisPrestamos = () => (
+        <section className="panel">
+            <h2>Mis préstamos</h2>
+            <p>Consultá tus préstamos activos y el historial de devoluciones.</p>
+            {cargandoMisPrestamos ? (
+                <p role="status">Cargando tus préstamos...</p>
+            ) : errorMisPrestamos ? (
+                <p className="mensaje-error" role="alert">{errorMisPrestamos}</p>
+            ) : misPrestamos.length === 0 ? (
+                <p className="mis-prestamos-vacio">Todavía no tenés préstamos registrados.</p>
+            ) : (
+                <div className="tarjetas">
+                    {misPrestamos.map((prestamo) => (
+                        <article className="tarjeta" key={prestamo.idPrestamo}>
+                            <span>📖</span>
+                            <h3>{prestamo.ejemplar.libro.titulo}</h3>
+                            <p><strong>Inventario:</strong> {prestamo.ejemplar.codigoInventario}</p>
+                            <p><strong>Fecha del préstamo:</strong> {prestamo.fechaPrestamo}</p>
+                            <p><strong>Devolución prevista:</strong> {prestamo.fechaDevolucionPrevista}</p>
+                            <p><strong>Devolución real:</strong> {prestamo.fechaDevolucionReal ?? 'Pendiente'}</p>
+                            <p><strong>Estado:</strong> <span className={prestamo.estado === 'DEVUELTO' ? 'estado-devuelto' : 'estado-activo'}>{prestamo.estado}</span></p>
+                        </article>
+                    ))}
+                </div>
+            )}
+        </section>
+    )
 
     const guardarLibro = async (e: FormEvent<HTMLFormElement>) => {
 
@@ -809,23 +879,23 @@ useEffect(() => {
             <h2>Catálogo de libros</h2>
 
             {esBibliotecario && (
-            <button
+                <button
 
-                className="boton-principal"
+                    className="boton-principal"
 
-                onClick={() => {
+                    onClick={() => {
 
-                    setMostrarFormulario(!mostrarFormulario)
+                        setMostrarFormulario(!mostrarFormulario)
 
-                    setMensajeLibro('')
+                        setMensajeLibro('')
 
-                }}
+                    }}
 
-            >
+                >
 
-                {mostrarFormulario ? 'Cancelar' : '+ Agregar libro'}
+                    {mostrarFormulario ? 'Cancelar' : '+ Agregar libro'}
 
-            </button>
+                </button>
             )}
 
             {esBibliotecario && mostrarFormularioEjemplar && (
@@ -929,23 +999,23 @@ useEffect(() => {
             )}
 
             {esBibliotecario && (
-            <button
+                <button
 
-                className="boton-principal"
+                    className="boton-principal"
 
-                onClick={() => {
+                    onClick={() => {
 
-                    setMostrarFormularioEjemplar(!mostrarFormularioEjemplar)
+                        setMostrarFormularioEjemplar(!mostrarFormularioEjemplar)
 
-                    setMensajeEjemplar('')
+                        setMensajeEjemplar('')
 
-                }}
+                    }}
 
-            >
+                >
 
-                {mostrarFormularioEjemplar ? 'Cancelar ejemplar' : '+ Agregar ejemplar'}
+                    {mostrarFormularioEjemplar ? 'Cancelar ejemplar' : '+ Agregar ejemplar'}
 
-            </button>
+                </button>
             )}
 
 
@@ -2754,6 +2824,10 @@ useEffect(() => {
 
 
 
+                    {esLector && (
+                        <button onClick={() => setVista('mis-prestamos')}>Mis préstamos</button>
+                    )}
+
                     {esBibliotecario && (
 
                         <>
@@ -2900,41 +2974,49 @@ useEffect(() => {
 
 
 
+                                {esLector && (
+                                    <article className="tarjeta tarjeta-acceso" onClick={() => setVista('mis-prestamos')}>
+                                        <span>📖</span>
+                                        <h3>Mis préstamos</h3>
+                                        <p>Consultar tus préstamos e historial de devoluciones.</p>
+                                    </article>
+                                )}
+
                                 {esBibliotecario && (
                                     <>
-                                <article
+                                        <article
 
-                                    className="tarjeta tarjeta-acceso"
+                                            className="tarjeta tarjeta-acceso"
 
-                                    onClick={() => setVista('prestamos')}
+                                            onClick={() => setVista('prestamos')}
 
-                                >
+                                        >
 
-                                    <span>🔄</span>
+                                            <span>🔄</span>
 
-                                    <h3>Préstamos</h3>
+                                            <h3>Préstamos</h3>
 
-                                    <p>Consultar préstamos y devoluciones.</p>
+                                            <p>Consultar préstamos y devoluciones.</p>
 
-                                </article>
+                                        </article>
 
 
 
-                                <article
+                                        <article
 
-                                    className="tarjeta tarjeta-acceso"
+                                            className="tarjeta tarjeta-acceso"
 
-                                    onClick={() => setVista('usuarios')}
+                                            onClick={() => setVista('usuarios')}
 
-                                >
+                                        >
 
-                                    <span>👥</span>
+                                            <span>👥</span>
 
-                                    <h3>Usuarios</h3>
+                                            <h3>Usuarios</h3>
 
-                                    <p>Consultar los lectores activos.</p>
+                                            <p>Consultar los lectores activos.</p>
 
-                                </article>
+                                        </article>
                                     </>
                                 )}
 
@@ -2949,6 +3031,8 @@ useEffect(() => {
 
 
                 {!cargando && !error && vista === 'catalogo' && mostrarCatalogo()}
+
+                {!cargando && !error && esLector && vista === 'mis-prestamos' && mostrarMisPrestamos()}
 
                 {!cargando && !error && esBibliotecario && vista === 'prestamos' && mostrarPrestamos()}
 

@@ -60,6 +60,12 @@ public class SecurityConfig {
                                 "/api/autores/**"
                         ).permitAll()
                         .requestMatchers("/api/auth/me").authenticated()
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/prestamos/mis-prestamos"
+                        ).authenticated()
+
                         .requestMatchers("/api/**").hasRole("BIBLIOTECARIO")
                         .anyRequest().denyAll()
                 )
