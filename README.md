@@ -1,32 +1,47 @@
 # BiblioGest - Sistema Web de Gestión de Biblioteca
-
 ## Trabajo Final Integrador
-
 Proyecto desarrollado en el marco del Trabajo Final Integrador de la Tecnicatura Universitaria en Programación.
 
 ## Integrantes
-
 * Luciano David Mendez
+
 * Alejandro Pereyra
 
 ## Tutor
-
 * Sergio Andrés Antonini
+
+---
+## Estado actual de implementación (octubre de 2026)
+
+BiblioGest cuenta con una versión funcional en entorno local. El frontend está desarrollado con React, TypeScript y Vite; el backend utiliza Java 17, Spring Boot, Maven y Spring Security; y la información se almacena en MySQL mediante JPA/Hibernate.
+
+**Funcionalidades implementadas y comprobadas:**
+
+- Consulta pública del catálogo y búsqueda de libros.
+- Visualización de disponibilidad de ejemplares.
+- Inicio y cierre de sesión con roles `BIBLIOTECARIO` y `LECTOR`.
+- Restricción de operaciones administrativas mediante Spring Security y ocultamiento de accesos administrativos en la interfaz.
+- Registro de libros y ejemplares.
+- Alta, edición y baja lógica de lectores.
+- Registro de préstamos y devoluciones con actualización de disponibilidad.
+- Navegación entre Inicio, Catálogo, Préstamos y Usuarios con React Router e historial Atrás/Adelante.
+- Interfaz adaptable con mejoras visuales en botones, tarjetas y formularios.
+
+**Validaciones realizadas en entorno local:** acceso de visitante, lector y bibliotecario; alta de libro; alta de ejemplar; alta y edición de lector; préstamo; devolución; y desactivación de lector. Las siete operaciones administrativas fueron verificadas manualmente. La compilación del frontend y la publicación de los cambios en GitHub se realizaron correctamente.
+
+**Pendiente de implementar o verificar antes de declarar completo el MVP:** consulta de préstamos propios del lector, gestión administrativa completa de autores/categorías/editoriales, identificación de préstamos vencidos, pruebas automatizadas y despliegue público. Algunas de estas funciones aparecen en las secciones siguientes como **alcance previsto**, no como funcionalidades ya entregadas.
 
 ---
 
 ## Descripción del proyecto
-
 BiblioGest es una aplicación web destinada a facilitar la gestión administrativa y operativa de una biblioteca.
 
-El sistema permitirá centralizar la información relacionada con libros, ejemplares, usuarios, préstamos y devoluciones, reemplazando registros manuales o información distribuida en diferentes medios.
+El sistema centraliza la información relacionada con libros, ejemplares, usuarios, préstamos y devoluciones, reemplazando registros manuales o información distribuida en diferentes medios.
 
-La propuesta busca desarrollar una herramienta sencilla y accesible que pueda ser utilizada tanto por el personal de una biblioteca como por sus lectores.
+El proyecto busca ofrecer una herramienta sencilla y accesible tanto para el personal bibliotecario como para quienes consultan el catálogo.
 
 ---
-
 ## Problemática
-
 En el relevamiento inicial se tomó como referencia el funcionamiento real de una biblioteca escolar en la que se desempeña uno de los integrantes del equipo.
 
 Actualmente, los préstamos y las devoluciones de libros se registran de forma manual en hojas A4 impresas. El catálogo de la biblioteca fue digitalizado previamente en una planilla de Excel, pero para el trabajo cotidiano también se utiliza una versión impresa.
@@ -38,9 +53,7 @@ Esta forma de trabajo dificulta principalmente la búsqueda rápida de los mater
 A partir de esta problemática surge la necesidad de centralizar la información en un sistema web que facilite la gestión de los libros, ejemplares, usuarios, préstamos y devoluciones, y que además permita consultar el catálogo de manera más sencilla.
 
 ---
-
 ## Solución propuesta
-
 Se propone desarrollar BiblioGest, una aplicación web que permita centralizar los principales procesos de gestión de una biblioteca.
 
 El personal bibliotecario podrá administrar usuarios, libros, autores, editoriales, categorías y ejemplares, además de registrar préstamos y devoluciones.
@@ -50,41 +63,46 @@ Los lectores podrán consultar el catálogo, realizar búsquedas y conocer la di
 El sistema contará con diferentes roles y permisos de acceso según el tipo de usuario.
 
 ---
-
 ## Actores involucrados
-
 Para definir las funcionalidades de BiblioGest se identifican los principales actores que intervienen en el funcionamiento de una biblioteca y que tendrán interacción con el sistema.
 
 ### Bibliotecario / Administrador
-
 Es el principal responsable de la gestión de la biblioteca y tendrá acceso a las funciones administrativas del sistema.
 
 Sus principales necesidades son:
 
 * Registrar y actualizar libros, autores, editoriales y categorías.
+
 * Administrar los ejemplares físicos de la biblioteca.
+
 * Registrar y gestionar usuarios de la biblioteca.
+
 * Registrar préstamos y devoluciones.
+
 * Consultar qué ejemplares se encuentran disponibles o prestados.
+
 * Identificar préstamos que hayan superado su fecha prevista de devolución.
+
 * Mantener centralizada y organizada la información de la biblioteca.
 
 ### Lector
-
 Es la persona que utiliza los servicios de la biblioteca y tendrá acceso a las funciones de consulta habilitadas por el sistema.
 
 Sus principales necesidades son:
 
 * Consultar el catálogo de libros.
+
 * Buscar libros por diferentes criterios.
+
 * Conocer la disponibilidad de ejemplares.
+
 * Consultar sus préstamos activos.
+
 * Conocer las fechas previstas de devolución.
 
 El lector no tendrá acceso a las funciones administrativas, como registrar o modificar libros, usuarios, ejemplares o préstamos.
 
 ### Usuario de referencia
-
 Para el relevamiento inicial del proyecto se cuenta con un usuario real vinculado al contexto de aplicación: uno de los integrantes del equipo se desempeña como bibliotecario en una institución educativa.
 
 Esta experiencia permite conocer de manera directa tareas habituales relacionadas con la organización del material bibliográfico, la consulta de disponibilidad y la gestión de préstamos y devoluciones.
@@ -92,204 +110,211 @@ Esta experiencia permite conocer de manera directa tareas habituales relacionada
 A partir de este contexto se utilizará la experiencia del usuario de referencia para relevar el funcionamiento actual, identificar necesidades concretas y validar las funcionalidades propuestas para BiblioGest.
 
 ---
-
 ## Objetivo general
-
 Desarrollar una aplicación web para centralizar y facilitar la gestión de una biblioteca escolar, permitiendo administrar libros, ejemplares, usuarios, préstamos y devoluciones, y brindando a los lectores la posibilidad de consultar el catálogo y la disponibilidad de los materiales.
 
 ---
-
 ## Objetivos específicos
-
 * Centralizar en una única aplicación la información relacionada con libros, autores, editoriales, categorías, ejemplares, usuarios y préstamos.
+
 * Facilitar el registro y seguimiento de los préstamos y devoluciones realizados en la biblioteca.
+
 * Permitir conocer la disponibilidad de los ejemplares para identificar cuáles se encuentran disponibles para préstamo.
+
 * Facilitar la búsqueda de libros mediante diferentes criterios, como título, autor o categoría.
+
 * Permitir que los lectores consulten el catálogo y la disponibilidad de los materiales sin depender exclusivamente de la consulta al bibliotecario.
+
 * Permitir que los lectores registrados consulten la información correspondiente a sus propios préstamos.
+
 * Diferenciar las funcionalidades disponibles según el rol del usuario, separando las tareas administrativas de las funciones de consulta.
 
 ---
-
 ## Alcance del sistema
-
 BiblioGest será una aplicación web orientada a la gestión de una biblioteca. El sistema contará con dos tipos principales de usuarios: Bibliotecario / Administrador y Lector, cada uno con funcionalidades diferentes según su rol.
 
 ### Funcionalidades del Bibliotecario / Administrador
-
 #### Gestión de usuarios
-
 Permitirá registrar nuevos usuarios de la biblioteca, consultar los usuarios existentes y modificar sus datos. Estos usuarios podrán ser asociados posteriormente a los préstamos realizados.
 
 #### Gestión de libros
-
 Permitirá registrar los libros que forman parte del catálogo de la biblioteca, consultar su información y modificar los datos registrados cuando sea necesario.
 
 #### Gestión de autores
-
 Permitirá registrar y consultar autores, asociándolos con los libros correspondientes del catálogo.
 
 #### Gestión de editoriales
-
 Permitirá registrar y consultar editoriales, asociándolas con los libros correspondientes del catálogo.
 
 #### Gestión de categorías
-
 Permitirá organizar los libros en diferentes categorías para facilitar su clasificación y posterior búsqueda dentro del sistema.
 
 #### Gestión de ejemplares
-
 Permitirá registrar los ejemplares físicos correspondientes a cada libro, identificar su ubicación y registrar su estado físico. La disponibilidad de cada ejemplar se determinará a partir de los préstamos registrados en el sistema.
 
 #### Gestión de préstamos
-
 Permitirá registrar el préstamo de un ejemplar a un usuario, almacenando la fecha en que se realiza y la información necesaria para efectuar su seguimiento. Solo podrán prestarse ejemplares que se encuentren disponibles.
 
 #### Gestión de devoluciones
-
 Permitirá registrar la devolución de un ejemplar previamente prestado. Una vez registrada la devolución, el ejemplar volverá a quedar disponible para futuros préstamos.
 
 #### Control de préstamos
-
 Permitirá consultar los préstamos registrados y conocer qué usuario posee cada ejemplar, la fecha en que fue retirado y si posteriormente fue devuelto.
 
 ### Funcionalidades del Lector
-
 #### Consulta del catálogo
-
 Permitirá consultar los libros que forman parte del catálogo de la biblioteca sin necesidad de solicitar la búsqueda directamente al bibliotecario.
 
 #### Búsqueda de libros
-
 Permitirá buscar materiales dentro del catálogo utilizando criterios definidos por el sistema, como título, autor o categoría.
 
 #### Consulta de disponibilidad
-
 Permitirá conocer si un libro posee ejemplares disponibles para préstamo.
 
 #### Consulta de préstamos propios
-
 Los lectores que ingresen al sistema podrán consultar los préstamos asociados a su usuario y la información correspondiente a cada uno de ellos.
 
 ### Acceso y roles
-
 El sistema contará con autenticación de usuarios y control de acceso según el rol. El Bibliotecario / Administrador tendrá acceso a las funciones de gestión, mientras que el Lector tendrá acceso únicamente a las funcionalidades de consulta habilitadas.
 
 ---
-
 ## Producto Mínimo Viable (MVP)
-
 El Producto Mínimo Viable de BiblioGest estará compuesto por las funcionalidades esenciales necesarias para resolver la problemática identificada en la biblioteca tomada como referencia.
 
 El MVP incluirá:
 
 * Autenticación de usuarios y diferenciación de roles.
+
 * Gestión de usuarios.
+
 * Gestión de libros.
+
 * Gestión de autores.
+
 * Gestión de editoriales.
+
 * Gestión de categorías.
+
 * Gestión de ejemplares.
+
 * Registro de préstamos.
+
 * Registro de devoluciones.
+
 * Consulta y control de préstamos.
+
 * Consulta del catálogo.
+
 * Búsqueda de libros.
+
 * Consulta de disponibilidad de ejemplares.
+
 * Consulta de préstamos propios por parte del lector.
 
 Estas funcionalidades permitirán centralizar la información que actualmente se encuentra distribuida entre registros en papel y planillas, facilitar las tareas administrativas del bibliotecario y brindar a los lectores una herramienta para consultar el catálogo y la disponibilidad de los materiales.
 
 ---
-
 ## Fuera de alcance del MVP
-
 Para mantener un alcance viable durante la primera versión del proyecto, las siguientes funcionalidades no formarán parte del MVP:
 
 * Aplicación móvil nativa.
+
 * Gestión de múltiples bibliotecas o sucursales.
+
 * Integración con sistemas externos.
+
 * Pago de multas o sanciones en línea.
+
 * Notificaciones automáticas por correo electrónico o mensajería.
+
 * Recomendaciones automáticas de libros.
+
 * Estadísticas avanzadas y generación de reportes.
+
 * Lectura o generación de códigos de barras o códigos QR.
+
 * Reservas de libros.
 
 Estas funcionalidades podrán evaluarse como posibles mejoras o ampliaciones futuras una vez que las funciones principales del sistema se encuentren implementadas y validadas.
 
 ---
-
 # Tecnologías
-
 Para el desarrollo de BiblioGest se seleccionó un stack tecnológico acotado, priorizando herramientas conocidas por el equipo y adecuadas para el alcance del proyecto.
 
 ## Backend
-
 - Java 17
+
 - Spring Boot
+
 - Maven
 
-Spring Boot será utilizado para desarrollar la API REST y gestionar el acceso a datos, validaciones y seguridad de la aplicación.
+Spring Boot se utiliza para desarrollar la API REST y gestionar el acceso a datos, las validaciones y la seguridad de la aplicación mediante Spring Security.
 
 ## Frontend
-
 - React
-- TypeScript
-- Vite
 
-React y TypeScript se utilizarán para desarrollar la interfaz web, mientras que Vite se utilizará para la creación y ejecución del proyecto frontend.
+- TypeScript
+
+- Vite
+- React Router
+
+React y TypeScript se utilizan para desarrollar la interfaz web; Vite se utiliza para ejecutarla y compilarla, y React Router permite navegar entre pantallas.
 
 ## Base de datos
-
 - MySQL
 
-Se utilizará una base de datos relacional debido a que la información principal del sistema presenta relaciones claras entre usuarios, libros, autores, editoriales, categorías, ejemplares y préstamos.
+Se utiliza una base de datos relacional debido a que la información principal del sistema presenta relaciones claras entre usuarios, libros, autores, editoriales, categorías, ejemplares y préstamos.
 
 ## Herramientas de desarrollo
-
 Como herramientas de apoyo se utilizarán:
 
 - IntelliJ IDEA
+
 - Visual Studio Code
+
 - MySQL Workbench
+
 - Postman
+
 - Git y GitHub
 
 Estas herramientas serán utilizadas para programación, administración de la base de datos, pruebas de la API y control de versiones, por lo que no se consideran tecnologías adicionales del sistema.
 
 ## Plataforma y despliegue
+BiblioGest se desarrolla como una aplicación web y actualmente se ejecuta en un entorno local.
 
-BiblioGest será desarrollado como una aplicación web.
-
-Para el despliegue se utilizarán servicios compatibles con las tecnologías seleccionadas. Se prevé utilizar Vercel para el frontend y un servicio compatible con Java y MySQL para el backend y la base de datos.
-
-La plataforma definitiva será seleccionada durante la etapa de implementación según la disponibilidad y compatibilidad de los servicios.
+El despliegue público todavía no está confirmado. Como alternativa a evaluar se contempla Vercel para el frontend y servicios compatibles con Java y MySQL para el backend y la base de datos. La elección dependerá de la disponibilidad y compatibilidad de los servicios.
 
 ---
-
 # Arquitectura propuesta
-
 El sistema utilizará una arquitectura cliente-servidor.
 
 ```text
+
 Frontend Web
-     |
-     | HTTP / REST
-     v
+
+     |
+
+     | HTTP / REST
+
+     v
+
 Backend - API REST
-     |
-     | JPA / Hibernate
-     v
+
+     |
+
+     | JPA / Hibernate
+
+     v
+
 Base de Datos MySQL
+
 ```
 
 El frontend consumirá los servicios proporcionados por una API REST desarrollada con Spring Boot.
 
 ---
-
 # Propuesta de valor
-
 BiblioGest busca simplificar y centralizar tareas que actualmente se realizan mediante registros en papel y planillas de cálculo dentro de la biblioteca escolar tomada como referencia.
 
 La propuesta de valor no consiste solamente en digitalizar la información existente, sino en facilitar el acceso y la consulta de esa información. El bibliotecario podrá gestionar desde un mismo sistema los libros, ejemplares, usuarios, préstamos y devoluciones, reduciendo la necesidad de consultar diferentes registros para realizar las tareas habituales.
@@ -299,17 +324,14 @@ Al mismo tiempo, los lectores podrán consultar el catálogo, buscar libros y co
 De esta manera, BiblioGest busca aportar valor principalmente mediante la centralización de la información, la simplificación de las tareas de gestión y una mayor autonomía de los lectores para consultar los recursos disponibles en la biblioteca.
 
 ## Análisis de alternativas y diferenciación
-
 Como parte del análisis de la propuesta se investigaron alternativas que actualmente permiten realizar tareas relacionadas con la gestión de bibliotecas.
 
 ### Alternativa utilizada actualmente
-
 En la biblioteca escolar tomada como referencia, la gestión se realiza principalmente mediante registros impresos y una planilla de Excel utilizada para el catálogo.
 
 Este método permite realizar las tareas básicas, pero la información se encuentra distribuida en diferentes medios y las consultas dependen en gran medida de la intervención del bibliotecario.
 
 ### Sistemas existentes
-
 Se identificaron sistemas de gestión bibliotecaria que permiten resolver problemáticas similares.
 
 Uno de ellos es **DigiBepé**, sistema integrado de gestión bibliotecaria ofrecido por la Comisión Nacional de Bibliotecas Populares (CONABIP). Se trata de una adaptación del software Koha orientada a bibliotecas populares. Permite administrar el catálogo, los usuarios y la circulación de materiales, además de contar con herramientas para informes y otras tareas de gestión.
@@ -319,27 +341,30 @@ También se tomó como referencia **Koha**, un sistema de gestión bibliotecaria
 Estos sistemas poseen un alcance más amplio y están preparados para cubrir diferentes procesos propios de la gestión bibliotecaria.
 
 ### Diferenciación de BiblioGest
-
 BiblioGest no busca reemplazar ni competir por cantidad de funcionalidades con sistemas bibliotecarios de mayor escala. El proyecto se plantea como una aplicación de alcance acotado, desarrollada a partir de las necesidades observadas en una biblioteca escolar concreta.
 
 Los principales aspectos de diferenciación serán:
 
 - Centralización del catálogo, usuarios, ejemplares, préstamos y devoluciones en una única aplicación.
+
 - Acceso web al catálogo por parte de alumnos y docentes.
+
 - Consulta sencilla de la disponibilidad de los materiales.
+
 - Interfaz enfocada en las funciones necesarias para la biblioteca escolar tomada como referencia.
+
 - Separación de funciones mediante los roles Bibliotecario / Administrador y Lector.
+
 - Alcance limitado a las funcionalidades definidas para el MVP.
+
 - Desarrollo y validación tomando como referencia un caso real de uso.
 
 De esta manera, la principal diferencia de BiblioGest no estará en ofrecer una mayor cantidad de funcionalidades que los sistemas existentes, sino en desarrollar una solución sencilla y ajustada al problema concreto relevado por el equipo.
 
 ## Viabilidad del proyecto
-
 Para determinar si BiblioGest puede desarrollarse dentro del contexto del Trabajo Final Integrador, se analiza su viabilidad desde tres aspectos principales: técnico, operativo y temporal.
 
 ### Viabilidad técnica
-
 El proyecto se considera técnicamente viable debido a que el equipo utilizará tecnologías abordadas durante la carrera y herramientas sobre las que posee experiencia previa.
 
 El backend será desarrollado con Java y Spring Boot, el frontend con React y TypeScript y la información será almacenada en una base de datos relacional MySQL.
@@ -347,7 +372,6 @@ El backend será desarrollado con Java y Spring Boot, el frontend con React y Ty
 El alcance definido para el MVP no requiere inicialmente integraciones con sistemas externos ni infraestructura de alta complejidad, lo que permite concentrar el desarrollo en las funcionalidades principales del sistema.
 
 ### Viabilidad operativa
-
 BiblioGest responde a necesidades identificadas a partir del funcionamiento real de una biblioteca escolar tomada como referencia.
 
 Las funcionalidades propuestas buscan adaptarse a tareas que actualmente forman parte del trabajo cotidiano, como la consulta del catálogo, la búsqueda de materiales y el registro y seguimiento de préstamos y devoluciones.
@@ -355,7 +379,6 @@ Las funcionalidades propuestas buscan adaptarse a tareas que actualmente forman 
 La aplicación buscará ofrecer una interfaz sencilla que pueda ser utilizada tanto por el personal bibliotecario para las tareas administrativas como por los lectores para consultar los materiales disponibles.
 
 ### Viabilidad temporal
-
 El proyecto se considera viable dentro del período disponible para el Trabajo Final Integrador debido a que se definió un Producto Mínimo Viable con las funcionalidades esenciales.
 
 Las características de mayor complejidad o que no resultan indispensables para resolver la problemática inicial, como reservas, notificaciones automáticas, estadísticas avanzadas, recomendaciones e integraciones externas, fueron excluidas del MVP y podrán evaluarse como mejoras futuras.
@@ -363,71 +386,80 @@ Las características de mayor complejidad o que no resultan indispensables para 
 Esta delimitación permite priorizar el desarrollo de las funciones principales y disminuir el riesgo de que un alcance excesivo impida completar el proyecto dentro de los plazos establecidos.
 
 ## Riesgos y estrategias de mitigación
-
 Durante el desarrollo de BiblioGest pueden presentarse diferentes situaciones que afecten el avance del proyecto. Por este motivo, se identifican inicialmente los siguientes riesgos y posibles acciones para reducir su impacto.
 
 ### Alcance excesivo
-
 **Riesgo:** incorporar nuevas funcionalidades durante el desarrollo puede aumentar la complejidad del proyecto y dificultar el cumplimiento de los plazos establecidos.
 
 **Mitigación:** priorizar las funcionalidades definidas en el MVP y dejar las características adicionales para futuras versiones.
 
 ### Dificultades técnicas
-
 **Riesgo:** pueden surgir problemas durante la integración entre el frontend, el backend y la base de datos.
 
 **Mitigación:** desarrollar e integrar el sistema de manera progresiva, realizando pruebas durante cada etapa y utilizando principalmente tecnologías conocidas por el equipo.
 
 ### Errores o pérdida de información
-
 **Riesgo:** una incorrecta gestión de los datos podría producir inconsistencias en la información de libros, usuarios, ejemplares o préstamos.
 
 **Mitigación:** implementar validaciones, restricciones en la base de datos y pruebas sobre las principales operaciones del sistema.
 
 ### Organización del equipo
-
 **Riesgo:** una distribución poco clara de las tareas o retrasos individuales pueden afectar el avance general del proyecto.
 
 **Mitigación:** dividir el desarrollo en tareas concretas, utilizar GitHub para centralizar el trabajo y realizar un seguimiento periódico del progreso del equipo.
 
 ### Datos iniciales del catálogo
-
 **Riesgo:** la información proveniente de registros existentes puede contener datos incompletos, duplicados o con formatos diferentes al momento de incorporarla al sistema.
 
 **Mitigación:** revisar y normalizar los datos antes de incorporarlos a la base de datos de BiblioGest.
 
 ## Criterios de éxito
-
 Se considerará que el MVP de BiblioGest cumple con su propósito cuando las funcionalidades principales definidas para resolver la problemática puedan utilizarse correctamente.
 
 Los criterios de éxito iniciales serán:
 
 * El bibliotecario puede registrar, consultar y modificar la información de los libros del catálogo.
+
 * El bibliotecario puede registrar y administrar los ejemplares asociados a cada libro.
+
 * El bibliotecario puede registrar usuarios de la biblioteca.
+
 * El sistema permite registrar un préstamo únicamente cuando el ejemplar se encuentra disponible.
+
 * El sistema permite registrar la devolución de un ejemplar y actualizar nuevamente su disponibilidad.
+
 * El bibliotecario puede consultar los préstamos registrados y conocer qué usuario posee cada ejemplar prestado.
+
 * Los lectores pueden consultar el catálogo sin depender de la intervención directa del bibliotecario.
+
 * Los lectores pueden buscar libros por los criterios definidos en el sistema.
+
 * Los lectores pueden conocer si existen ejemplares disponibles de un determinado libro.
+
 * Los lectores pueden consultar los préstamos asociados a su propio usuario.
+
 * Los usuarios autenticados pueden acceder únicamente a las funcionalidades correspondientes a su rol.
+
 * La información principal de libros, usuarios, ejemplares y préstamos se encuentra centralizada en el sistema.
+
 * Las funcionalidades principales del MVP pueden utilizarse sin errores que impidan completar las operaciones previstas.
 
 ---
-
 # Entidades principales
-
-El modelo de datos inicial de BiblioGest está compuesto por las siguientes entidades principales:
+El diseño inicial de BiblioGest contempla las siguientes entidades principales (la implementación concreta puede representar algunos datos, como la editorial, mediante atributos en lugar de tablas independientes):
 
 - Usuario
+
 - Libro
+
 - Autor
+
 - Editorial
+
 - Categoría
+
 - Ejemplar
+
 - Préstamo
 
 Además, se utiliza la tabla intermedia `libro_autor` para representar la relación entre libros y autores.
@@ -435,139 +467,165 @@ Además, se utiliza la tabla intermedia `libro_autor` para representar la relaci
 La funcionalidad de reservas no forma parte del MVP y podrá evaluarse como una posible ampliación futura del sistema.
 
 ---
-
 # Plan de trabajo
-
 El desarrollo de BiblioGest se organizará de manera progresiva mediante etapas. La planificación temporal podrá ajustarse de acuerdo con las fechas académicas y el avance real del equipo, priorizando en todo momento las funcionalidades definidas para el MVP.
 
 La estimación inicial es la siguiente:
 
-| Etapa | Tiempo estimado | Entregable principal |
-|---|---|---|
-| 1. Definición y planificación | 1 semana | Problemática, objetivos, alcance, actores, stack y propuesta definidos |
-| 2. Diseño y arquitectura | 1 semana | Modelo de datos, diagrama entidad-relación y arquitectura general |
-| 3. Desarrollo del backend | 3 semanas | API REST funcional con acceso a datos, validaciones y seguridad |
-| 4. Desarrollo del frontend | 3 semanas | Interfaces principales e integración con la API |
-| 5. Integración y pruebas | 2 semanas | MVP integrado, probado y con correcciones realizadas |
-| 6. Despliegue | 1 semana | Aplicación disponible en un entorno de prueba o producción |
-| 7. Documentación y presentación | 1 semana | Documentación final, video y material para la defensa |
+\| Etapa | Tiempo estimado | Entregable principal |
+
+\|---|---|---|
+
+\| 1. Definición y planificación | 1 semana | Problemática, objetivos, alcance, actores, stack y propuesta definidos |
+
+\| 2. Diseño y arquitectura | 1 semana | Modelo de datos, diagrama entidad-relación y arquitectura general |
+
+\| 3. Desarrollo del backend | 3 semanas | API REST funcional con acceso a datos, validaciones y seguridad |
+
+\| 4. Desarrollo del frontend | 3 semanas | Interfaces principales e integración con la API |
+
+\| 5. Integración y pruebas | 2 semanas | MVP integrado, probado y con correcciones realizadas |
+
+\| 6. Despliegue | 1 semana | Aplicación disponible en un entorno de prueba o producción |
+
+\| 7. Documentación y presentación | 1 semana | Documentación final, video y material para la defensa |
 
 La planificación contempla aproximadamente 12 semanas de trabajo. Las etapas podrán superponerse parcialmente cuando resulte conveniente, especialmente durante el desarrollo del backend y frontend.
 
 ## Etapa 1 - Definición y planificación
-
 * Definición de la problemática.
+
 * Definición del alcance.
+
 * Selección del stack tecnológico.
+
 * Creación del repositorio único.
+
 * Elaboración de la propuesta.
 
 ## Etapa 2 - Diseño y arquitectura
-
 * Diseño de la base de datos.
+
 * Elaboración del diagrama entidad-relación.
+
 * Definición de entidades y relaciones.
+
 * Definición de módulos.
+
 * Diseño general de la arquitectura.
 
 ## Etapa 3 - Backend
-
 * Configuración de Spring Boot.
+
 * Conexión con la base de datos.
+
 * Desarrollo de entidades.
+
 * Desarrollo de repositorios.
+
 * Desarrollo de servicios.
+
 * Desarrollo de controladores REST.
+
 * Implementación de validaciones.
+
 * Implementación de autenticación y autorización.
 
 ## Etapa 4 - Frontend
-
 * Creación del proyecto con React y TypeScript.
+
 * Diseño de las interfaces.
+
 * Desarrollo del catálogo.
+
 * Desarrollo de pantallas administrativas.
+
 * Integración del frontend con la API REST.
 
 ## Etapa 5 - Integración y pruebas
-
 * Pruebas de endpoints.
+
 * Pruebas de funcionalidades.
+
 * Corrección de errores.
+
 * Validación de reglas de negocio.
 
 ## Etapa 6 - Despliegue
-
 * Configuración del entorno de producción.
+
 * Despliegue del frontend.
+
 * Despliegue del backend.
+
 * Configuración de la base de datos online.
 
 ## Etapa 7 - Documentación y presentación
-
 * Elaboración del informe final.
+
 * Actualización de documentación técnica.
+
 * Elaboración del video explicativo.
+
 * Preparación de la defensa oral.
 
 ---
-
 # Organización del repositorio
-
 El proyecto se organizará dentro de un único repositorio.
 
 ```text
+
 TRABAJO-FINAL---GRUPO-205/
+
 │
+
 ├── backend/
+
 │
+
 ├── frontend/
+
 │
+
 ├── database/
+
 │
+
 ├── docs/
+
 │
+
 └── README.md
+
 ```
 
 ### backend
-
 Contendrá la API REST desarrollada con Java y Spring Boot.
 
 ### frontend
-
 Contendrá la aplicación web desarrollada con React y TypeScript.
 
 ### database
-
 Contendrá scripts, modelos y documentación correspondiente a la base de datos.
 
 ### docs
-
 Contendrá diagramas, documentación técnica, informes y material relacionado con las diferentes entregas.
 
 ---
-
 # Estado del proyecto
+El proyecto superó la etapa de diseño y cuenta con una versión funcional integrada en entorno local. Se completaron el modelo de datos inicial, el Diagrama Entidad-Relación, el desarrollo de la API REST con Spring Boot, la conexión a MySQL, el frontend con React, el inicio de sesión por roles y las principales operaciones de gestión bibliotecaria.
 
-Actualmente el proyecto se encuentra en la etapa de diseño y arquitectura. Se completó el diseño inicial de la base de datos, el Diagrama Entidad-Relación, la definición de entidades y relaciones, el script inicial de creación de la base de datos y el listado de módulos principales del sistema.
-
-La siguiente etapa del proyecto estará orientada al desarrollo e implementación del backend y la conexión con la base de datos.
+Las próximas tareas son completar o validar los puntos del MVP aún pendientes, ampliar las pruebas, actualizar la documentación técnica y preparar el despliegue y la presentación final.
 
 ---
-
 ## Repositorio del proyecto
-
 Todo el desarrollo, documentación, base de datos, frontend y backend del Trabajo Final Integrador se mantendrá centralizado en este único repositorio de GitHub.
 
 ---
-
 # Diseño y módulos del sistema
-
 Como parte del diseño de BiblioGest se realizó el modelado inicial de la base de datos y se definieron los principales módulos que organizarán las funcionalidades del sistema.
 
 ## Diseño de la base de datos
-
 Se definió un modelo de base de datos relacional utilizando MySQL. El diseño contempla las entidades necesarias para representar libros, autores, editoriales, categorías, ejemplares, usuarios y préstamos.
 
 La documentación del modelo, sus relaciones, reglas de negocio y el Diagrama Entidad-Relación se encuentran en la carpeta:
@@ -575,17 +633,83 @@ La documentación del modelo, sus relaciones, reglas de negocio y el Diagrama En
 📁 [Base de datos de BiblioGest](database/README.md)
 
 ## Módulos del sistema
-
 Se definieron los módulos principales que permitirán organizar las funcionalidades de BiblioGest y dividir el desarrollo según las responsabilidades de cada parte del sistema.
 
 La descripción de los módulos se encuentra en:
 
 📄 [Módulos de BiblioGest](docs/modulos.md)
 
-## Estado actual del diseño
-
+## Estado del diseño
 - Diseño inicial de la base de datos: completado.
+
 - Diagrama Entidad-Relación (DER): completado.
+
 - Definición de entidades y relaciones: completada.
+
 - Reglas de negocio iniciales: definidas.
+
 - Listado de módulos del sistema: completado.
+
+---
+
+# Ejecución local
+
+## Requisitos
+
+- Java 17 y Maven (o el wrapper de Maven si está incluido en el backend).
+- MySQL en funcionamiento y una base de datos local para BiblioGest.
+- Node.js y npm.
+- IntelliJ IDEA o un editor compatible para el backend; Visual Studio Code para el frontend.
+
+## Backend
+
+1. Abrir la carpeta `backend` en IntelliJ IDEA.
+2. Configurar la conexión a MySQL según los valores del archivo de configuración de Spring Boot. La contraseña de la base de datos debe mantenerse fuera del repositorio; en el entorno de desarrollo se utiliza una variable de entorno como `DB_PASSWORD`.
+3. Ejecutar la aplicación Spring Boot desde IntelliJ IDEA. La API se utiliza localmente en `http://localhost:8080`.
+
+> No publicar contraseñas reales, credenciales de usuarios ni archivos `.env` con secretos en GitHub.
+
+## Frontend
+
+Desde una terminal ubicada en `frontend`:
+
+```powershell
+npm install
+npm run dev
+```
+
+Abrir la URL local indicada por Vite, habitualmente `http://localhost:5173` o `http://localhost:5174`.
+
+Para comprobar la compilación:
+
+```powershell
+npm run build
+```
+
+## Roles y permisos
+
+| Acceso | Funciones verificadas |
+| --- | --- |
+| Visitante | Consultar y buscar libros en el catálogo público |
+| Lector autenticado | Consultar el catálogo sin acceso a operaciones administrativas |
+| Bibliotecario autenticado | Gestionar libros, ejemplares, lectores, préstamos y devoluciones |
+
+La autenticación de la API utiliza HTTP Basic con contraseñas almacenadas mediante BCrypt. La autorización se comprueba en el backend, no solamente ocultando botones en el frontend. **Para un despliegue público será necesario utilizar HTTPS y revisar el mecanismo de autenticación y la configuración de producción.**
+
+## Pruebas manuales de integración
+
+En el entorno local se verificaron estas operaciones:
+
+1. Registrar un libro.
+2. Registrar un ejemplar asociado al libro.
+3. Registrar un lector.
+4. Editar los datos del lector.
+5. Registrar un préstamo y descontar la disponibilidad.
+6. Registrar la devolución y recuperar la disponibilidad.
+7. Desactivar al lector mediante baja lógica.
+
+También se comprobó la visualización diferenciada de menús para visitantes, lectores y bibliotecarios, y el historial de navegación de React Router.
+
+## Repositorio
+
+[GitHub - TRABAJO-FINAL---GRUPO-205](https://github.com/LuMendez7/TRABAJO-FINAL---GRUPO-205)
