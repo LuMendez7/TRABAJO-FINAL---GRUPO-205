@@ -112,6 +112,8 @@ interface Prestamo {
 
     fechaDevolucionReal: string | null
 
+    vencido: boolean
+
     estado: string
 
     usuario: Usuario
@@ -242,6 +244,7 @@ function AppContenido() {
     const [usuarios, setUsuarios] = useState<Usuario[]>([])
 
     const [prestamos, setPrestamos] = useState<Prestamo[]>([])
+    const [filtroPrestamos, setFiltroPrestamos] = useState<'TODOS' | 'ACTIVOS' | 'VENCIDOS' | 'DEVUELTOS'>('TODOS')
     const [misPrestamos, setMisPrestamos] = useState<Prestamo[]>([])
     const [cargandoMisPrestamos, setCargandoMisPrestamos] = useState(false)
     const [errorMisPrestamos, setErrorMisPrestamos] = useState('')
@@ -587,6 +590,7 @@ function AppContenido() {
                             <p><strong>Devolución prevista:</strong> {prestamo.fechaDevolucionPrevista}</p>
                             <p><strong>Devolución real:</strong> {prestamo.fechaDevolucionReal ?? 'Pendiente'}</p>
                             <p><strong>Estado:</strong> <span className={prestamo.estado === 'DEVUELTO' ? 'estado-devuelto' : 'estado-activo'}>{prestamo.estado}</span></p>
+                            {prestamo.vencido && <p className="mensaje-error" role="status">Vencido</p>}
                         </article>
                     ))}
                 </div>
@@ -2859,6 +2863,14 @@ function AppContenido() {
 
 
 
+            <label htmlFor="filtro-prestamos">Filtrar prÃ©stamos</label>
+            <select id="filtro-prestamos" value={filtroPrestamos} onChange={(evento) => setFiltroPrestamos(evento.target.value as typeof filtroPrestamos)}>
+                <option value="TODOS">Todos</option>
+                <option value="ACTIVOS">Activos</option>
+                <option value="VENCIDOS">Vencidos</option>
+                <option value="DEVUELTOS">Devueltos</option>
+            </select>
+
             {prestamos.length === 0 ? (
 
                 <p>No hay préstamos registrados.</p>
@@ -2867,7 +2879,12 @@ function AppContenido() {
 
                 <div className="tarjetas">
 
-                    {prestamos.map((prestamo) => (
+                    {prestamos.filter((prestamo) => {
+                        if (filtroPrestamos === 'ACTIVOS') return prestamo.estado === 'ACTIVO'
+                        if (filtroPrestamos === 'VENCIDOS') return prestamo.estado === 'ACTIVO' && prestamo.fechaDevolucionReal === null && prestamo.vencido
+                        if (filtroPrestamos === 'DEVUELTOS') return prestamo.estado === 'DEVUELTO'
+                        return true
+                    }).map((prestamo) => (
 
                         <article className="tarjeta" key={prestamo.idPrestamo}>
 
@@ -2923,6 +2940,7 @@ function AppContenido() {
 
                             </p>
 
+                            {prestamo.vencido && <p className="mensaje-error" role="status">Vencido</p>}
                             {prestamo.estado === 'ACTIVO' && (
 
                                 <button
