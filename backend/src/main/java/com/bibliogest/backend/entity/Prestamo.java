@@ -1,11 +1,13 @@
 package com.bibliogest.backend.entity;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 
 @Entity
 @Table(name = "prestamo")
@@ -38,4 +40,13 @@ public class Prestamo {
 
     @Column(nullable = false, length = 30)
     private String estado;
+
+    @Transient
+    @JsonProperty("vencido")
+    public boolean isVencido() {
+        return fechaDevolucionReal == null
+                && fechaDevolucionPrevista != null
+                && fechaDevolucionPrevista.isBefore(
+                        LocalDate.now(ZoneId.of("America/Argentina/Buenos_Aires")));
+    }
 }
