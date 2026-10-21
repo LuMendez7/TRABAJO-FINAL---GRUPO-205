@@ -1,5 +1,16 @@
 # Base de Datos - BiblioGest
 
+## Crear una base nueva
+
+Con MySQL disponible, ejecutar `database/schema.sql` con un usuario autorizado
+sobre una instancia de ensayo nueva. El script crea `bibliogest` y sus tablas,
+sin insertar cuentas ni contrasenas. Ejecutarlo **solo sobre una base vacia**;
+no aplicarlo a tablas con datos. Configurar el usuario de aplicacion indicado en
+`backend/src/main/resources/application.properties` y pasar su clave mediante
+`DB_PASSWORD`. El backend usa `ddl-auto=validate` y no sustituye al script.
+
+La creacion opcional del primer bibliotecario se describe en `backend/README.md`.
+
 ## Descripción
 
 BiblioGest utiliza **MySQL** para almacenar la información de la biblioteca escolar. La base de datos respalda la gestión de libros, autores, categorías, ejemplares, lectores y préstamos, así como las devoluciones y el control de acceso por roles.
