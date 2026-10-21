@@ -8,6 +8,8 @@ import { BrowserRouter, useLocation, useNavigate } from 'react-router-dom'
 
 import Login from './components/Login.tsx'
 
+import GestionAutoresCategorias from './components/GestionAutoresCategorias.tsx'
+
 import type { Sesion } from './components/Login.tsx'
 
 import './App.css'
@@ -33,6 +35,8 @@ interface Categoria {
     idCategoria: number
 
     nombre: string
+
+    descripcion?: string | null
 
 }
 
@@ -126,7 +130,18 @@ interface Prestamo {
 
 
 
-type Vista = 'inicio' | 'catalogo' | 'prestamos' | 'mis-prestamos' | 'usuarios' | 'login'
+type Vista = 'inicio' | 'catalogo' | 'prestamos' | 'mis-prestamos' | 'usuarios' | 'autores' | 'categorias' | 'login'
+
+const rutas: Record<Vista, string> = {
+    inicio: '/',
+    catalogo: '/catalogo',
+    prestamos: '/prestamos',
+    'mis-prestamos': '/mis-prestamos',
+    usuarios: '/usuarios',
+    autores: '/autores',
+    categorias: '/categorias',
+    login: '/login',
+}
 
 
 
@@ -136,14 +151,6 @@ function AppContenido() {
 
     const navigate = useNavigate()
     const location = useLocation()
-    const rutas: Record<Vista, string> = {
-        inicio: '/',
-        catalogo: '/catalogo',
-        prestamos: '/prestamos',
-        'mis-prestamos': '/mis-prestamos',
-        usuarios: '/usuarios',
-        login: '/login',
-    }
     const rutaActual = location.pathname.replace(/\/$/, '') || '/'
     const vista: Vista =
         (Object.entries(rutas).find(([, ruta]) => ruta === rutaActual)?.[0] as Vista | undefined)
@@ -165,7 +172,7 @@ function AppContenido() {
     // La URL identifica la pantalla. Las rutas administrativas se restringen por rol.
     useEffect(() => {
         if (rutaActual !== rutas[vista] ||
-            ((vista === 'prestamos' || vista === 'usuarios') && !esBibliotecario) ||
+            ((vista === 'prestamos' || vista === 'usuarios' || vista === 'autores' || vista === 'categorias') && !esBibliotecario) ||
             (vista === 'mis-prestamos' && !esLector) ||
             (vista === 'login' && sesion)) {
             navigate('/', { replace: true })
@@ -2844,6 +2851,10 @@ function AppContenido() {
 
                             </button>
 
+                            <button onClick={() => setVista('autores')}>Autores</button>
+
+                            <button onClick={() => setVista('categorias')}>Categorías</button>
+
                         </>
 
                     )}
@@ -2998,6 +3009,18 @@ function AppContenido() {
 
                                         </article>
 
+                                        <article className="tarjeta tarjeta-acceso" onClick={() => setVista('autores')}>
+                                            <span>✍️</span>
+                                            <h3>Autores</h3>
+                                            <p>Administrar autores del catálogo.</p>
+                                        </article>
+
+                                        <article className="tarjeta tarjeta-acceso" onClick={() => setVista('categorias')}>
+                                            <span>🏷️</span>
+                                            <h3>Categorías</h3>
+                                            <p>Administrar categorías del catálogo.</p>
+                                        </article>
+
 
 
                                         <article
@@ -3035,6 +3058,16 @@ function AppContenido() {
                 {!cargando && !error && esBibliotecario && vista === 'prestamos' && mostrarPrestamos()}
 
                 {!cargando && !error && esBibliotecario && vista === 'usuarios' && mostrarUsuarios()}
+
+                {!cargando && !error && esBibliotecario && vista === 'autores' && (
+                    <GestionAutoresCategorias tipo="autores" autorizacion={sesion.autorizacion}
+                        onAutoresActualizados={setAutores} onCategoriasActualizadas={setCategorias} />
+                )}
+
+                {!cargando && !error && esBibliotecario && vista === 'categorias' && (
+                    <GestionAutoresCategorias tipo="categorias" autorizacion={sesion.autorizacion}
+                        onAutoresActualizados={setAutores} onCategoriasActualizadas={setCategorias} />
+                )}
 
             </main>
 

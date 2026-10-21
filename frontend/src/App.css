@@ -123,6 +123,14 @@ button:focus-visible, input:focus-visible, select:focus-visible, .tarjeta-acceso
 .formulario-libro .boton-principal { align-self: flex-start; }
 .formulario-libro button:disabled { opacity: .55; cursor: not-allowed; }
 .mensaje-error { padding: 13px 16px; border: 1px solid #f6cbce; border-radius: 10px; background: #fff0f0; color: #9b2e3a; }
+.gestion-catalogo > .boton-principal { margin: 0 0 16px; }
+.tabla-contenedor { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: #fff; }
+.tabla-contenedor table { width: 100%; border-collapse: collapse; text-align: left; }
+.tabla-contenedor th, .tabla-contenedor td { padding: 12px 15px; border-bottom: 1px solid var(--border); }
+.tabla-contenedor th { color: var(--navy); background: #f5f8fc; font-size: .9rem; }
+.tabla-contenedor tr:last-child td { border-bottom: 0; }
+.tabla-contenedor td button { padding: 7px 12px; border: 1px solid #cbd9eb; border-radius: 8px; background: #fff; color: var(--navy); cursor: pointer; }
+.tabla-contenedor td button:hover:not(:disabled) { background: #edf4ff; }
 [role="status"] { color: #216849; font-weight: 600; }
 footer { text-align: center; padding: 15px 20px; background: #142e4d; color: #d9e4ee; font-size: .85rem; margin-top: auto; }
 footer p { margin: 0; }
