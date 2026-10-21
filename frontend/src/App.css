@@ -122,6 +122,16 @@ button:focus-visible, input:focus-visible, select:focus-visible, .tarjeta-acceso
 .formulario-libro input:focus, .formulario-libro select:focus { outline: none; border-color: #4b8ae5; box-shadow: 0 0 0 4px rgba(65,133,226,.13); }
 .formulario-libro .boton-principal { align-self: flex-start; }
 .formulario-libro button:disabled { opacity: .55; cursor: not-allowed; }
+.seleccion-autores { border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+.seleccion-autores legend { color: #35506d; font-weight: 650; }
+.seleccion-autores label { display: flex; align-items: center; gap: 9px; margin: 7px 0; }
+.seleccion-autores input { width: auto; }
+.acciones-libro { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 14px; }
+.acciones-libro button { padding: 8px 12px; border: 1px solid #cbd9eb; border-radius: 8px; background: #fff; color: var(--navy); cursor: pointer; }
+.acciones-libro button:disabled { opacity: .55; cursor: not-allowed; }
+.confirmacion-libro { width: 100%; }
+.confirmacion-libro p { color: #9b2e3a; }
+.confirmacion-libro button { margin: 0 8px 0 0; }
 .mensaje-error { padding: 13px 16px; border: 1px solid #f6cbce; border-radius: 10px; background: #fff0f0; color: #9b2e3a; }
 .gestion-catalogo > .boton-principal { margin: 0 0 16px; }
 .tabla-contenedor { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: #fff; }

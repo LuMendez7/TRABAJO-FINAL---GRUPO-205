@@ -6,7 +6,11 @@ import com.bibliogest.backend.entity.Libro;
 import com.bibliogest.backend.exception.ApiException;
 import com.bibliogest.backend.repository.AutorRepository;
 import com.bibliogest.backend.repository.CategoriaRepository;
+import com.bibliogest.backend.repository.EjemplarRepository;
 import com.bibliogest.backend.repository.LibroRepository;
+import com.bibliogest.backend.repository.PrestamoRepository;
+import jakarta.persistence.LockTimeoutException;
+import org.springframework.dao.PessimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,13 +27,19 @@ public class LibroService {
     private final LibroRepository libroRepository;
     private final CategoriaRepository categoriaRepository;
     private final AutorRepository autorRepository;
+    private final EjemplarRepository ejemplarRepository;
+    private final PrestamoRepository prestamoRepository;
 
     public LibroService(LibroRepository libroRepository,
                         CategoriaRepository categoriaRepository,
-                        AutorRepository autorRepository) {
+                        AutorRepository autorRepository,
+                        EjemplarRepository ejemplarRepository,
+                        PrestamoRepository prestamoRepository) {
         this.libroRepository = libroRepository;
         this.categoriaRepository = categoriaRepository;
         this.autorRepository = autorRepository;
+        this.ejemplarRepository = ejemplarRepository;
+        this.prestamoRepository = prestamoRepository;
     }
 
     public List<Libro> listar() {
@@ -45,30 +55,55 @@ public class LibroService {
     @Transactional
     public Libro crear(Libro datos) {
         Campos campos = validar(datos);
+        if (datos.isActivoEnviado() && !Boolean.TRUE.equals(datos.getActivo())) {
+            throw ApiException.validacion("El libro debe crearse activo", "activo");
+        }
         Libro nuevo = new Libro();
         aplicar(nuevo, campos);
-        if (datos.getActivo() != null) {
-            nuevo.setActivo(datos.getActivo());
-        }
         return libroRepository.saveAndFlush(nuevo);
     }
 
     @Transactional
     public Libro actualizar(Long id, Libro datos) {
         Libro libro = buscarPorId(id);
+        if (datos == null) {
+            throw ApiException.validacion("Faltan datos del libro", null);
+        }
+        if (datos.isActivoEnviado()) {
+            if (datos.getActivo() == null || !datos.getActivo().equals(libro.getActivo())) {
+                throw ApiException.validacion("El estado activo no se modifica aqui", "activo");
+            }
+        }
         Campos campos = validar(datos);
         aplicar(libro, campos);
-        if (datos.getActivo() != null) {
-            libro.setActivo(datos.getActivo());
-        }
         return libroRepository.saveAndFlush(libro);
     }
 
     @Transactional
     public void eliminar(Long id) {
-        Libro libro = buscarPorId(id);
-        libroRepository.delete(libro);
-        libroRepository.flush();
+        Libro libro;
+        try {
+            libro = libroRepository.findByIdForUpdate(id)
+                    .orElseThrow(() -> ApiException.noEncontrado("Libro no encontrado"));
+        } catch (PessimisticLockingFailureException | LockTimeoutException ex) {
+            throw ApiException.conflicto("Libro ocupado", "libro");
+        }
+        if (!Boolean.TRUE.equals(libro.getActivo())) {
+            throw ApiException.conflicto("El libro ya esta inactivo", "activo");
+        }
+        // Comparte el orden de bloqueo por ejemplar con altas y devoluciones de prestamos.
+        for (Long idEjemplar : libroRepository.findEjemplarIdsByLibroId(id)) {
+            try {
+                ejemplarRepository.findByIdForUpdate(idEjemplar);
+            } catch (PessimisticLockingFailureException | LockTimeoutException ex) {
+                throw ApiException.conflicto("Ejemplar ocupado", "libro");
+            }
+            if (prestamoRepository.existsByEjemplar_IdEjemplarAndFechaDevolucionRealIsNull(idEjemplar)) {
+                throw ApiException.conflicto("El libro tiene un prestamo abierto", "libro");
+            }
+        }
+        libro.setActivo(false);
+        libroRepository.saveAndFlush(libro);
     }
 
     public List<Libro> listarActivos() {

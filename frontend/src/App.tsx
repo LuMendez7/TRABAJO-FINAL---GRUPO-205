@@ -143,6 +143,10 @@ const rutas: Record<Vista, string> = {
     login: '/login',
 }
 
+const libroVacio = {
+    titulo: '', isbn: '', editorial: '', anioPublicacion: '', idCategoria: '', idsAutores: [] as string[],
+}
+
 
 
 
@@ -311,23 +315,17 @@ function AppContenido() {
 
     const [mensajeLibro, setMensajeLibro] = useState('')
 
+    const [errorLibro, setErrorLibro] = useState('')
+
+    const [libroEditando, setLibroEditando] = useState<number | null>(null)
+
+    const [confirmandoDesactivacion, setConfirmandoDesactivacion] = useState<number | null>(null)
+
+    const [desactivandoLibro, setDesactivandoLibro] = useState(false)
 
 
-    const [nuevoLibro, setNuevoLibro] = useState({
 
-        titulo: '',
-
-        isbn: '',
-
-        editorial: '',
-
-        anioPublicacion: '',
-
-        idCategoria: '',
-
-        idAutor: '',
-
-    })
+    const [nuevoLibro, setNuevoLibro] = useState(libroVacio)
 
 
 
@@ -575,6 +573,63 @@ function AppContenido() {
         </section>
     )
 
+    const recargarCatalogo = async () => {
+        const [respuestaLibros, respuestaEjemplares] = await Promise.all([
+            fetch('http://localhost:8080/api/libros/activos'),
+            fetch('http://localhost:8080/api/ejemplares/activos'),
+        ])
+        if (!respuestaLibros.ok || !respuestaEjemplares.ok) {
+            throw new Error('La operación se completó, pero no se pudo actualizar el catálogo.')
+        }
+        setLibros(await respuestaLibros.json() as Libro[])
+        setEjemplares(await respuestaEjemplares.json() as Ejemplar[])
+    }
+
+    const iniciarEdicionLibro = (libro: Libro) => {
+        setLibroEditando(libro.idLibro)
+        setNuevoLibro({
+            titulo: libro.titulo,
+            isbn: libro.isbn || '',
+            editorial: libro.editorial || '',
+            anioPublicacion: libro.anioPublicacion?.toString() || '',
+            idCategoria: libro.categoria.idCategoria.toString(),
+            idsAutores: libro.autores.map((autor) => autor.idAutor.toString()),
+        })
+        setErrorLibro('')
+        setMensajeLibro('')
+        setMostrarFormulario(true)
+    }
+
+    const desactivarLibro = async (idLibro: number) => {
+        if (desactivandoLibro) return
+        setDesactivandoLibro(true)
+        setErrorLibro('')
+        setMensajeLibro('')
+        try {
+            const respuesta = await fetch(`http://localhost:8080/api/libros/${idLibro}`, {
+                method: 'DELETE',
+                headers: { Authorization: sesion?.autorizacion ?? '' },
+            })
+            if (!respuesta.ok) {
+                let detalle = ''
+                try { detalle = (await respuesta.json() as { mensaje?: string }).mensaje || '' } catch { /* sin cuerpo */ }
+                throw new Error(detalle || `No se pudo desactivar el libro (HTTP ${respuesta.status}).`)
+            }
+            setConfirmandoDesactivacion(null)
+            if (libroEditando === idLibro) {
+                setMostrarFormulario(false)
+                setLibroEditando(null)
+                setNuevoLibro(libroVacio)
+            }
+            setMensajeLibro('Libro desactivado correctamente.')
+            await recargarCatalogo()
+        } catch (error) {
+            setErrorLibro(error instanceof Error ? error.message : 'No se pudo conectar con el servidor.')
+        } finally {
+            setDesactivandoLibro(false)
+        }
+    }
+
     const guardarLibro = async (e: FormEvent<HTMLFormElement>) => {
 
         e.preventDefault()
@@ -583,11 +638,25 @@ function AppContenido() {
 
         if (guardandoLibro) return
 
+        const anio = nuevoLibro.anioPublicacion ? Number(nuevoLibro.anioPublicacion) : null
+        const anioActual = Number(new Intl.DateTimeFormat('en-US', {
+            year: 'numeric', timeZone: 'America/Argentina/Buenos_Aires',
+        }).format(new Date()))
+        if (!nuevoLibro.titulo.trim() || nuevoLibro.titulo.trim().length > 200
+            || nuevoLibro.isbn.trim().length > 20 || nuevoLibro.editorial.trim().length > 150
+            || !nuevoLibro.idCategoria || nuevoLibro.idsAutores.length === 0
+            || (anio !== null && (!Number.isInteger(anio) || anio < 1450 || anio > anioActual))) {
+            setErrorLibro('Revisá título, categoría, autores y año de publicación (1450 hasta el año actual).')
+            return
+        }
+
 
 
         setGuardandoLibro(true)
 
         setMensajeLibro('')
+
+        setErrorLibro('')
 
 
 
@@ -607,31 +676,23 @@ function AppContenido() {
 
                     : null,
 
-                activo: true,
-
                 categoria: {
 
                     idCategoria: Number(nuevoLibro.idCategoria),
 
                 },
 
-                autores: [
-
-                    {
-
-                        idAutor: Number(nuevoLibro.idAutor),
-
-                    },
-
-                ],
+                autores: nuevoLibro.idsAutores.map((idAutor) => ({ idAutor: Number(idAutor) })),
 
             }
 
 
 
-            const respuesta = await fetch('http://localhost:8080/api/libros', {
+            const respuesta = await fetch(libroEditando === null
+                ? 'http://localhost:8080/api/libros'
+                : `http://localhost:8080/api/libros/${libroEditando}`, {
 
-                method: 'POST',
+                method: libroEditando === null ? 'POST' : 'PUT',
 
                 headers: {
 
@@ -648,50 +709,17 @@ function AppContenido() {
 
 
             if (!respuesta.ok) {
-
-                throw new Error('No se pudo guardar el libro')
-
-            }
-
-
-
-            const respuestaLibros = await fetch(
-
-                'http://localhost:8080/api/libros/activos'
-
-            )
-
-
-
-            if (!respuestaLibros.ok) {
-
-                throw new Error('El libro se guardó, pero no se pudo actualizar el catálogo')
+                let detalle = ''
+                try { detalle = (await respuesta.json() as { mensaje?: string }).mensaje || '' } catch { /* sin cuerpo */ }
+                throw new Error(detalle || `No se pudo guardar el libro (HTTP ${respuesta.status}).`)
 
             }
 
 
 
-            const librosActualizados: Libro[] = await respuestaLibros.json()
+            setNuevoLibro(libroVacio)
 
-            setLibros(librosActualizados)
-
-
-
-            setNuevoLibro({
-
-                titulo: '',
-
-                isbn: '',
-
-                editorial: '',
-
-                anioPublicacion: '',
-
-                idCategoria: '',
-
-                idAutor: '',
-
-            })
+            setLibroEditando(null)
 
 
 
@@ -699,11 +727,13 @@ function AppContenido() {
 
             setMostrarFormulario(false)
 
-            setMensajeLibro('Libro registrado correctamente.')
+            setMensajeLibro(libroEditando === null ? 'Libro registrado correctamente.' : 'Libro actualizado correctamente.')
+
+            await recargarCatalogo()
 
         } catch (error) {
 
-            setMensajeLibro(
+            setErrorLibro(
 
                 error instanceof Error ? error.message : 'Ocurrió un error.'
 
@@ -894,7 +924,13 @@ function AppContenido() {
 
                         setMostrarFormulario(!mostrarFormulario)
 
+                        setLibroEditando(null)
+
+                        setNuevoLibro(libroVacio)
+
                         setMensajeLibro('')
+
+                        setErrorLibro('')
 
                     }}
 
@@ -1033,13 +1069,15 @@ function AppContenido() {
 
             {mensajeLibro && <p role="status">{mensajeLibro}</p>}
 
+            {errorLibro && <p className="mensaje-error" role="alert">{errorLibro}</p>}
+
             <div className="buscador">
 
                 {esBibliotecario && mostrarFormulario && (
 
                     <form className="formulario-libro" onSubmit={guardarLibro}>
 
-                        <h3>Registrar nuevo libro</h3>
+                        <h3>{libroEditando === null ? 'Registrar nuevo libro' : 'Editar libro'}</h3>
 
 
 
@@ -1119,9 +1157,11 @@ function AppContenido() {
 
                             type="number"
 
-                            min="1"
+                            min="1450"
 
-                            max="2100"
+                            max={new Intl.DateTimeFormat('en-US', {
+                                year: 'numeric', timeZone: 'America/Argentina/Buenos_Aires',
+                            }).format(new Date())}
 
                             value={nuevoLibro.anioPublicacion}
 
@@ -1175,37 +1215,22 @@ function AppContenido() {
 
 
 
-                        <label htmlFor="autor">Autor *</label>
-
-                        <select
-
-                            id="autor"
-
-                            required
-
-                            value={nuevoLibro.idAutor}
-
-                            onChange={(e) =>
-
-                                setNuevoLibro({ ...nuevoLibro, idAutor: e.target.value })
-
-                            }
-
-                        >
-
-                            <option value="">Seleccionar autor</option>
-
-                            {autores.map((autor) => (
-
-                                <option key={autor.idAutor} value={autor.idAutor}>
-
+                        <fieldset className="seleccion-autores">
+                            <legend>Autores * (seleccioná al menos uno)</legend>
+                            {autores.map((autor) => {
+                                const id = autor.idAutor.toString()
+                                return <label htmlFor={`autor-${id}`} key={id}>
+                                    <input id={`autor-${id}`} type="checkbox" checked={nuevoLibro.idsAutores.includes(id)}
+                                        onChange={(e) => setNuevoLibro({
+                                            ...nuevoLibro,
+                                            idsAutores: e.target.checked
+                                                ? [...nuevoLibro.idsAutores, id]
+                                                : nuevoLibro.idsAutores.filter((seleccionado) => seleccionado !== id),
+                                        })} />
                                     {autor.nombre} {autor.apellido}
-
-                                </option>
-
-                            ))}
-
-                        </select>
+                                </label>
+                            })}
+                        </fieldset>
 
 
 
@@ -1219,7 +1244,7 @@ function AppContenido() {
 
                         >
 
-                            {guardandoLibro ? 'Guardando...' : 'Guardar libro'}
+                            {guardandoLibro ? 'Guardando...' : libroEditando === null ? 'Guardar libro' : 'Guardar cambios'}
 
                         </button>
 
@@ -1326,6 +1351,25 @@ function AppContenido() {
                                 }
 
                             </p>
+
+                            {esBibliotecario && (
+                                <div className="acciones-libro">
+                                    <button type="button" onClick={() => iniciarEdicionLibro(libro)}
+                                        disabled={guardandoLibro || desactivandoLibro}>Editar libro</button>
+                                    {confirmandoDesactivacion === libro.idLibro ? (
+                                        <div className="confirmacion-libro">
+                                            <p>¿Desactivar este libro? Se conservarán sus ejemplares e historial.</p>
+                                            <button type="button" onClick={() => { void desactivarLibro(libro.idLibro) }}
+                                                disabled={desactivandoLibro}>Confirmar desactivación</button>
+                                            <button type="button" onClick={() => setConfirmandoDesactivacion(null)}
+                                                disabled={desactivandoLibro}>Cancelar</button>
+                                        </div>
+                                    ) : (
+                                        <button type="button" onClick={() => setConfirmandoDesactivacion(libro.idLibro)}
+                                            disabled={guardandoLibro || desactivandoLibro}>Desactivar libro</button>
+                                    )}
+                                </div>
+                            )}
 
                         </article>
 
