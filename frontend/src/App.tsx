@@ -2235,8 +2235,6 @@ function AppContenido() {
 
                 },
 
-                fechaPrestamo,
-
                 fechaDevolucionPrevista: nuevoPrestamo.fechaDevolucionPrevista,
 
             }
