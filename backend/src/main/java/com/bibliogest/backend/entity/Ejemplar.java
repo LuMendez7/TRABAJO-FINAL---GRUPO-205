@@ -26,6 +26,12 @@ public class Ejemplar {
     @Column(name = "codigo_inventario", nullable = false, unique = true, length = 50)
     private String codigoInventario;
 
+    @Column(length = 120)
+    private String ubicacion;
+
+    @Column(name = "estado_fisico", length = 20)
+    private String estadoFisico;
+
     @Column(nullable = false, length = 30)
     private String estado;
 

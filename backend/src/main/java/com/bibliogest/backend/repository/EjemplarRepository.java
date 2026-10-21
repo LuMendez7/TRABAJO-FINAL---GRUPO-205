@@ -14,6 +14,8 @@ public interface EjemplarRepository extends JpaRepository<Ejemplar, Long> {
 
     List<Ejemplar> findByActivoTrue();
 
+    List<Ejemplar> findByActivoTrueAndLibro_ActivoTrue();
+
     boolean existsByCodigoInventario(String codigoInventario);
 
     boolean existsByCodigoInventarioAndIdEjemplarNot(String codigoInventario, Long idEjemplar);

@@ -356,6 +356,8 @@ class CirculacionF02Tests {
         referenciaLibro.setIdLibro(libro.getIdLibro());
         datos.setLibro(referenciaLibro);
         datos.setCodigoInventario(ejemplar.getCodigoInventario());
+        datos.setUbicacion("Estante A");
+        datos.setEstadoFisico("BUENO");
         return datos;
     }
 

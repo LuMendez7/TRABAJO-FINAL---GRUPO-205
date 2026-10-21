@@ -11,6 +11,34 @@ no aplicarlo a tablas con datos. Configurar el usuario de aplicacion indicado en
 
 La creacion opcional del primer bibliotecario se describe en `backend/README.md`.
 
+### Datos físicos de ejemplares (F06)
+
+Para una base **nueva**, `schema.sql` ya incluye `ejemplar.ubicacion` y
+`ejemplar.estado_fisico`, ambas columnas anulables. El backend usa
+`ddl-auto=validate`; iniciar la aplicación no agrega columnas a una base existente.
+
+Para una instalación anterior, hacer un respaldo, detener la aplicación y comprobar
+si las columnas ya existen y cuántos ejemplares hay:
+
+```sql
+SHOW COLUMNS FROM ejemplar LIKE 'ubicacion';
+SHOW COLUMNS FROM ejemplar LIKE 'estado_fisico';
+SELECT COUNT(*) FROM ejemplar;
+```
+
+Si faltan **ambas** columnas, aplicar **una sola vez**
+`database/migrations/001_ejemplar_datos_fisicos.sql`. Si existe solo una,
+revisar el esquema manualmente antes de cambiarlo; el script no es repetible.
+Después, comprobar las dos columnas y el mismo `COUNT(*)`, y arrancar el backend
+para que `ddl-auto=validate` contraste el mapeo. La migración deja `NULL` en las
+filas anteriores; la interfaz muestra “Sin registrar”. No hay actualización
+masiva ni migración automática.
+
+El archivo fuente `BiblioGest-Modelo-MySQL.mwb` requiere una herramienta compatible
+para incorporar las dos columnas al diagrama. No se modificó el binario ni se
+alteró el DER `.drawio` sin verificar su presentación; este apartado documenta
+la diferencia pendiente entre esos diagramas y el esquema F06.
+
 ### Unicidad del correo en MySQL
 
 El proyecto no fija una version de MySQL para instalaciones existentes. Para

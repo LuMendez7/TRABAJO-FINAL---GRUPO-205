@@ -16,9 +16,12 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @Service
 public class EjemplarService {
+
+    private static final Set<String> ESTADOS_FISICOS = Set.of("BUENO", "REGULAR", "DANADO");
 
     private final EjemplarRepository ejemplarRepository;
     private final LibroRepository libroRepository;
@@ -58,9 +61,13 @@ public class EjemplarService {
         if (ejemplarRepository.existsByCodigoInventario(codigo)) {
             throw ApiException.conflicto("El codigo de inventario ya existe", "codigoInventario");
         }
+        String ubicacion = ValidacionEntrada.obligatorio(datos.getUbicacion(), "ubicacion", 120);
+        String estadoFisico = validarEstadoFisico(datos.getEstadoFisico());
         Ejemplar nuevo = new Ejemplar();
         nuevo.setLibro(libro);
         nuevo.setCodigoInventario(codigo);
+        nuevo.setUbicacion(ubicacion);
+        nuevo.setEstadoFisico(estadoFisico);
         nuevo.setEstado("DISPONIBLE");
         nuevo.setActivo(true);
         return ejemplarRepository.saveAndFlush(nuevo);
@@ -102,9 +109,13 @@ public class EjemplarService {
         if (ejemplarRepository.existsByCodigoInventarioAndIdEjemplarNot(codigo, id)) {
             throw ApiException.conflicto("El codigo de inventario ya existe", "codigoInventario");
         }
+        String ubicacion = ValidacionEntrada.obligatorio(datos.getUbicacion(), "ubicacion", 120);
+        String estadoFisico = validarEstadoFisico(datos.getEstadoFisico());
 
         ejemplar.setLibro(libro);
         ejemplar.setCodigoInventario(codigo);
+        ejemplar.setUbicacion(ubicacion);
+        ejemplar.setEstadoFisico(estadoFisico);
         return ejemplarRepository.saveAndFlush(ejemplar);
     }
 
@@ -125,7 +136,14 @@ public class EjemplarService {
     }
 
     public List<Ejemplar> listarActivos() {
-        return ejemplarRepository.findByActivoTrue();
+        return ejemplarRepository.findByActivoTrueAndLibro_ActivoTrue();
+    }
+
+    private String validarEstadoFisico(String valor) {
+        if (valor == null || !ESTADOS_FISICOS.contains(valor)) {
+            throw ApiException.validacion("El estado fisico debe ser BUENO, REGULAR o DANADO", "estadoFisico");
+        }
+        return valor;
     }
 
     private Ejemplar bloquearEjemplar(Long id) {
