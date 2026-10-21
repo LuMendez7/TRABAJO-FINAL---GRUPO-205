@@ -8,4 +8,8 @@ import java.util.List;
 public interface LibroRepository extends JpaRepository<Libro, Long> {
 
     List<Libro> findByActivoTrue();
+
+    boolean existsByCategoria_IdCategoria(Long idCategoria);
+
+    boolean existsByAutores_IdAutor(Long idAutor);
 }

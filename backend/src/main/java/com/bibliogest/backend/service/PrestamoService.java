@@ -44,7 +44,8 @@ public class PrestamoService {
 
     public Prestamo buscarPorId(Long id) {
         return prestamoRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Prestamo no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(
+                        HttpStatus.NOT_FOUND, "Prestamo no encontrado"));
     }
 
     @Transactional(readOnly = true)

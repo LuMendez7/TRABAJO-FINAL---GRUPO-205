@@ -2,6 +2,7 @@ package com.bibliogest.backend.service;
 
 import com.bibliogest.backend.entity.Ejemplar;
 import com.bibliogest.backend.entity.Libro;
+import com.bibliogest.backend.exception.ApiException;
 import com.bibliogest.backend.repository.EjemplarRepository;
 import com.bibliogest.backend.repository.LibroRepository;
 import com.bibliogest.backend.repository.PrestamoRepository;
@@ -37,15 +38,32 @@ public class EjemplarService {
 
     public Ejemplar buscarPorId(Long id) {
         return ejemplarRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Ejemplar no encontrado"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Ejemplar no encontrado"));
     }
 
-    public Ejemplar crear(Ejemplar ejemplar) {
-        Long idLibro = ejemplar.getLibro().getIdLibro();
+    @Transactional
+    public Ejemplar crear(Ejemplar datos) {
+        if (datos == null || datos.getLibro() == null) {
+            throw ApiException.validacion("El libro es obligatorio", "libro");
+        }
+        Long idLibro = ValidacionEntrada.id(datos.getLibro().getIdLibro(), "libro");
+        String codigo = ValidacionEntrada.obligatorio(datos.getCodigoInventario(),
+                "codigoInventario", 50);
         Libro libro = libroRepository.findById(idLibro)
-                .orElseThrow(() -> new RuntimeException("Libro no encontrado"));
-        ejemplar.setLibro(libro);
-        return ejemplarRepository.save(ejemplar);
+                .orElseThrow(() -> ApiException.noEncontrado("Libro no encontrado"));
+        if (!Boolean.TRUE.equals(libro.getActivo())) {
+            throw ApiException.conflicto("El libro esta inactivo", "libro");
+        }
+        if (ejemplarRepository.existsByCodigoInventario(codigo)) {
+            throw ApiException.conflicto("El codigo de inventario ya existe", "codigoInventario");
+        }
+        Ejemplar nuevo = new Ejemplar();
+        nuevo.setLibro(libro);
+        nuevo.setCodigoInventario(codigo);
+        nuevo.setEstado("DISPONIBLE");
+        nuevo.setActivo(true);
+        return ejemplarRepository.saveAndFlush(nuevo);
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
@@ -66,20 +84,28 @@ public class EjemplarService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
                     "El estado activo no se modifica aqui");
         }
-        if (datos.getLibro() == null || datos.getLibro().getIdLibro() == null) {
+        if (datos.getLibro() == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Falta el libro");
         }
 
-        Libro libro = libroRepository.findById(datos.getLibro().getIdLibro())
+        Long idLibro = ValidacionEntrada.id(datos.getLibro().getIdLibro(), "libro");
+        String codigo = ValidacionEntrada.obligatorio(datos.getCodigoInventario(),
+                "codigoInventario", 50);
+
+        Libro libro = libroRepository.findById(idLibro)
                 .orElseThrow(() -> new ResponseStatusException(
                         HttpStatus.NOT_FOUND, "Libro no encontrado"));
         if (!Boolean.TRUE.equals(libro.getActivo())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "El libro esta inactivo");
         }
 
+        if (ejemplarRepository.existsByCodigoInventarioAndIdEjemplarNot(codigo, id)) {
+            throw ApiException.conflicto("El codigo de inventario ya existe", "codigoInventario");
+        }
+
         ejemplar.setLibro(libro);
-        ejemplar.setCodigoInventario(datos.getCodigoInventario());
-        return ejemplarRepository.save(ejemplar);
+        ejemplar.setCodigoInventario(codigo);
+        return ejemplarRepository.saveAndFlush(ejemplar);
     }
 
     @Transactional(isolation = Isolation.READ_COMMITTED)

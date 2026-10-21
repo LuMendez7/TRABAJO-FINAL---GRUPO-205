@@ -11,6 +11,31 @@ no aplicarlo a tablas con datos. Configurar el usuario de aplicacion indicado en
 
 La creacion opcional del primer bibliotecario se describe en `backend/README.md`.
 
+### Unicidad del correo en MySQL
+
+El proyecto no fija una version de MySQL para instalaciones existentes. Para
+bases nuevas, `schema.sql` requiere MySQL 8 o superior: establece
+`utf8mb4_0900_ai_ci` **solo** en `usuario.email` y conserva su indice `UNIQUE`.
+Asi, la base rechaza correos que difieren solo en mayusculas/minusculas, incluso
+si dos altas concurrentes superan la comprobacion previa del backend.
+
+Antes de cualquier cambio en una base existente, hacer un respaldo y comprobar
+la version, la collation actual de `usuario.email` y los correos que resultarian
+duplicados bajo la collation nueva. Consultas de solo lectura en MySQL 8:
+
+```sql
+SELECT VERSION();
+SHOW FULL COLUMNS FROM usuario LIKE 'email';
+SELECT TRIM(email) COLLATE utf8mb4_0900_ai_ci AS email_equivalente,
+       COUNT(*) AS cantidad
+FROM usuario
+GROUP BY email_equivalente
+HAVING COUNT(*) > 1;
+```
+
+Revisar los resultados antes de planificar una migracion manual. Este repositorio
+no ejecuta cambios automaticos de collation ni modifica registros existentes.
+
 ## Descripción
 
 BiblioGest utiliza **MySQL** para almacenar la información de la biblioteca escolar. La base de datos respalda la gestión de libros, autores, categorías, ejemplares, lectores y préstamos, así como las devoluciones y el control de acceso por roles.
