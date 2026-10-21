@@ -132,6 +132,10 @@ button:focus-visible, input:focus-visible, select:focus-visible, .tarjeta-acceso
 .confirmacion-libro { width: 100%; }
 .confirmacion-libro p { color: #9b2e3a; }
 .confirmacion-libro button { margin: 0 8px 0 0; }
+.ejemplares-libro { margin-top: 16px; padding-top: 12px; border-top: 1px solid var(--border); }
+.ejemplares-libro h4 { margin: 0 0 10px; color: var(--navy); }
+.ejemplar-detalle { padding: 10px 0; border-top: 1px solid var(--border); }
+.ejemplar-detalle p { margin: 5px 0; }
 .mensaje-error { padding: 13px 16px; border: 1px solid #f6cbce; border-radius: 10px; background: #fff0f0; color: #9b2e3a; }
 .gestion-catalogo > .boton-principal { margin: 0 0 16px; }
 .tabla-contenedor { overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; background: #fff; }

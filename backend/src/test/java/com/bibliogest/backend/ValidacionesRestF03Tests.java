@@ -397,7 +397,8 @@ class ValidacionesRestF03Tests {
     }
 
     private String ejemplarJson(long libro, String codigo) {
-        return "{\"libro\":{\"idLibro\":" + libro + "},\"codigoInventario\":\"" + codigo + "\"}";
+        return "{\"libro\":{\"idLibro\":" + libro + "},\"codigoInventario\":\"" + codigo
+                + "\",\"ubicacion\":\"Estante A\",\"estadoFisico\":\"BUENO\"}";
     }
 
     private String usuarioJson(String nombre, String apellido, String email, String password) {

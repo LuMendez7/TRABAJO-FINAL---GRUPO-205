@@ -52,6 +52,8 @@ CREATE TABLE ejemplar (
     id_ejemplar BIGINT NOT NULL AUTO_INCREMENT,
     id_libro BIGINT NOT NULL,
     codigo_inventario VARCHAR(50) NOT NULL,
+    ubicacion VARCHAR(120) NULL,
+    estado_fisico VARCHAR(20) NULL,
     estado VARCHAR(30) NOT NULL,
     activo TINYINT(1) NOT NULL DEFAULT 1,
     PRIMARY KEY (id_ejemplar),

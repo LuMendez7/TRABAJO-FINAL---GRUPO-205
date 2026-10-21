@@ -70,6 +70,10 @@ interface Ejemplar {
 
     codigoInventario: string
 
+    ubicacion: string | null
+
+    estadoFisico: string | null
+
     estado: string
 
     activo: boolean
@@ -147,6 +151,16 @@ const libroVacio = {
     titulo: '', isbn: '', editorial: '', anioPublicacion: '', idCategoria: '', idsAutores: [] as string[],
 }
 
+const ejemplarVacio = { idLibro: '', codigoInventario: '', ubicacion: '', estadoFisico: '' }
+
+function obtenerEjemplares(sesion: Sesion | null) {
+    return sesion?.rol === 'BIBLIOTECARIO'
+        ? fetch('http://localhost:8080/api/ejemplares', {
+            headers: { Authorization: sesion.autorizacion },
+        })
+        : fetch('http://localhost:8080/api/ejemplares/activos')
+}
+
 
 
 
@@ -209,6 +223,11 @@ function AppContenido() {
 
         setMostrarFormulario(false)
         setMostrarFormularioEjemplar(false)
+        setEjemplarEditando(null)
+        setNuevoEjemplar(ejemplarVacio)
+        setConfirmandoDesactivacionEjemplar(null)
+        setMensajeEjemplar('')
+        setErrorEjemplar('')
         setMostrarFormularioUsuario(false)
         setMostrarFormularioPrestamo(false)
         setUsuarioEditando(null)
@@ -301,15 +320,17 @@ function AppContenido() {
 
     const [mensajeEjemplar, setMensajeEjemplar] = useState('')
 
+    const [errorEjemplar, setErrorEjemplar] = useState('')
+
+    const [ejemplarEditando, setEjemplarEditando] = useState<number | null>(null)
+
+    const [confirmandoDesactivacionEjemplar, setConfirmandoDesactivacionEjemplar] = useState<number | null>(null)
+
+    const [desactivandoEjemplar, setDesactivandoEjemplar] = useState(false)
 
 
-    const [nuevoEjemplar, setNuevoEjemplar] = useState({
 
-        idLibro: '',
-
-        codigoInventario: '',
-
-    })
+    const [nuevoEjemplar, setNuevoEjemplar] = useState(ejemplarVacio)
 
     const [guardandoLibro, setGuardandoLibro] = useState(false)
 
@@ -353,7 +374,7 @@ function AppContenido() {
 
                     fetch('http://localhost:8080/api/libros/activos'),
 
-                    fetch('http://localhost:8080/api/ejemplares/activos'),
+                    obtenerEjemplares(sesion),
 
                     fetch('http://localhost:8080/api/categorias'),
 
@@ -576,7 +597,7 @@ function AppContenido() {
     const recargarCatalogo = async () => {
         const [respuestaLibros, respuestaEjemplares] = await Promise.all([
             fetch('http://localhost:8080/api/libros/activos'),
-            fetch('http://localhost:8080/api/ejemplares/activos'),
+            obtenerEjemplares(sesion),
         ])
         if (!respuestaLibros.ok || !respuestaEjemplares.ok) {
             throw new Error('La operación se completó, pero no se pudo actualizar el catálogo.')
@@ -749,6 +770,49 @@ function AppContenido() {
 
 
 
+    const iniciarEdicionEjemplar = (ejemplar: Ejemplar) => {
+        setEjemplarEditando(ejemplar.idEjemplar)
+        setNuevoEjemplar({
+            idLibro: ejemplar.libro.idLibro.toString(),
+            codigoInventario: ejemplar.codigoInventario,
+            ubicacion: ejemplar.ubicacion || '',
+            estadoFisico: ejemplar.estadoFisico || '',
+        })
+        setMensajeEjemplar('')
+        setErrorEjemplar('')
+        setMostrarFormularioEjemplar(true)
+    }
+
+    const desactivarEjemplar = async (idEjemplar: number) => {
+        if (desactivandoEjemplar) return
+        setDesactivandoEjemplar(true)
+        setMensajeEjemplar('')
+        setErrorEjemplar('')
+        try {
+            const respuesta = await fetch(`http://localhost:8080/api/ejemplares/${idEjemplar}/desactivar`, {
+                method: 'PUT',
+                headers: { Authorization: sesion?.autorizacion ?? '' },
+            })
+            if (!respuesta.ok) {
+                let detalle = ''
+                try { detalle = (await respuesta.json() as { mensaje?: string }).mensaje || '' } catch { /* sin cuerpo */ }
+                throw new Error(detalle || `No se pudo desactivar el ejemplar (HTTP ${respuesta.status}).`)
+            }
+            setConfirmandoDesactivacionEjemplar(null)
+            if (ejemplarEditando === idEjemplar) {
+                setMostrarFormularioEjemplar(false)
+                setEjemplarEditando(null)
+                setNuevoEjemplar(ejemplarVacio)
+            }
+            setMensajeEjemplar('Ejemplar desactivado correctamente.')
+            await recargarCatalogo()
+        } catch (error) {
+            setErrorEjemplar(error instanceof Error ? error.message : 'No se pudo conectar con el servidor.')
+        } finally {
+            setDesactivandoEjemplar(false)
+        }
+    }
+
     const guardarEjemplar = async (e: FormEvent<HTMLFormElement>) => {
 
         e.preventDefault()
@@ -757,11 +821,22 @@ function AppContenido() {
 
         if (guardandoEjemplar) return
 
+        const ubicacion = nuevoEjemplar.ubicacion.trim()
+        const codigoInventario = nuevoEjemplar.codigoInventario.trim()
+        if (!nuevoEjemplar.idLibro || !codigoInventario || codigoInventario.length > 50
+            || !ubicacion || ubicacion.length > 120
+            || !['BUENO', 'REGULAR', 'DANADO'].includes(nuevoEjemplar.estadoFisico)) {
+            setErrorEjemplar('Completá libro, código, ubicación (hasta 120 caracteres) y estado físico válido.')
+            return
+        }
+
 
 
         setGuardandoEjemplar(true)
 
         setMensajeEjemplar('')
+
+        setErrorEjemplar('')
 
 
 
@@ -769,11 +844,11 @@ function AppContenido() {
 
             const datos = {
 
-                codigoInventario: nuevoEjemplar.codigoInventario.trim(),
+                codigoInventario,
 
-                estado: 'DISPONIBLE',
+                ubicacion,
 
-                activo: true,
+                estadoFisico: nuevoEjemplar.estadoFisico,
 
                 libro: {
 
@@ -785,9 +860,11 @@ function AppContenido() {
 
 
 
-            const respuesta = await fetch('http://localhost:8080/api/ejemplares', {
+            const respuesta = await fetch(ejemplarEditando === null
+                ? 'http://localhost:8080/api/ejemplares'
+                : `http://localhost:8080/api/ejemplares/${ejemplarEditando}`, {
 
-                method: 'POST',
+                method: ejemplarEditando === null ? 'POST' : 'PUT',
 
                 headers: {
 
@@ -804,60 +881,30 @@ function AppContenido() {
 
 
             if (!respuesta.ok) {
-
-                throw new Error('No se pudo guardar el ejemplar')
-
-            }
-
-
-
-            const respuestaEjemplares = await fetch(
-
-                'http://localhost:8080/api/ejemplares/activos'
-
-            )
-
-
-
-            if (!respuestaEjemplares.ok) {
-
-                throw new Error(
-
-                    'El ejemplar se guardó, pero no se pudo actualizar el catálogo'
-
-                )
+                let detalle = ''
+                try { detalle = (await respuesta.json() as { mensaje?: string }).mensaje || '' } catch { /* sin cuerpo */ }
+                throw new Error(detalle || `No se pudo guardar el ejemplar (HTTP ${respuesta.status}).`)
 
             }
 
 
 
-            const ejemplaresActualizados: Ejemplar[] =
+            setNuevoEjemplar(ejemplarVacio)
 
-                await respuestaEjemplares.json()
-
-
-
-            setEjemplares(ejemplaresActualizados)
-
-
-
-            setNuevoEjemplar({
-
-                idLibro: '',
-
-                codigoInventario: '',
-
-            })
+            setEjemplarEditando(null)
 
 
 
             setMostrarFormularioEjemplar(false)
 
-            setMensajeEjemplar('Ejemplar registrado correctamente.')
+            setMensajeEjemplar(ejemplarEditando === null
+                ? 'Ejemplar registrado correctamente.' : 'Ejemplar actualizado correctamente.')
+
+            await recargarCatalogo()
 
         } catch (error) {
 
-            setMensajeEjemplar(
+            setErrorEjemplar(
 
                 error instanceof Error ? error.message : 'Ocurrió un error.'
 
@@ -945,7 +992,7 @@ function AppContenido() {
 
                 <form className="formulario-libro" onSubmit={guardarEjemplar}>
 
-                    <h3>Registrar nuevo ejemplar</h3>
+                    <h3>{ejemplarEditando === null ? 'Registrar nuevo ejemplar' : 'Editar ejemplar'}</h3>
 
 
 
@@ -1013,13 +1060,29 @@ function AppContenido() {
 
                                 ...nuevoEjemplar,
 
-                                codigoInventario: e.target.value,
+                        codigoInventario: e.target.value,
 
                             })
 
                         }
 
                     />
+
+                    <label htmlFor="ubicacion-ejemplar">Ubicación *</label>
+
+                    <input id="ubicacion-ejemplar" type="text" required maxLength={120}
+                        value={nuevoEjemplar.ubicacion}
+                        onChange={(e) => setNuevoEjemplar({ ...nuevoEjemplar, ubicacion: e.target.value })} />
+
+                    <label htmlFor="estado-fisico-ejemplar">Estado físico *</label>
+
+                    <select id="estado-fisico-ejemplar" required value={nuevoEjemplar.estadoFisico}
+                        onChange={(e) => setNuevoEjemplar({ ...nuevoEjemplar, estadoFisico: e.target.value })}>
+                        <option value="" disabled hidden>Seleccionar estado físico</option>
+                        <option value="BUENO">Bueno</option>
+                        <option value="REGULAR">Regular</option>
+                        <option value="DANADO">Dañado</option>
+                    </select>
 
 
 
@@ -1033,7 +1096,8 @@ function AppContenido() {
 
                     >
 
-                        {guardandoEjemplar ? 'Guardando...' : 'Guardar ejemplar'}
+                        {guardandoEjemplar ? 'Guardando...' : ejemplarEditando === null
+                            ? 'Guardar ejemplar' : 'Guardar cambios'}
 
                     </button>
 
@@ -1050,7 +1114,13 @@ function AppContenido() {
 
                         setMostrarFormularioEjemplar(!mostrarFormularioEjemplar)
 
+                        setEjemplarEditando(null)
+
+                        setNuevoEjemplar(ejemplarVacio)
+
                         setMensajeEjemplar('')
+
+                        setErrorEjemplar('')
 
                     }}
 
@@ -1064,6 +1134,8 @@ function AppContenido() {
 
 
             {mensajeEjemplar && <p role="status">{mensajeEjemplar}</p>}
+
+            {errorEjemplar && <p className="mensaje-error" role="alert">{errorEjemplar}</p>}
 
 
 
@@ -1344,6 +1416,10 @@ function AppContenido() {
 
                                             ejemplar.libro.idLibro === libro.idLibro &&
 
+                                            ejemplar.activo === true &&
+
+                                            libro.activo === true &&
+
                                             ejemplar.estado === 'DISPONIBLE'
 
                                     ).length
@@ -1368,6 +1444,42 @@ function AppContenido() {
                                         <button type="button" onClick={() => setConfirmandoDesactivacion(libro.idLibro)}
                                             disabled={guardandoLibro || desactivandoLibro}>Desactivar libro</button>
                                     )}
+                                </div>
+                            )}
+
+                            {esBibliotecario && (
+                                <div className="ejemplares-libro">
+                                    <h4>Ejemplares</h4>
+                                    {ejemplares.filter((ejemplar) => ejemplar.libro.idLibro === libro.idLibro)
+                                        .map((ejemplar) => {
+                                            const prestado = prestamos.some((prestamo) =>
+                                                prestamo.ejemplar.idEjemplar === ejemplar.idEjemplar
+                                                && prestamo.fechaDevolucionReal === null)
+                                            return <div className="ejemplar-detalle" key={ejemplar.idEjemplar}>
+                                                <p><strong>ID:</strong> {ejemplar.idEjemplar} · <strong>Código:</strong> {ejemplar.codigoInventario}</p>
+                                                <p><strong>Ubicación:</strong> {ejemplar.ubicacion || 'Sin registrar'}</p>
+                                                <p><strong>Estado físico:</strong> {ejemplar.estadoFisico || 'Sin registrar'}</p>
+                                                <p><strong>Circulación:</strong> {ejemplar.estado} · {ejemplar.activo ? 'Activo' : 'Inactivo'}</p>
+                                                <div className="acciones-libro">
+                                                    <button type="button" onClick={() => iniciarEdicionEjemplar(ejemplar)}
+                                                        disabled={prestado || guardandoEjemplar || desactivandoEjemplar}>Editar ejemplar</button>
+                                                    {ejemplar.activo && (confirmandoDesactivacionEjemplar === ejemplar.idEjemplar ? (
+                                                        <div className="confirmacion-libro">
+                                                            <p>¿Desactivar este ejemplar? Se conservará su historial.</p>
+                                                            <button type="button" onClick={() => { void desactivarEjemplar(ejemplar.idEjemplar) }}
+                                                                disabled={prestado || desactivandoEjemplar}>Confirmar desactivación</button>
+                                                            <button type="button" onClick={() => setConfirmandoDesactivacionEjemplar(null)}
+                                                                disabled={desactivandoEjemplar}>Cancelar</button>
+                                                        </div>
+                                                    ) : (
+                                                        <button type="button" onClick={() => setConfirmandoDesactivacionEjemplar(ejemplar.idEjemplar)}
+                                                            disabled={prestado || guardandoEjemplar || desactivandoEjemplar}>Desactivar ejemplar</button>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        })}
+                                    {ejemplares.every((ejemplar) => ejemplar.libro.idLibro !== libro.idLibro)
+                                        && <p>No hay ejemplares registrados.</p>}
                                 </div>
                             )}
 
@@ -2340,7 +2452,7 @@ function AppContenido() {
 
                 }),
 
-                fetch('http://localhost:8080/api/ejemplares/activos'),
+                obtenerEjemplares(sesion),
 
             ])
 
@@ -2475,7 +2587,7 @@ function AppContenido() {
                     },
                 }),
 
-                fetch('http://localhost:8080/api/ejemplares/activos'),
+                obtenerEjemplares(sesion),
 
             ])
 
@@ -2664,6 +2776,8 @@ function AppContenido() {
                                 (ejemplar) =>
 
                                     ejemplar.activo &&
+
+                                    ejemplar.libro.activo &&
 
                                     ejemplar.estado === 'DISPONIBLE'
 
