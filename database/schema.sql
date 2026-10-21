@@ -65,7 +65,7 @@ CREATE TABLE usuario (
     id_usuario BIGINT NOT NULL AUTO_INCREMENT,
     nombre VARCHAR(100) NOT NULL,
     apellido VARCHAR(100) NOT NULL,
-    email VARCHAR(150) NOT NULL,
+    email VARCHAR(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
     password VARCHAR(255) NOT NULL,
     rol VARCHAR(30) NOT NULL,
     activo TINYINT(1) NOT NULL DEFAULT 1,

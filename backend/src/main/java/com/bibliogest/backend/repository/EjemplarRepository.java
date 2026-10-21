@@ -14,6 +14,10 @@ public interface EjemplarRepository extends JpaRepository<Ejemplar, Long> {
 
     List<Ejemplar> findByActivoTrue();
 
+    boolean existsByCodigoInventario(String codigoInventario);
+
+    boolean existsByCodigoInventarioAndIdEjemplarNot(String codigoInventario, Long idEjemplar);
+
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select e from Ejemplar e where e.idEjemplar = :id")
     Optional<Ejemplar> findByIdForUpdate(@Param("id") Long id);
