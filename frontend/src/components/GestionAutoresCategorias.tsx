@@ -1,7 +1,8 @@
 import { useCallback, useEffect, useState } from 'react'
 import type { FormEvent } from 'react'
+import { apiUrl } from '../services/api.ts'
 
-const API = 'http://localhost:8080/api'
+const API = apiUrl('/api')
 
 interface Autor {
     idAutor: number
