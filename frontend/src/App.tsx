@@ -12,6 +12,8 @@ import GestionAutoresCategorias from './components/GestionAutoresCategorias.tsx'
 
 import type { Sesion } from './components/Login.tsx'
 
+import { apiUrl } from './services/api.ts'
+
 import './App.css'
 
 
@@ -157,10 +159,10 @@ const ejemplarVacio = { idLibro: '', codigoInventario: '', ubicacion: '', estado
 
 function obtenerEjemplares(sesion: Sesion | null) {
     return sesion?.rol === 'BIBLIOTECARIO'
-        ? fetch('http://localhost:8080/api/ejemplares', {
+        ? fetch(apiUrl('/api/ejemplares'), {
             headers: { Authorization: sesion.autorizacion },
         })
-        : fetch('http://localhost:8080/api/ejemplares/activos')
+        : fetch(apiUrl('/api/ejemplares/activos'))
 }
 
 
@@ -375,13 +377,13 @@ function AppContenido() {
 
                     respuestaCategorias, respuestaAutores] = await Promise.all([
 
-                    fetch('http://localhost:8080/api/libros/activos'),
+                    fetch(apiUrl('/api/libros/activos')),
 
                     obtenerEjemplares(sesion),
 
-                    fetch('http://localhost:8080/api/categorias'),
+                    fetch(apiUrl('/api/categorias')),
 
-                    fetch('http://localhost:8080/api/autores'),
+                    fetch(apiUrl('/api/autores')),
 
                 ])
 
@@ -435,7 +437,7 @@ function AppContenido() {
 
                         await Promise.all([
 
-                            fetch('http://localhost:8080/api/usuarios/activos', {
+                            fetch(apiUrl('/api/usuarios/activos'), {
 
                                 headers: {
 
@@ -445,7 +447,7 @@ function AppContenido() {
 
                             }),
 
-                            fetch('http://localhost:8080/api/prestamos', {
+                            fetch(apiUrl('/api/prestamos'), {
 
                                 headers: {
 
@@ -546,7 +548,7 @@ function AppContenido() {
             setCargandoMisPrestamos(true)
             setErrorMisPrestamos('')
             try {
-                const respuesta = await fetch('http://localhost:8080/api/prestamos/mis-prestamos', {
+                const respuesta = await fetch(apiUrl('/api/prestamos/mis-prestamos'), {
                     headers: { Authorization: sesion.autorizacion },
                     signal: controlador.signal,
                 })
@@ -600,7 +602,7 @@ function AppContenido() {
 
     const recargarCatalogo = async () => {
         const [respuestaLibros, respuestaEjemplares] = await Promise.all([
-            fetch('http://localhost:8080/api/libros/activos'),
+            fetch(apiUrl('/api/libros/activos')),
             obtenerEjemplares(sesion),
         ])
         if (!respuestaLibros.ok || !respuestaEjemplares.ok) {
@@ -631,7 +633,7 @@ function AppContenido() {
         setErrorLibro('')
         setMensajeLibro('')
         try {
-            const respuesta = await fetch(`http://localhost:8080/api/libros/${idLibro}`, {
+            const respuesta = await fetch(apiUrl(`/api/libros/${idLibro}`), {
                 method: 'DELETE',
                 headers: { Authorization: sesion?.autorizacion ?? '' },
             })
@@ -714,8 +716,8 @@ function AppContenido() {
 
 
             const respuesta = await fetch(libroEditando === null
-                ? 'http://localhost:8080/api/libros'
-                : `http://localhost:8080/api/libros/${libroEditando}`, {
+                ? apiUrl('/api/libros')
+                : apiUrl(`/api/libros/${libroEditando}`), {
 
                 method: libroEditando === null ? 'POST' : 'PUT',
 
@@ -793,7 +795,7 @@ function AppContenido() {
         setMensajeEjemplar('')
         setErrorEjemplar('')
         try {
-            const respuesta = await fetch(`http://localhost:8080/api/ejemplares/${idEjemplar}/desactivar`, {
+            const respuesta = await fetch(apiUrl(`/api/ejemplares/${idEjemplar}/desactivar`), {
                 method: 'PUT',
                 headers: { Authorization: sesion?.autorizacion ?? '' },
             })
@@ -865,8 +867,8 @@ function AppContenido() {
 
 
             const respuesta = await fetch(ejemplarEditando === null
-                ? 'http://localhost:8080/api/ejemplares'
-                : `http://localhost:8080/api/ejemplares/${ejemplarEditando}`, {
+                ? apiUrl('/api/ejemplares')
+                : apiUrl(`/api/ejemplares/${ejemplarEditando}`), {
 
                 method: ejemplarEditando === null ? 'POST' : 'PUT',
 
@@ -1537,7 +1539,7 @@ function AppContenido() {
 
 
 
-            const respuesta = await fetch('http://localhost:8080/api/usuarios', {
+            const respuesta = await fetch(apiUrl('/api/usuarios'), {
 
                 method: 'POST',
 
@@ -1573,7 +1575,7 @@ function AppContenido() {
 
             const respuestaUsuarios = await fetch(
 
-                'http://localhost:8080/api/usuarios/activos',
+                apiUrl('/api/usuarios/activos'),
 
                 {
 
@@ -1711,7 +1713,7 @@ function AppContenido() {
 
             const respuesta = await fetch(
 
-                `http://localhost:8080/api/usuarios/${usuarioEditando}`,
+                apiUrl(`/api/usuarios/${usuarioEditando}`),
 
                 {
 
@@ -1760,7 +1762,7 @@ function AppContenido() {
 
             const respuestaUsuarios = await fetch(
 
-                'http://localhost:8080/api/usuarios/activos',
+                apiUrl('/api/usuarios/activos'),
 
                 {
 
@@ -1848,7 +1850,7 @@ function AppContenido() {
 
             const respuesta = await fetch(
 
-                `http://localhost:8080/api/usuarios/${idUsuario}/desactivar`,
+                apiUrl(`/api/usuarios/${idUsuario}/desactivar`),
 
 
 
@@ -1878,7 +1880,7 @@ function AppContenido() {
 
             const respuestaUsuarios = await fetch(
 
-                'http://localhost:8080/api/usuarios/activos',
+                apiUrl('/api/usuarios/activos'),
 
                 {
 
@@ -2408,7 +2410,7 @@ function AppContenido() {
 
 
 
-            const respuesta = await fetch('http://localhost:8080/api/prestamos', {
+            const respuesta = await fetch(apiUrl('/api/prestamos'), {
 
                 method: 'POST',
 
@@ -2446,7 +2448,7 @@ function AppContenido() {
 
             const [respuestaPrestamos, respuestaEjemplares] = await Promise.all([
 
-                fetch('http://localhost:8080/api/prestamos', {
+                fetch(apiUrl('/api/prestamos'), {
 
                     headers: {
 
@@ -2552,7 +2554,7 @@ function AppContenido() {
 
             const respuesta = await fetch(
 
-                `http://localhost:8080/api/prestamos/${idPrestamo}/devolver`,
+                apiUrl(`/api/prestamos/${idPrestamo}/devolver`),
 
                 {
 
@@ -2585,7 +2587,7 @@ function AppContenido() {
 
             const [respuestaPrestamos, respuestaEjemplares] = await Promise.all([
 
-                fetch('http://localhost:8080/api/prestamos', {
+                fetch(apiUrl('/api/prestamos'), {
                     headers: {
                         Authorization: sesion?.autorizacion ?? '',
                     },

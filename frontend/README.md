@@ -1,3 +1,24 @@
+# BiblioGest frontend
+
+Para desarrollo local, ejecutá `npm.cmd install` una vez y luego `npm.cmd run dev`
+desde `frontend`. La API se consulta en `http://localhost:8080` cuando no se define
+`VITE_API_URL`.
+
+Para usar otra API, copiá `.env.example` a `.env.local` y ajustá solo el origen:
+
+```dotenv
+VITE_API_URL=https://api.ejemplo.test
+```
+
+`.env.local` está ignorado por Git. `VITE_API_URL` se incorpora al bundle del
+navegador: no coloques contraseñas, claves ni otras credenciales en variables
+`VITE_`. Configurá la URL antes de ejecutar `npm.cmd run build` para ese entorno.
+
+La autenticación HTTP Basic de este MVP se usa para desarrollo local. Antes de
+exponer el frontend y la API en otro entorno, ambos deben usar HTTPS y el
+backend debe permitir explícitamente el origen del frontend en CORS. Esta
+configuración no convierte al proyecto en un despliegue listo para producción.
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.

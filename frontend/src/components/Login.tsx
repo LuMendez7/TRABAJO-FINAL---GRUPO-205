@@ -1,6 +1,7 @@
 
 import { useState } from 'react'
 import type { FormEvent } from 'react'
+import { apiUrl } from '../services/api.ts'
 
 export interface Sesion {
   email: string
@@ -35,7 +36,7 @@ export default function Login({ onLogin }: LoginProps) {
       const autorizacion = `Basic ${btoa(binario)}`
 
       const respuesta = await fetch(
-        'http://localhost:8080/api/auth/me',
+        apiUrl('/api/auth/me'),
         {
           method: 'GET',
           headers: {

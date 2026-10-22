@@ -48,4 +48,22 @@ Las pruebas usan H2 en memoria solo bajo el perfil `test` y se ejecutan desde
 `backend` con `mvnw.cmd test` (Windows) o `./mvnw test`. No usan la MySQL personal.
 H2 no acredita el comportamiento de bloqueo concurrente de InnoDB.
 
+## Orígenes CORS
+
+El backend acepta por defecto solo `http://localhost:5173` y
+`http://localhost:5174`. Para otro entorno, definí la variable
+`BIBLIOGEST_CORS_ALLOWED_ORIGINS` como lista CSV de orígenes exactos, sin
+barra final ni comodines. Ejemplo ficticio en PowerShell:
+
+```powershell
+$env:BIBLIOGEST_CORS_ALLOWED_ORIGINS = 'https://bibliogest.ejemplo.test,https://bibliogest-alterno.ejemplo.test'
+```
+
+La configuración CORS reside en Spring Security y solo acepta los métodos
+GET, POST, PUT, DELETE y OPTIONS, con los encabezados Authorization y
+Content-Type. CORS no reemplaza los permisos por rol. La URL pública del
+frontend y la API deben usar HTTPS antes de cualquier despliegue remoto;
+HTTP Basic queda limitado al desarrollo local del MVP. No guardes credenciales
+ni encabezados Authorization en archivos del repositorio o registros.
+
 En esta carpeta se alojará la API REST desarrollada con Java y Spring Boot.
