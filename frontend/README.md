@@ -1,8 +1,18 @@
 # BiblioGest frontend
 
-Para desarrollo local, ejecutá `npm.cmd install` una vez y luego `npm.cmd run dev`
-desde `frontend`. La API se consulta en `http://localhost:8080` cuando no se define
-`VITE_API_URL`.
+## Requisitos y comandos
+
+- Node.js `^20.19.0` o `>=22.12.0`, según el requisito de Vite instalado.
+- npm compatible con esa versión de Node. Esta revisión se ejecutó con Node `v24.19.0` y npm `11.17.0`.
+
+Desde `frontend`, instalar exactamente las dependencias del lockfile y arrancar Vite:
+
+```powershell
+npm.cmd ci
+npm.cmd run dev
+```
+
+La API usa `http://localhost:8080` si `VITE_API_URL` no está definida.
 
 Para usar otra API, copiá `.env.example` a `.env.local` y ajustá solo el origen:
 
@@ -10,9 +20,22 @@ Para usar otra API, copiá `.env.example` a `.env.local` y ajustá solo el orige
 VITE_API_URL=https://api.ejemplo.test
 ```
 
-`.env.local` está ignorado por Git. `VITE_API_URL` se incorpora al bundle del
+`.env.local` está ignorado por Git. `.env.example` documenta el valor local. `VITE_API_URL` se incorpora al bundle del
 navegador: no coloques contraseñas, claves ni otras credenciales en variables
 `VITE_`. Configurá la URL antes de ejecutar `npm.cmd run build` para ese entorno.
+
+Comandos de verificación desde `frontend`:
+
+```powershell
+npm.cmd run lint
+npm.cmd run build
+```
+
+## Pantallas y permisos
+
+La aplicación incluye las vistas Inicio, Catálogo, Iniciar sesión, Mis préstamos, Préstamos, Usuarios, Autores y Categorías. `Mis préstamos` se ofrece al rol `LECTOR`; Préstamos, Usuarios, Autores y Categorías al rol `BIBLIOTECARIO`. El backend verifica los permisos aunque se navegue directamente a una ruta. El historial SPA usa las rutas `/`, `/catalogo`, `/login`, `/mis-prestamos`, `/prestamos`, `/usuarios`, `/autores` y `/categorias`.
+
+En F09 se aprobaron en navegador los flujos documentados de usuarios, autores, categorías, libros, ejemplares y circulación. También se verificaron `VITE_API_URL`, rutas, historial Atrás/Adelante y navegación por teclado. Recargar con F5 requiere iniciar sesión nuevamente para ambos roles; es una limitación aceptada del MVP. El detalle por criterio, incluida la pantalla de vencidos sin afirmar una comprobación manual de un vencimiento real, está en `../docs/VERIFICACION_MVP.md`.
 
 La autenticación HTTP Basic de este MVP se usa para desarrollo local. Antes de
 exponer el frontend y la API en otro entorno, ambos deben usar HTTPS y el
