@@ -34,6 +34,12 @@ para que `ddl-auto=validate` contraste el mapeo. La migración deja `NULL` en la
 filas anteriores; la interfaz muestra “Sin registrar”. No hay actualización
 masiva ni migración automática.
 
+En F09, la migración se aplicó sobre `bibliogest_migracion_test`, creada con el
+esquema pre-F06. Se comprobaron las dos columnas y se conservaron 1 libro,
+2 ejemplares, 2 préstamos y sus relaciones; los préstamos activo y devuelto
+permanecieron intactos y los valores históricos nuevos quedaron `NULL`. La
+migración es de ejecución única y no es idempotente.
+
 El archivo fuente `BiblioGest-Modelo-MySQL.mwb` requiere una herramienta compatible
 para incorporar las dos columnas al diagrama. No se modificó el binario ni se
 alteró el DER `.drawio` sin verificar su presentación; este apartado documenta
@@ -106,7 +112,7 @@ Campos principales:
 - `id_categoria`: identificador único.
 - `nombre`: nombre de la categoría.
 
-> El diseño inicial incluía `descripcion`. Debe verificarse en el esquema SQL real si ese campo permanece en la tabla actual; no se considera indispensable para las funcionalidades del frontend probadas.
+`descripcion` es una columna opcional `VARCHAR(255)` en `schema.sql` y en la entidad `Categoria`.
 
 ## Autor
 
@@ -157,7 +163,7 @@ Campos principales:
 - `estado`: estado operativo del ejemplar, por ejemplo `DISPONIBLE` o el estado que corresponda mientras se encuentra prestado.
 - `activo`: permite dar de baja lógicamente un ejemplar.
 
-**Diferencia respecto del diseño inicial:** en la implementación probada, `estado` se usa para gestionar la **disponibilidad operativa**. No se está utilizando como un campo exclusivo de conservación física (`NUEVO`, `USADO`, `ROTO`). Tampoco se comprobó la implementación del atributo `ubicacion` propuesto inicialmente.
+**Diferencia respecto del diseño inicial:** `estado` gestiona la **disponibilidad operativa** (`DISPONIBLE`/`PRESTADO`), mientras `ubicacion` y `estado_fisico` guardan ubicación y conservación física (`BUENO`, `REGULAR`, `DANADO`). `activo` es una baja lógica independiente.
 
 ## Prestamo
 
@@ -215,7 +221,7 @@ El diagrama elaborado en la etapa de diseño inicial está disponible en:
 
 ![DER inicial de BiblioGest](DER-BiblioGest.png)
 
-**Atención:** este DER corresponde al diseño original. Antes de presentarlo como diagrama definitivo, se debe revisar y actualizar para reflejar las tablas y columnas reales de la implementación, especialmente el tratamiento de `editorial`, `estado` de ejemplares y la ausencia de `ubicacion` en las funcionalidades comprobadas.
+**Atención:** este DER corresponde al diseño original. Antes de presentarlo como diagrama definitivo, revisar que refleje el modelo implementado, especialmente la editorial como atributo de `Libro`, el estado operativo de ejemplares y las columnas físicas `ubicacion` y `estado_fisico`.
 
 ## Script SQL
 
@@ -223,7 +229,7 @@ El repositorio incluye el script de la etapa de diseño:
 
 [Ver script SQL de BiblioGest](schema.sql)
 
-**Atención:** el script debe contrastarse con el esquema que utiliza actualmente Spring Boot y MySQL. No se afirma que pueda reconstruir íntegramente la base de datos actual sin verificar sus tablas, columnas, claves y restricciones.
+`schema.sql` es el esquema para crear una base nueva y vacía. Define las tablas actuales del código, incluidas las columnas físicas F06 y la collation MySQL 8 de `usuario.email`. No lo ejecutes sobre una base poblada. En F09, MySQL 8.0.46/InnoDB creó `bibliogest_test` desde este esquema; se verificaron siete tablas InnoDB y el inicio de Spring Boot con `ddl-auto=validate`. La matriz de `../docs/VERIFICACION_MVP.md` distingue esta comprobación de la migración histórica, ejecutada en la base aislada `bibliogest_migracion_test`.
 
 ## Tecnologías y acceso a datos
 

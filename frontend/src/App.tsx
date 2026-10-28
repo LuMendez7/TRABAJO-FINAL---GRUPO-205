@@ -3147,7 +3147,18 @@ function AppContenido() {
 
                                     className="tarjeta tarjeta-acceso"
 
+                                    role="button"
+
+                                    tabIndex={0}
+
                                     onClick={() => setVista('catalogo')}
+
+                                    onKeyDown={(event) => {
+                                        if (event.key === 'Enter' || event.key === ' ') {
+                                            event.preventDefault()
+                                            setVista('catalogo')
+                                        }
+                                    }}
 
                                 >
 
@@ -3162,7 +3173,18 @@ function AppContenido() {
 
 
                                 {esLector && (
-                                    <article className="tarjeta tarjeta-acceso" onClick={() => setVista('mis-prestamos')}>
+                                    <article
+                                        className="tarjeta tarjeta-acceso"
+                                        role="button"
+                                        tabIndex={0}
+                                        onClick={() => setVista('mis-prestamos')}
+                                        onKeyDown={(event) => {
+                                            if (event.key === 'Enter' || event.key === ' ') {
+                                                event.preventDefault()
+                                                setVista('mis-prestamos')
+                                            }
+                                        }}
+                                    >
                                         <span>📖</span>
                                         <h3>Mis préstamos</h3>
                                         <p>Consultar tus préstamos e historial de devoluciones.</p>
@@ -3175,7 +3197,18 @@ function AppContenido() {
 
                                             className="tarjeta tarjeta-acceso"
 
+                                            role="button"
+
+                                            tabIndex={0}
+
                                             onClick={() => setVista('prestamos')}
+
+                                            onKeyDown={(event) => {
+                                                if (event.key === 'Enter' || event.key === ' ') {
+                                                    event.preventDefault()
+                                                    setVista('prestamos')
+                                                }
+                                            }}
 
                                         >
 
@@ -3187,13 +3220,35 @@ function AppContenido() {
 
                                         </article>
 
-                                        <article className="tarjeta tarjeta-acceso" onClick={() => setVista('autores')}>
+                                        <article
+                                            className="tarjeta tarjeta-acceso"
+                                            role="button"
+                                            tabIndex={0}
+                                            onClick={() => setVista('autores')}
+                                            onKeyDown={(event) => {
+                                                if (event.key === 'Enter' || event.key === ' ') {
+                                                    event.preventDefault()
+                                                    setVista('autores')
+                                                }
+                                            }}
+                                        >
                                             <span>✍️</span>
                                             <h3>Autores</h3>
                                             <p>Administrar autores del catálogo.</p>
                                         </article>
 
-                                        <article className="tarjeta tarjeta-acceso" onClick={() => setVista('categorias')}>
+                                        <article
+                                            className="tarjeta tarjeta-acceso"
+                                            role="button"
+                                            tabIndex={0}
+                                            onClick={() => setVista('categorias')}
+                                            onKeyDown={(event) => {
+                                                if (event.key === 'Enter' || event.key === ' ') {
+                                                    event.preventDefault()
+                                                    setVista('categorias')
+                                                }
+                                            }}
+                                        >
                                             <span>🏷️</span>
                                             <h3>Categorías</h3>
                                             <p>Administrar categorías del catálogo.</p>
@@ -3205,7 +3260,18 @@ function AppContenido() {
 
                                             className="tarjeta tarjeta-acceso"
 
+                                            role="button"
+
+                                            tabIndex={0}
+
                                             onClick={() => setVista('usuarios')}
+
+                                            onKeyDown={(event) => {
+                                                if (event.key === 'Enter' || event.key === ' ') {
+                                                    event.preventDefault()
+                                                    setVista('usuarios')
+                                                }
+                                            }}
 
                                         >
 

@@ -1,5 +1,13 @@
 # Backend
 
+## Requisitos y comandos
+
+- Java 17.
+- Maven mediante `mvnw.cmd` en Windows o `./mvnw` en Linux/macOS.
+- MySQL 8 o superior para una base nueva: el esquema define `utf8mb4_0900_ai_ci` en `usuario.email`.
+
+Desde esta carpeta, ejecutar las pruebas automatizadas con `mvnw.cmd test` (Windows) o `./mvnw test` (Linux/macOS). El perfil de pruebas configura H2 en memoria y no accede a una base MySQL personal. Para arrancar la API localmente, preparar primero el esquema descrito en `../database/README.md` y usar `mvnw.cmd spring-boot:run`.
+
 ## Arranque desde una base vacia
 
 Se necesitan Java 17, Maven (o `mvnw.cmd` en Windows) y MySQL. Crear la base y
@@ -67,3 +75,20 @@ HTTP Basic queda limitado al desarrollo local del MVP. No guardes credenciales
 ni encabezados Authorization en archivos del repositorio o registros.
 
 En esta carpeta se alojará la API REST desarrollada con Java y Spring Boot.
+
+## Endpoints y roles
+
+La API usa HTTP Basic. Los lectores se crean como `LECTOR`; no hay registro público de cuentas privilegiadas. Las contraseñas se guardan con BCrypt.
+
+| Operación | Endpoint | Permiso |
+| --- | --- | --- |
+| Catálogo activo y ejemplares activos | `GET /api/libros/activos`, `GET /api/ejemplares/activos` | Público |
+| Consultar autores/categorías | `GET /api/autores/**`, `GET /api/categorias/**` | Público |
+| Identidad de la sesión | `GET /api/auth/me` | Autenticado |
+| Préstamos propios | `GET /api/prestamos/mis-prestamos` | Lector autenticado; solo devuelve su usuario |
+| Administración de usuarios, autores, categorías, libros y ejemplares | `/api/usuarios`, `/api/autores`, `/api/categorias`, `/api/libros`, `/api/ejemplares` | Bibliotecario |
+| Alta y consulta administrativa, devolución | `/api/prestamos`, `/api/prestamos/{id}/devolver` | Bibliotecario |
+
+Las operaciones REST de altas, ediciones, bajas y devoluciones requieren el rol `BIBLIOTECARIO`; un lector no obtiene permisos por ocultarse o mostrarse una pantalla en el frontend. El catálogo público omite libros inactivos. La editorial se guarda en `Libro`, sin endpoint ni módulo independiente. Los préstamos abiertos y sus fechas históricas se conservan.
+
+La suite automatizada de esta revisión se ejecutó sobre H2. Además, en MySQL 8.0.46/InnoDB se creó `bibliogest_test` desde `schema.sql`, se validó el mapeo con `ddl-auto=validate`, se verificaron el bootstrap y el login HTTP Basic, la concurrencia funcional de préstamos y la devolución. La migración F06 se probó separadamente en `bibliogest_migracion_test`. Las verificaciones y sus límites están en `../docs/VERIFICACION_MVP.md`; la prueba HTTP 201/409 no es una prueba de estrés.

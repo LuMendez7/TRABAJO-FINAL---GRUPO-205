@@ -11,25 +11,13 @@ Proyecto desarrollado en el marco del Trabajo Final Integrador de la Tecnicatura
 * Sergio Andrés Antonini
 
 ---
-## Estado actual de implementación (octubre de 2026)
+## Estado de implementación y verificación (octubre de 2026)
 
-BiblioGest cuenta con una versión funcional en entorno local. El frontend está desarrollado con React, TypeScript y Vite; el backend utiliza Java 17, Spring Boot, Maven y Spring Security; y la información se almacena en MySQL mediante JPA/Hibernate.
+BiblioGest integra un frontend React, TypeScript y Vite; un backend Java 17, Spring Boot y Spring Security; y persistencia JPA preparada para MySQL. La lista de pruebas automatizadas y sus límites se mantiene en [docs/VERIFICACION_MVP.md](docs/VERIFICACION_MVP.md).
 
-**Funcionalidades implementadas y comprobadas:**
+El repositorio implementa catálogo público y búsqueda, autenticación con roles `BIBLIOTECARIO` y `LECTOR`, administración de usuarios, autores, categorías, libros y ejemplares, circulación de préstamos y devoluciones, consulta de préstamos propios e indicador dinámico de vencimiento. La editorial se guarda como texto de `Libro`; no hay un módulo ni tabla independiente de editoriales. Los ejemplares separan estado de circulación (`DISPONIBLE`/`PRESTADO`) de `estadoFisico` y `ubicacion`.
 
-- Consulta pública del catálogo y búsqueda de libros.
-- Visualización de disponibilidad de ejemplares.
-- Inicio y cierre de sesión con roles `BIBLIOTECARIO` y `LECTOR`.
-- Restricción de operaciones administrativas mediante Spring Security y ocultamiento de accesos administrativos en la interfaz.
-- Registro de libros y ejemplares.
-- Alta, edición y baja lógica de lectores.
-- Registro de préstamos y devoluciones con actualización de disponibilidad.
-- Navegación entre Inicio, Catálogo, Préstamos y Usuarios con React Router e historial Atrás/Adelante.
-- Interfaz adaptable con mejoras visuales en botones, tarjetas y formularios.
-
-**Validaciones realizadas en entorno local:** acceso de visitante, lector y bibliotecario; alta de libro; alta de ejemplar; alta y edición de lector; préstamo; devolución; y desactivación de lector. Las siete operaciones administrativas fueron verificadas manualmente. La compilación del frontend y la publicación de los cambios en GitHub se realizaron correctamente.
-
-**Pendiente de implementar o verificar antes de declarar completo el MVP:** consulta de préstamos propios del lector, gestión administrativa completa de autores/categorías/editoriales, identificación de préstamos vencidos, pruebas automatizadas y despliegue público. Algunas de estas funciones aparecen en las secciones siguientes como **alcance previsto**, no como funcionalidades ya entregadas.
+En F09 se aprobaron 70 pruebas automatizadas del backend, ESLint y la compilación del frontend. MySQL 8.0.46/InnoDB validó el esquema actual, el arranque con `ddl-auto=validate`, el bootstrap y la autenticación; también se probaron la migración histórica F06 y la concurrencia funcional de préstamos en una base de ensayo. Los smoke tests y sus límites están detallados en [docs/VERIFICACION_MVP.md](docs/VERIFICACION_MVP.md). La pérdida de autenticación tras F5 requiere iniciar sesión nuevamente y se acepta como limitación del MVP. El repositorio no se presenta como un despliegue público listo para producción.
 
 ---
 
@@ -56,7 +44,7 @@ A partir de esta problemática surge la necesidad de centralizar la información
 ## Solución propuesta
 Se propone desarrollar BiblioGest, una aplicación web que permita centralizar los principales procesos de gestión de una biblioteca.
 
-El personal bibliotecario podrá administrar usuarios, libros, autores, editoriales, categorías y ejemplares, además de registrar préstamos y devoluciones.
+El personal bibliotecario podrá administrar usuarios, libros, autores, categorías y ejemplares, además de registrar préstamos y devoluciones. La editorial se registra como atributo de texto de `Libro`; no hay gestión independiente de editoriales.
 
 Los lectores podrán consultar el catálogo, realizar búsquedas y conocer la disponibilidad de los materiales.
 
@@ -71,7 +59,7 @@ Es el principal responsable de la gestión de la biblioteca y tendrá acceso a l
 
 Sus principales necesidades son:
 
-* Registrar y actualizar libros, autores, editoriales y categorías.
+* Registrar y actualizar libros, autores y categorías; la editorial es un atributo del libro.
 
 * Administrar los ejemplares físicos de la biblioteca.
 
@@ -115,7 +103,7 @@ Desarrollar una aplicación web para centralizar y facilitar la gestión de una 
 
 ---
 ## Objetivos específicos
-* Centralizar en una única aplicación la información relacionada con libros, autores, editoriales, categorías, ejemplares, usuarios y préstamos.
+* Centralizar en una única aplicación la información relacionada con libros, autores, categorías, ejemplares, usuarios y préstamos. La editorial se guarda en `libro.editorial`.
 
 * Facilitar el registro y seguimiento de los préstamos y devoluciones realizados en la biblioteca.
 
@@ -143,8 +131,8 @@ Permitirá registrar los libros que forman parte del catálogo de la biblioteca,
 #### Gestión de autores
 Permitirá registrar y consultar autores, asociándolos con los libros correspondientes del catálogo.
 
-#### Gestión de editoriales
-Permitirá registrar y consultar editoriales, asociándolas con los libros correspondientes del catálogo.
+#### Editorial del libro
+El nombre de la editorial se registra como atributo de texto de `Libro`. No se crea un catálogo ni un módulo independiente de editoriales.
 
 #### Gestión de categorías
 Permitirá organizar los libros en diferentes categorías para facilitar su clasificación y posterior búsqueda dentro del sistema.
@@ -191,7 +179,7 @@ El MVP incluirá:
 
 * Gestión de autores.
 
-* Gestión de editoriales.
+* Editorial como atributo de texto de cada libro, sin módulo independiente.
 
 * Gestión de categorías.
 
@@ -263,7 +251,7 @@ React y TypeScript se utilizan para desarrollar la interfaz web; Vite se utiliza
 ## Base de datos
 - MySQL
 
-Se utiliza una base de datos relacional debido a que la información principal del sistema presenta relaciones claras entre usuarios, libros, autores, editoriales, categorías, ejemplares y préstamos.
+Se utiliza una base de datos relacional para usuarios, libros, autores, categorías, ejemplares y préstamos. La editorial es una columna de `libro`, no una tabla relacionada.
 
 ## Herramientas de desarrollo
 Como herramientas de apoyo se utilizarán:
@@ -613,9 +601,7 @@ Contendrá diagramas, documentación técnica, informes y material relacionado c
 
 ---
 # Estado del proyecto
-El proyecto superó la etapa de diseño y cuenta con una versión funcional integrada en entorno local. Se completaron el modelo de datos inicial, el Diagrama Entidad-Relación, el desarrollo de la API REST con Spring Boot, la conexión a MySQL, el frontend con React, el inicio de sesión por roles y las principales operaciones de gestión bibliotecaria.
-
-Las próximas tareas son completar o validar los puntos del MVP aún pendientes, ampliar las pruebas, actualizar la documentación técnica y preparar el despliegue y la presentación final.
+El código incluye el MVP de catálogo, administración y circulación descrito en este README. En F09 pasaron la suite automatizada con H2, ESLint, la compilación frontend y las verificaciones documentadas contra MySQL de ensayo y en navegador. La matriz [docs/VERIFICACION_MVP.md](docs/VERIFICACION_MVP.md) registra cada criterio, incluido el comportamiento aceptado de reautenticación después de F5.
 
 ---
 ## Repositorio del proyecto
@@ -626,7 +612,7 @@ Todo el desarrollo, documentación, base de datos, frontend y backend del Trabaj
 Como parte del diseño de BiblioGest se realizó el modelado inicial de la base de datos y se definieron los principales módulos que organizarán las funcionalidades del sistema.
 
 ## Diseño de la base de datos
-Se definió un modelo de base de datos relacional utilizando MySQL. El diseño contempla las entidades necesarias para representar libros, autores, editoriales, categorías, ejemplares, usuarios y préstamos.
+Se definió un modelo relacional para MySQL con libros, autores, categorías, ejemplares, usuarios y préstamos. La editorial forma parte de `libro` como texto.
 
 La documentación del modelo, sus relaciones, reglas de negocio y el Diagrama Entidad-Relación se encuentran en la carpeta:
 
@@ -674,7 +660,7 @@ La descripción de los módulos se encuentra en:
 Desde una terminal ubicada en `frontend`:
 
 ```powershell
-npm install
+npm ci
 npm run dev
 ```
 
@@ -684,21 +670,24 @@ Para comprobar la compilación:
 
 ```powershell
 npm run build
+npm run lint
 ```
+
+La versión de Node requerida por Vite y el uso de `.env.example` se detallan en [frontend/README.md](frontend/README.md). `VITE_API_URL` configura el origen del backend para el bundle; no se deben guardar secretos en variables `VITE_`.
 
 ## Roles y permisos
 
-| Acceso | Funciones verificadas |
+| Acceso | Permisos y consultas implementados (cobertura automatizada en F09) |
 | --- | --- |
-| Visitante | Consultar y buscar libros en el catálogo público |
-| Lector autenticado | Consultar el catálogo sin acceso a operaciones administrativas |
-| Bibliotecario autenticado | Gestionar libros, ejemplares, lectores, préstamos y devoluciones |
+| Visitante | Consultar catálogo y ejemplares activos; no puede usar operaciones administrativas |
+| Lector autenticado | Consultar catálogo y únicamente sus préstamos propios |
+| Bibliotecario autenticado | Administrar usuarios, autores, categorías, libros y ejemplares; registrar préstamos y devoluciones |
 
 La autenticación de la API utiliza HTTP Basic con contraseñas almacenadas mediante BCrypt. La autorización se comprueba en el backend, no solamente ocultando botones en el frontend. **Para un despliegue público será necesario utilizar HTTPS y revisar el mecanismo de autenticación y la configuración de producción.**
 
-## Pruebas manuales de integración
+## Registros manuales anteriores
 
-En el entorno local se verificaron estas operaciones:
+El README de entregas anteriores registró las operaciones siguientes como verificadas en su entorno local. La verificación adicional de F09 está desglosada por escenario en [docs/VERIFICACION_MVP.md](docs/VERIFICACION_MVP.md):
 
 1. Registrar un libro.
 2. Registrar un ejemplar asociado al libro.
@@ -708,7 +697,7 @@ En el entorno local se verificaron estas operaciones:
 6. Registrar la devolución y recuperar la disponibilidad.
 7. Desactivar al lector mediante baja lógica.
 
-También se comprobó la visualización diferenciada de menús para visitantes, lectores y bibliotecarios, y el historial de navegación de React Router.
+La verificación actual de navegador, MySQL, historial de rutas y pruebas automatizadas se detalla por criterio en [docs/VERIFICACION_MVP.md](docs/VERIFICACION_MVP.md). La sesión frontend está en memoria: al recargar, ambos roles deben iniciar sesión otra vez.
 
 ## Repositorio
 
