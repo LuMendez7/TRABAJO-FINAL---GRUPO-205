@@ -17,9 +17,9 @@ public class Autor {
     @Column(name = "id_autor")
     private Long idAutor;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 150)
     private String nombre;
 
-    @Column(nullable = false, length = 100)
+    @Column(nullable = false, length = 150)
     private String apellido;
 }

@@ -1,248 +1,190 @@
 # Base de Datos - BiblioGest
 
-## Crear una base nueva
-
-Con MySQL disponible, ejecutar `database/schema.sql` con un usuario autorizado
-sobre una instancia de ensayo nueva. El script crea `bibliogest` y sus tablas,
-sin insertar cuentas ni contrasenas. Ejecutarlo **solo sobre una base vacia**;
-no aplicarlo a tablas con datos. Configurar el usuario de aplicacion indicado en
-`backend/src/main/resources/application.properties` y pasar su clave mediante
-`DB_PASSWORD`. El backend usa `ddl-auto=validate` y no sustituye al script.
-
-La creacion opcional del primer bibliotecario se describe en `backend/README.md`.
-
-### Datos físicos de ejemplares (F06)
-
-Para una base **nueva**, `schema.sql` ya incluye `ejemplar.ubicacion` y
-`ejemplar.estado_fisico`, ambas columnas anulables. El backend usa
-`ddl-auto=validate`; iniciar la aplicación no agrega columnas a una base existente.
-
-Para una instalación anterior, hacer un respaldo, detener la aplicación y comprobar
-si las columnas ya existen y cuántos ejemplares hay:
-
-```sql
-SHOW COLUMNS FROM ejemplar LIKE 'ubicacion';
-SHOW COLUMNS FROM ejemplar LIKE 'estado_fisico';
-SELECT COUNT(*) FROM ejemplar;
-```
-
-Si faltan **ambas** columnas, aplicar **una sola vez**
-`database/migrations/001_ejemplar_datos_fisicos.sql`. Si existe solo una,
-revisar el esquema manualmente antes de cambiarlo; el script no es repetible.
-Después, comprobar las dos columnas y el mismo `COUNT(*)`, y arrancar el backend
-para que `ddl-auto=validate` contraste el mapeo. La migración deja `NULL` en las
-filas anteriores; la interfaz muestra “Sin registrar”. No hay actualización
-masiva ni migración automática.
-
-En F09, la migración se aplicó sobre `bibliogest_migracion_test`, creada con el
-esquema pre-F06. Se comprobaron las dos columnas y se conservaron 1 libro,
-2 ejemplares, 2 préstamos y sus relaciones; los préstamos activo y devuelto
-permanecieron intactos y los valores históricos nuevos quedaron `NULL`. La
-migración es de ejecución única y no es idempotente.
-
-El archivo fuente `BiblioGest-Modelo-MySQL.mwb` requiere una herramienta compatible
-para incorporar las dos columnas al diagrama. No se modificó el binario ni se
-alteró el DER `.drawio` sin verificar su presentación; este apartado documenta
-la diferencia pendiente entre esos diagramas y el esquema F06.
-
-### Unicidad del correo en MySQL
-
-El proyecto no fija una version de MySQL para instalaciones existentes. Para
-bases nuevas, `schema.sql` requiere MySQL 8 o superior: establece
-`utf8mb4_0900_ai_ci` **solo** en `usuario.email` y conserva su indice `UNIQUE`.
-Asi, la base rechaza correos que difieren solo en mayusculas/minusculas, incluso
-si dos altas concurrentes superan la comprobacion previa del backend.
-
-Antes de cualquier cambio en una base existente, hacer un respaldo y comprobar
-la version, la collation actual de `usuario.email` y los correos que resultarian
-duplicados bajo la collation nueva. Consultas de solo lectura en MySQL 8:
-
-```sql
-SELECT VERSION();
-SHOW FULL COLUMNS FROM usuario LIKE 'email';
-SELECT TRIM(email) COLLATE utf8mb4_0900_ai_ci AS email_equivalente,
-       COUNT(*) AS cantidad
-FROM usuario
-GROUP BY email_equivalente
-HAVING COUNT(*) > 1;
-```
-
-Revisar los resultados antes de planificar una migracion manual. Este repositorio
-no ejecuta cambios automaticos de collation ni modifica registros existentes.
-
 ## Descripción
 
-BiblioGest utiliza **MySQL** para almacenar la información de la biblioteca escolar. La base de datos respalda la gestión de libros, autores, categorías, ejemplares, lectores y préstamos, así como las devoluciones y el control de acceso por roles.
+BiblioGest utiliza MySQL como sistema de gestión de bases de datos relacionales. El modelo permite administrar el catálogo bibliográfico, los ejemplares físicos, los usuarios, los préstamos, las reservas, las fichas bibliográficas y las notificaciones internas.
 
-Este documento describe **el modelo implementado actualmente**, diferenciándolo del diseño inicial. No se modifica la base de datos por actualizar esta documentación.
+La documentación corresponde al modelo actualizado en noviembre de 2026.
 
-## Tablas principales de la implementación
+## Tablas del sistema
 
-- `usuario`
-- `categoria`
-- `autor`
-- `libro`
-- `libro_autor` (tabla intermedia)
-- `ejemplar`
-- `prestamo`
-
-**Diferencia respecto del diseño inicial:** no se utiliza una tabla independiente `editorial`; el nombre de la editorial se guarda como atributo del libro. Tampoco se implementó una entidad independiente para devoluciones: la devolución se registra sobre el préstamo.
+| Tabla | Responsabilidad |
+| --- | --- |
+| usuario | Identidad, autenticación, roles y estado de las cuentas. |
+| categoria | Clasificación temática de los libros. |
+| autor | Información de los autores. |
+| libro | Información bibliográfica de las obras. |
+| libro_autor | Asociación entre libros y autores. |
+| ejemplar | Copias físicas, inventario y disponibilidad. |
+| prestamo | Registro de préstamos y devoluciones. |
+| ficha_bibliografica | Descripciones y portadas personalizadas. |
+| reserva | Solicitudes, asignaciones y seguimiento de reservas. |
+| notificacion | Avisos internos y seguimiento de lectura. |
 
 ## Usuario
 
-Representa a las personas registradas en el sistema.
+Almacena los datos de identificación, correo electrónico, contraseña protegida mediante BCrypt, rol, indicador de actividad y estado de cuenta.
 
-Campos principales:
+Roles:
 
-- `id_usuario`: identificador único.
-- `nombre` y `apellido`: datos del usuario.
-- `email`: correo utilizado para iniciar sesión.
-- `password`: contraseña almacenada como **hash BCrypt**, no en texto plano.
-- `rol`: `BIBLIOTECARIO` o `LECTOR`.
-- `activo`: indica si la cuenta está habilitada; permite realizar baja lógica.
+- BIBLIOTECARIO.
+- LECTOR.
 
-La aplicación utiliza Spring Security para autenticar al usuario y autorizar operaciones según su rol. Los lectores no pueden acceder a los endpoints administrativos.
+Estados de cuenta:
 
-## Categoria
+- PENDIENTE.
+- APROBADO.
+- RECHAZADO.
+- INACTIVO.
 
-Clasifica los libros del catálogo.
+La baja lógica permite conservar el historial de operaciones del usuario.
 
-Campos principales:
+## Categoría
 
-- `id_categoria`: identificador único.
-- `nombre`: nombre de la categoría.
-
-`descripcion` es una columna opcional `VARCHAR(255)` en `schema.sql` y en la entidad `Categoria`.
+Organiza los libros mediante una clasificación temática. Incluye identificador, nombre y descripción opcional.
 
 ## Autor
 
-Registra los autores de las obras.
-
-Campos principales:
-
-- `id_autor`: identificador único.
-- `nombre`: nombre del autor.
-- `apellido`: apellido del autor.
+Almacena el identificador, nombre y apellido del autor.
 
 ## Libro
 
-Representa la información bibliográfica de una obra, independientemente de sus copias físicas.
+Representa la información bibliográfica de una obra:
 
-Campos principales:
+- Identificador.
+- Título.
+- ISBN.
+- Editorial.
+- Año de publicación.
+- Indicador de actividad.
+- Categoría.
 
-- `id_libro`: identificador único.
-- `titulo`: título.
-- `isbn`: identificador bibliográfico, cuando está disponible.
-- `editorial`: nombre de la editorial, como texto.
-- `anio_publicacion`: año de publicación, cuando se conoce.
-- `activo`: indica si el libro está activo en el catálogo.
-- `id_categoria`: referencia a la categoría.
-
-Los autores se asocian mediante la tabla `libro_autor`.
+La editorial se representa como atributo y no como tabla independiente.
 
 ## Libro_Autor
 
-Resuelve la relación de muchos a muchos entre libros y autores.
-
-Campos principales:
-
-- `id_libro`: referencia al libro.
-- `id_autor`: referencia al autor.
-
-Un libro puede tener varios autores y un autor puede participar en varios libros.
+Tabla intermedia que resuelve la relación de muchos a muchos entre libros y autores mediante una clave primaria compuesta.
 
 ## Ejemplar
 
-Representa cada copia física de un libro.
+Representa cada copia física de un libro. Contiene identificador, referencia al libro, código de inventario único, estado operativo e indicador de actividad.
 
-Campos principales:
+Su estado permite controlar la disponibilidad para préstamos y reservas.
 
-- `id_ejemplar`: identificador único.
-- `id_libro`: libro al que pertenece.
-- `codigo_inventario`: código identificatorio del ejemplar.
-- `estado`: estado operativo del ejemplar, por ejemplo `DISPONIBLE` o el estado que corresponda mientras se encuentra prestado.
-- `activo`: permite dar de baja lógicamente un ejemplar.
+## Préstamo
 
-**Diferencia respecto del diseño inicial:** `estado` gestiona la **disponibilidad operativa** (`DISPONIBLE`/`PRESTADO`), mientras `ubicacion` y `estado_fisico` guardan ubicación y conservación física (`BUENO`, `REGULAR`, `DANADO`). `activo` es una baja lógica independiente.
+Registra la circulación de ejemplares mediante:
 
-## Prestamo
+- Identificador del préstamo.
+- Usuario asociado.
+- Ejemplar asociado.
+- Fecha del préstamo.
+- Fecha prevista de devolución.
+- Fecha real de devolución.
+- Estado.
 
-Registra la circulación de ejemplares.
+Las devoluciones se registran actualizando el préstamo y la disponibilidad del ejemplar.
 
-Campos principales:
+## Ficha bibliográfica
 
-- `id_prestamo`: identificador único.
-- `id_usuario`: lector asociado.
-- `id_ejemplar`: ejemplar prestado.
-- `fecha_prestamo`: fecha de registro.
-- `fecha_devolucion_prevista`: fecha límite prevista.
-- `fecha_devolucion_real`: fecha efectiva de devolución, cuando corresponde.
-- `estado`: situación del préstamo, por ejemplo `ACTIVO` mientras no se devolvió.
+Complementa la información del libro con:
 
-La devolución se registra actualizando el préstamo y el estado operativo del ejemplar; no requiere una tabla `devolucion` independiente.
+- Identificador del libro.
+- Descripción.
+- Imagen de portada.
+- Tipo de imagen.
+- Indicador de portada eliminada.
+- Fecha de actualización.
+
+Las imágenes personalizadas se almacenan en MySQL mediante MEDIUMBLOB.
+
+La ficha es opcional y corresponde a un único libro.
+
+## Reserva
+
+Registra las solicitudes de reserva realizadas por los lectores.
+
+Permite asociar usuarios, libros, ejemplares y préstamos según la etapa del proceso, además de registrar fechas, estado y observaciones.
+
+La lógica de negocio controla las transiciones de estado, la disponibilidad y los vencimientos.
+
+## Notificación
+
+Almacena los avisos internos destinados a los usuarios.
+
+Incluye información como título, mensaje, tipo de evento, estado de lectura, fechas y referencias a las operaciones relacionadas.
+
+La clave de evento permite identificar notificaciones y controlar su duplicación.
 
 ## Relaciones principales
 
-- **Categoria 1:N Libro:** una categoría agrupa varios libros; cada libro pertenece a una categoría.
-- **Libro N:M Autor:** mediante `libro_autor`.
-- **Libro 1:N Ejemplar:** un libro puede tener varias copias físicas.
-- **Usuario 1:N Prestamo:** un lector puede tener varios préstamos a lo largo del tiempo.
-- **Ejemplar 1:N Prestamo:** un ejemplar puede participar en distintos préstamos históricos, pero no debe tener dos préstamos activos simultáneos.
+- Categoría 1:N Libro.
+- Libro N:M Autor, mediante libro_autor.
+- Libro 1:N Ejemplar.
+- Usuario 1:N Préstamo.
+- Ejemplar 1:N Préstamo histórico.
+- Libro 1:0..1 Ficha bibliográfica.
+- Usuario 1:N Reserva.
+- Libro 1:N Reserva.
+- Reserva: asociación opcional con ejemplar y préstamo.
+- Usuario 1:N Notificación.
 
-## Reglas de negocio implementadas y comprobadas
+Las claves foráneas, restricciones, índices y tipos de datos exactos se encuentran definidos en schema.sql.
 
-1. Los préstamos se asocian con un usuario y un ejemplar existentes.
-2. Solo se puede registrar un préstamo de un ejemplar disponible.
-3. Registrar un préstamo modifica la disponibilidad del ejemplar.
-4. Registrar una devolución actualiza el préstamo y devuelve el ejemplar a la condición de disponible.
-5. Cada ejemplar se identifica mediante un código de inventario.
-6. Los usuarios poseen un rol: `LECTOR` o `BIBLIOTECARIO`.
-7. Las contraseñas se almacenan con BCrypt.
-8. La desactivación de un lector es una baja lógica: el registro se conserva con `activo = false`.
-9. Las operaciones administrativas están restringidas al bibliotecario mediante Spring Security.
+## Reglas de negocio
 
-## Pruebas funcionales realizadas
-
-Se comprobaron desde la aplicación web las siguientes operaciones:
-
-1. Registro de un libro.
-2. Registro de un ejemplar.
-3. Registro de un lector.
-4. Modificación de datos de un lector.
-5. Registro de un préstamo y actualización de disponibilidad.
-6. Registro de una devolución y recuperación de disponibilidad.
-7. Desactivación lógica de un lector.
-
-También se comprobó la diferenciación de acceso entre visitante, lector y bibliotecario. Estas pruebas funcionales no reemplazan una revisión completa del esquema, restricciones e índices de MySQL.
+1. Cada ejemplar pertenece a un libro.
+2. El código de inventario identifica de manera única a cada ejemplar.
+3. Un ejemplar no debe tener dos préstamos activos simultáneos.
+4. Los préstamos y devoluciones actualizan la disponibilidad.
+5. Los lectores consultan sus propias operaciones.
+6. Las operaciones administrativas requieren autorización de bibliotecario.
+7. Las cuentas pendientes o rechazadas no pueden iniciar sesión.
+8. Las contraseñas se almacenan mediante BCrypt.
+9. Las reservas se gestionan de acuerdo con la disponibilidad y sus estados.
+10. Las notificaciones internas identifican los eventos asociados.
+11. La edición de fichas bibliográficas está reservada al bibliotecario.
 
 ## Diagrama Entidad-Relación
 
-El diagrama elaborado en la etapa de diseño inicial está disponible en:
+El siguiente diagrama fue actualizado a partir del modelo físico de MySQL.
 
-![DER inicial de BiblioGest](DER-BiblioGest.png)
+![Diagrama Entidad-Relación de BiblioGest](DER-BiblioGest.png)
 
-**Atención:** este DER corresponde al diseño original. Antes de presentarlo como diagrama definitivo, revisar que refleje el modelo implementado, especialmente la editorial como atributo de `Libro`, el estado operativo de ejemplares y las columnas físicas `ubicacion` y `estado_fisico`.
+[Modelo editable de MySQL Workbench](BiblioGest-Modelo-MySQL.mwb)
 
-## Script SQL
+## Esquema SQL
 
-El repositorio incluye el script de la etapa de diseño:
+[Consultar schema.sql](schema.sql)
 
-[Ver script SQL de BiblioGest](schema.sql)
+El archivo contiene la estructura de la base de datos y sus relaciones.
 
-`schema.sql` es el esquema para crear una base nueva y vacía. Define las tablas actuales del código, incluidas las columnas físicas F06 y la collation MySQL 8 de `usuario.email`. No lo ejecutes sobre una base poblada. En F09, MySQL 8.0.46/InnoDB creó `bibliogest_test` desde este esquema; se verificaron siete tablas InnoDB y el inicio de Spring Boot con `ddl-auto=validate`. La matriz de `../docs/VERIFICACION_MVP.md` distingue esta comprobación de la migración histórica, ejecutada en la base aislada `bibliogest_migracion_test`.
+### Instalación
 
-## Tecnologías y acceso a datos
+1. Instalar MySQL y MySQL Workbench.
+2. Conectarse al servidor local.
+3. Abrir schema.sql.
+4. Ejecutar el script sobre una base nueva y vacía.
+5. Configurar la conexión del backend.
+6. Preparar las cuentas y los datos iniciales necesarios.
 
-- MySQL como motor relacional.
-- Java 17 y Spring Boot en el backend.
-- Spring Data JPA e Hibernate para persistencia.
-- Spring Security y BCrypt para autenticación, autorización y protección de contraseñas.
+No ejecutar el esquema de creación sobre una base existente con información sin realizar previamente un respaldo y revisar las instrucciones.
 
-La aplicación frontend se comunica con la API REST; no accede directamente a MySQL.
+El esquema no incluye contraseñas reales, lectores registrados ni el inventario institucional completo.
 
-## Pendientes de documentación técnica
+## Acceso a datos
 
-- Comparar `schema.sql` con las tablas actuales de MySQL.
-- Actualizar `DER-BiblioGest.png` si aún representa el modelo inicial.
-- Verificar los nombres exactos, tipos de datos, índices y restricciones del esquema físico.
-- Documentar un procedimiento de creación de la base de datos desde cero que se haya probado en un entorno limpio.
+- MySQL.
+- Spring Data JPA.
+- Hibernate.
+- JdbcTemplate para las operaciones de fichas bibliográficas.
+- Spring Security.
+- BCrypt.
+
+El frontend se comunica con el backend mediante una API REST y no accede directamente a MySQL.
+
+## Seguridad y mantenimiento
+
+Se recomienda realizar respaldos periódicos, proteger las credenciales de conexión y evitar publicar datos personales o copias de producción en repositorios públicos.
+
+La reconstrucción en una instancia limpia y el despliegue de producción deben validarse de manera independiente.

@@ -1,2 +1,35 @@
 .idea/
 backend/target/
+
+# Entornos de desarrollo
+.idea/
+.vscode/
+*.iml
+
+# Java y Maven
+backend/target/
+*.class
+
+# React y Node
+frontend/node_modules/
+frontend/dist/
+node_modules/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+
+# Variables de entorno y configuracion privada
+.env
+.env.*
+!.env.example
+!.env.*.example
+application-local.properties
+
+# Archivos temporales
+*.log
+*.tmp
+*.bak
+.DS_Store
+Thumbs.db

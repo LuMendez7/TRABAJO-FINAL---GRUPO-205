@@ -1,7 +1,6 @@
-
 package com.bibliogest.backend.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import jakarta.servlet.DispatcherType;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -12,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.web.cors.CorsConfiguration;
 
-import java.util.Arrays;
 import java.util.List;
 
 @Configuration
@@ -24,24 +22,17 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            @Value("${BIBLIOGEST_CORS_ALLOWED_ORIGINS:http://localhost:5173,http://localhost:5174}")
-            String configuredOrigins)
+    public SecurityFilterChain securityFilterChain(HttpSecurity http)
             throws Exception {
-
-        List<String> allowedOrigins = Arrays.stream(configuredOrigins.split(",", -1))
-                .map(String::trim)
-                .toList();
-        if (allowedOrigins.stream().anyMatch(origin -> origin.isEmpty() || origin.contains("*"))) {
-            throw new IllegalArgumentException("La configuracion de origenes CORS es invalida");
-        }
 
         http
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
 
-                    config.setAllowedOrigins(allowedOrigins);
+                    config.setAllowedOrigins(List.of(
+                            "http://localhost:5173",
+                            "http://localhost:5174"
+                    ));
 
                     config.setAllowedMethods(List.of(
                             "GET", "POST", "PUT", "DELETE", "OPTIONS"
@@ -60,7 +51,22 @@ public class SecurityConfig {
                         )
                 )
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+
+                        .requestMatchers(
+                                HttpMethod.GET,
+                                "/api/fichas/**"
+                        ).permitAll()
+
+                        // Permitir el procesamiento interno de errores.
+                        .dispatcherTypeMatchers(
+                                DispatcherType.ERROR
+                        ).permitAll()
+
+                        .requestMatchers(
+                                HttpMethod.OPTIONS, "/**"
+                        ).permitAll()
+
+                        // Catalogo publico.
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/libros/activos",
@@ -68,14 +74,59 @@ public class SecurityConfig {
                                 "/api/categorias/**",
                                 "/api/autores/**"
                         ).permitAll()
-                        .requestMatchers("/api/auth/me").authenticated()
 
+                        // Registro publico de lectores.
+                        .requestMatchers(
+                                HttpMethod.POST,
+                                "/api/auth/registro"
+                        ).permitAll()
+
+                        // Usuario autenticado.
+                        .requestMatchers(
+                                "/api/auth/me"
+                        ).authenticated()
+
+                        // Consulta de prestamos propios.
                         .requestMatchers(
                                 HttpMethod.GET,
                                 "/api/prestamos/mis-prestamos"
                         ).authenticated()
 
-                        .requestMatchers("/api/**").hasRole("BIBLIOTECARIO")
+
+                        // Reservas bibliograficas.
+                        .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/reservas/mis-reservas"
+                        ).hasRole("LECTOR")
+
+                        .requestMatchers(
+                            HttpMethod.POST,
+                            "/api/reservas/solicitar"
+                        ).hasRole("LECTOR")
+
+                        .requestMatchers(
+                            HttpMethod.PUT,
+                            "/api/reservas/*/cancelar"
+                        ).hasAnyRole("LECTOR", "BIBLIOTECARIO")
+
+                        // Notificaciones personales.
+                        .requestMatchers(
+                            HttpMethod.GET,
+                            "/api/notificaciones",
+                            "/api/notificaciones/no-leidas"
+                        ).hasAnyRole("LECTOR", "BIBLIOTECARIO")
+
+                        .requestMatchers(
+                            HttpMethod.PUT,
+                            "/api/notificaciones/*/leer",
+                            "/api/notificaciones/leer-todas"
+                        ).hasAnyRole("LECTOR", "BIBLIOTECARIO")
+
+                        // Operaciones administrativas.
+                        .requestMatchers(
+                                "/api/**"
+                        ).hasRole("BIBLIOTECARIO")
+
                         .anyRequest().denyAll()
                 )
                 .httpBasic(basic -> {});

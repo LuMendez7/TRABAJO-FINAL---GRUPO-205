@@ -24,18 +24,23 @@ public class BibliogestUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String email)
             throws UsernameNotFoundException {
 
-        if (email == null || email.isBlank()) {
-            throw new UsernameNotFoundException("Usuario no encontrado");
-        }
-        Usuario usuario = usuarioRepository.findByEmailIgnoreCase(email.trim().toLowerCase(Locale.ROOT))
+        String emailNormalizado =
+                email.trim().toLowerCase(Locale.ROOT);
+
+        Usuario usuario = usuarioRepository
+                .findByEmail(emailNormalizado)
                 .orElseThrow(() -> new UsernameNotFoundException(
                         "Usuario no encontrado"));
+
+        boolean cuentaHabilitada =
+                Boolean.TRUE.equals(usuario.getActivo()) &&
+                "APROBADO".equals(usuario.getEstadoCuenta());
 
         return User.builder()
                 .username(usuario.getEmail())
                 .password(usuario.getPassword())
                 .roles(usuario.getRol())
-                .disabled(!Boolean.TRUE.equals(usuario.getActivo()))
+                .disabled(!cuentaHabilitada)
                 .build();
     }
 }

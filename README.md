@@ -11,13 +11,45 @@ Proyecto desarrollado en el marco del Trabajo Final Integrador de la Tecnicatura
 * Sergio Andrés Antonini
 
 ---
-## Estado de implementación y verificación (octubre de 2026)
+## Estado actual de implementación (noviembre de 2026)
 
-BiblioGest integra un frontend React, TypeScript y Vite; un backend Java 17, Spring Boot y Spring Security; y persistencia JPA preparada para MySQL. La lista de pruebas automatizadas y sus límites se mantiene en [docs/VERIFICACION_MVP.md](docs/VERIFICACION_MVP.md).
+BiblioGest cuenta con una versión funcional en entorno local, desarrollada como Trabajo Final Integrador de la Tecnicatura Universitaria en Programación.
 
-El repositorio implementa catálogo público y búsqueda, autenticación con roles `BIBLIOTECARIO` y `LECTOR`, administración de usuarios, autores, categorías, libros y ejemplares, circulación de préstamos y devoluciones, consulta de préstamos propios e indicador dinámico de vencimiento. La editorial se guarda como texto de `Libro`; no hay un módulo ni tabla independiente de editoriales. Los ejemplares separan estado de circulación (`DISPONIBLE`/`PRESTADO`) de `estadoFisico` y `ubicacion`.
+### Tecnologías utilizadas
 
-En F09 se aprobaron 70 pruebas automatizadas del backend, ESLint y la compilación del frontend. MySQL 8.0.46/InnoDB validó el esquema actual, el arranque con `ddl-auto=validate`, el bootstrap y la autenticación; también se probaron la migración histórica F06 y la concurrencia funcional de préstamos en una base de ensayo. Los smoke tests y sus límites están detallados en [docs/VERIFICACION_MVP.md](docs/VERIFICACION_MVP.md). La pérdida de autenticación tras F5 requiere iniciar sesión nuevamente y se acepta como limitación del MVP. El repositorio no se presenta como un despliegue público listo para producción.
+- Frontend: React, TypeScript, Vite y React Router.
+- Backend: Java 17, Spring Boot, Spring Security y Maven.
+- Persistencia: MySQL, JPA e Hibernate.
+- Control de versiones: Git y GitHub.
+
+### Funcionalidades implementadas
+
+- Página de inicio y catálogo bibliográfico público.
+- Búsqueda y filtrado de libros.
+- Consulta de disponibilidad de ejemplares.
+- Autenticación y autorización según roles.
+- Registro de lectores con aprobación del bibliotecario.
+- Administración de usuarios, libros y ejemplares.
+- Registro y seguimiento de préstamos y devoluciones.
+- Consulta de préstamos propios del lector.
+- Identificación de préstamos vencidos.
+- Gestión de reservas bibliográficas.
+- Notificaciones internas y recordatorios de devolución.
+- Fichas bibliográficas con descripciones y portadas.
+- Edición administrativa de fichas bibliográficas.
+- Buscadores inteligentes de lectores y ejemplares.
+- Interfaz adaptable con navegación mediante React Router.
+- Actualización del esquema SQL y del modelo entidad-relación.
+
+### Verificación funcional
+
+Como antecedente, la entrega F09 registró 70 pruebas automatizadas del backend, ESLint, compilación del frontend y verificaciones con MySQL de ensayo. Estos resultados corresponden a la [versión anterior F09](https://github.com/LuMendez7/TRABAJO-FINAL---GRUPO-205/blob/8be5beca2d69dd8883ae11355aa6213e8feb7871/docs/VERIFICACION_MVP.md), no a la suite de la versión ampliada de noviembre.
+
+Se realizaron pruebas manuales en entorno local sobre los principales flujos de acceso, administración bibliotecaria, circulación, registro de lectores, reservas y notificaciones.
+
+La aplicación utiliza una base de datos MySQL local. Las credenciales deben configurarse mediante variables de entorno. No se deben publicar datos personales de los usuarios ni credenciales reales.
+
+La versión actual está destinada a la demostración académica. El despliegue público y la validación automatizada integral de esta versión requieren verificaciones adicionales.
 
 ---
 
@@ -44,7 +76,7 @@ A partir de esta problemática surge la necesidad de centralizar la información
 ## Solución propuesta
 Se propone desarrollar BiblioGest, una aplicación web que permita centralizar los principales procesos de gestión de una biblioteca.
 
-El personal bibliotecario podrá administrar usuarios, libros, autores, categorías y ejemplares, además de registrar préstamos y devoluciones. La editorial se registra como atributo de texto de `Libro`; no hay gestión independiente de editoriales.
+El personal bibliotecario podrá administrar usuarios, libros, autores, categorías y ejemplares, además de registrar préstamos y devoluciones.
 
 Los lectores podrán consultar el catálogo, realizar búsquedas y conocer la disponibilidad de los materiales.
 
@@ -59,7 +91,7 @@ Es el principal responsable de la gestión de la biblioteca y tendrá acceso a l
 
 Sus principales necesidades son:
 
-* Registrar y actualizar libros, autores y categorías; la editorial es un atributo del libro.
+* Registrar y actualizar libros, autores y categorías.
 
 * Administrar los ejemplares físicos de la biblioteca.
 
@@ -90,6 +122,9 @@ Sus principales necesidades son:
 
 El lector no tendrá acceso a las funciones administrativas, como registrar o modificar libros, usuarios, ejemplares o préstamos.
 
+### Ampliaciones implementadas
+El bibliotecario puede aprobar o rechazar solicitudes de registro, gestionar reservas y editar fichas bibliográficas. Los lectores pueden solicitar una cuenta, realizar reservas y consultar notificaciones internas.
+
 ### Usuario de referencia
 Para el relevamiento inicial del proyecto se cuenta con un usuario real vinculado al contexto de aplicación: uno de los integrantes del equipo se desempeña como bibliotecario en una institución educativa.
 
@@ -103,7 +138,7 @@ Desarrollar una aplicación web para centralizar y facilitar la gestión de una 
 
 ---
 ## Objetivos específicos
-* Centralizar en una única aplicación la información relacionada con libros, autores, categorías, ejemplares, usuarios y préstamos. La editorial se guarda en `libro.editorial`.
+* Centralizar en una única aplicación la información relacionada con libros, autores, categorías, ejemplares, usuarios y préstamos.
 
 * Facilitar el registro y seguimiento de los préstamos y devoluciones realizados en la biblioteca.
 
@@ -132,13 +167,13 @@ Permitirá registrar los libros que forman parte del catálogo de la biblioteca,
 Permitirá registrar y consultar autores, asociándolos con los libros correspondientes del catálogo.
 
 #### Editorial del libro
-El nombre de la editorial se registra como atributo de texto de `Libro`. No se crea un catálogo ni un módulo independiente de editoriales.
+La editorial se almacena como atributo de texto del libro, sin un módulo independiente.
 
 #### Gestión de categorías
 Permitirá organizar los libros en diferentes categorías para facilitar su clasificación y posterior búsqueda dentro del sistema.
 
 #### Gestión de ejemplares
-Permitirá registrar los ejemplares físicos correspondientes a cada libro, identificar su ubicación y registrar su estado físico. La disponibilidad de cada ejemplar se determinará a partir de los préstamos registrados en el sistema.
+Permitirá registrar los ejemplares físicos correspondientes a cada libro, identificarlos mediante su código de inventario. La disponibilidad de cada ejemplar se determinará a partir de los préstamos registrados en el sistema.
 
 #### Gestión de préstamos
 Permitirá registrar el préstamo de un ejemplar a un usuario, almacenando la fecha en que se realiza y la información necesaria para efectuar su seguimiento. Solo podrán prestarse ejemplares que se encuentren disponibles.
@@ -163,7 +198,7 @@ Permitirá conocer si un libro posee ejemplares disponibles para préstamo.
 Los lectores que ingresen al sistema podrán consultar los préstamos asociados a su usuario y la información correspondiente a cada uno de ellos.
 
 ### Acceso y roles
-El sistema contará con autenticación de usuarios y control de acceso según el rol. El Bibliotecario / Administrador tendrá acceso a las funciones de gestión, mientras que el Lector tendrá acceso únicamente a las funcionalidades de consulta habilitadas.
+El sistema contará con autenticación de usuarios y control de acceso según el rol. El Bibliotecario / Administrador tendrá acceso a las funciones de gestión, mientras que el Lector podrá consultar el catálogo y sus préstamos, gestionar sus reservas y consultar sus notificaciones.
 
 ---
 ## Producto Mínimo Viable (MVP)
@@ -179,7 +214,7 @@ El MVP incluirá:
 
 * Gestión de autores.
 
-* Editorial como atributo de texto de cada libro, sin módulo independiente.
+* Editorial como atributo del libro.
 
 * Gestión de categorías.
 
@@ -221,7 +256,6 @@ Para mantener un alcance viable durante la primera versión del proyecto, las si
 
 * Lectura o generación de códigos de barras o códigos QR.
 
-* Reservas de libros.
 
 Estas funcionalidades podrán evaluarse como posibles mejoras o ampliaciones futuras una vez que las funciones principales del sistema se encuentren implementadas y validadas.
 
@@ -251,7 +285,7 @@ React y TypeScript se utilizan para desarrollar la interfaz web; Vite se utiliza
 ## Base de datos
 - MySQL
 
-Se utiliza una base de datos relacional para usuarios, libros, autores, categorías, ejemplares y préstamos. La editorial es una columna de `libro`, no una tabla relacionada.
+Se utiliza una base de datos relacional debido a que la información principal del sistema presenta relaciones claras entre usuarios, libros, autores, categorías, ejemplares y préstamos.
 
 ## Herramientas de desarrollo
 Como herramientas de apoyo se utilizarán:
@@ -281,19 +315,19 @@ El sistema utilizará una arquitectura cliente-servidor.
 
 Frontend Web
 
-     |
+     |
 
-     | HTTP / REST
+     | HTTP / REST
 
-     v
+     v
 
 Backend - API REST
 
-     |
+     |
 
-     | JPA / Hibernate
+     | JPA / Hibernate / JDBC
 
-     v
+     v
 
 Base de Datos MySQL
 
@@ -369,7 +403,7 @@ La aplicación buscará ofrecer una interfaz sencilla que pueda ser utilizada ta
 ### Viabilidad temporal
 El proyecto se considera viable dentro del período disponible para el Trabajo Final Integrador debido a que se definió un Producto Mínimo Viable con las funcionalidades esenciales.
 
-Las características de mayor complejidad o que no resultan indispensables para resolver la problemática inicial, como reservas, notificaciones automáticas, estadísticas avanzadas, recomendaciones e integraciones externas, fueron excluidas del MVP y podrán evaluarse como mejoras futuras.
+Las características de mayor complejidad o que no resultan indispensables para resolver la problemática inicial, como estadísticas avanzadas, recomendaciones, notificaciones por correo electrónico e integraciones externas, fueron excluidas del MVP y podrán evaluarse como mejoras futuras.
 
 Esta delimitación permite priorizar el desarrollo de las funciones principales y disminuir el riesgo de que un alcance excesivo impida completar el proyecto dentro de los plazos establecidos.
 
@@ -442,17 +476,20 @@ El diseño inicial de BiblioGest contempla las siguientes entidades principales 
 
 - Autor
 
-- Editorial
-
 - Categoría
 
 - Ejemplar
 
 - Préstamo
+- Reserva
+- Notificación
+- Ficha bibliográfica
+
+La editorial es un atributo del libro.
 
 Además, se utiliza la tabla intermedia `libro_autor` para representar la relación entre libros y autores.
 
-La funcionalidad de reservas no forma parte del MVP y podrá evaluarse como una posible ampliación futura del sistema.
+Las reservas, las notificaciones internas y las fichas bibliográficas fueron incorporadas como ampliaciones del MVP original.
 
 ---
 # Plan de trabajo
@@ -601,7 +638,9 @@ Contendrá diagramas, documentación técnica, informes y material relacionado c
 
 ---
 # Estado del proyecto
-El código incluye el MVP de catálogo, administración y circulación descrito en este README. En F09 pasaron la suite automatizada con H2, ESLint, la compilación frontend y las verificaciones documentadas contra MySQL de ensayo y en navegador. La matriz [docs/VERIFICACION_MVP.md](docs/VERIFICACION_MVP.md) registra cada criterio, incluido el comportamiento aceptado de reautenticación después de F5.
+El proyecto superó la etapa de diseño y cuenta con una versión funcional integrada en entorno local. Se completaron el modelo de datos inicial, el Diagrama Entidad-Relación, el desarrollo de la API REST con Spring Boot, la conexión a MySQL, el frontend con React, el inicio de sesión por roles y las principales operaciones de gestión bibliotecaria.
+
+La versión actual incorpora las funcionalidades principales del MVP y ampliaciones relacionadas con reservas, notificaciones internas, registro de lectores y fichas bibliográficas. El sistema funciona en entorno local. Se encuentra en etapa de cierre, verificación final y preparación de la presentación académica.
 
 ---
 ## Repositorio del proyecto
@@ -612,7 +651,7 @@ Todo el desarrollo, documentación, base de datos, frontend y backend del Trabaj
 Como parte del diseño de BiblioGest se realizó el modelado inicial de la base de datos y se definieron los principales módulos que organizarán las funcionalidades del sistema.
 
 ## Diseño de la base de datos
-Se definió un modelo relacional para MySQL con libros, autores, categorías, ejemplares, usuarios y préstamos. La editorial forma parte de `libro` como texto.
+Se definió un modelo de base de datos relacional utilizando MySQL. El diseño contempla libros, autores, categorías, ejemplares, usuarios, préstamos, reservas, notificaciones y fichas bibliográficas, además de la relación libro_autor. La editorial es un atributo del libro.
 
 La documentación del modelo, sus relaciones, reglas de negocio y el Diagrama Entidad-Relación se encuentran en la carpeta:
 
@@ -650,7 +689,7 @@ La descripción de los módulos se encuentra en:
 ## Backend
 
 1. Abrir la carpeta `backend` en IntelliJ IDEA.
-2. Configurar la conexión a MySQL según los valores del archivo de configuración de Spring Boot. La contraseña de la base de datos debe mantenerse fuera del repositorio; en el entorno de desarrollo se utiliza una variable de entorno como `DB_PASSWORD`.
+2. Preparar una base de datos nueva de ensayo con `database/schema.sql` (no ejecutar el esquema sobre una base existente con datos). Configurar la conexión a MySQL según los valores del archivo de configuración de Spring Boot. La contraseña de la base de datos debe mantenerse fuera del repositorio; en el entorno de desarrollo se utiliza una variable de entorno como `DB_PASSWORD`.
 3. Ejecutar la aplicación Spring Boot desde IntelliJ IDEA. La API se utiliza localmente en `http://localhost:8080`.
 
 > No publicar contraseñas reales, credenciales de usuarios ni archivos `.env` con secretos en GitHub.
@@ -660,7 +699,7 @@ La descripción de los módulos se encuentra en:
 Desde una terminal ubicada en `frontend`:
 
 ```powershell
-npm ci
+npm install
 npm run dev
 ```
 
@@ -670,24 +709,23 @@ Para comprobar la compilación:
 
 ```powershell
 npm run build
-npm run lint
 ```
-
-La versión de Node requerida por Vite y el uso de `.env.example` se detallan en [frontend/README.md](frontend/README.md). `VITE_API_URL` configura el origen del backend para el bundle; no se deben guardar secretos en variables `VITE_`.
 
 ## Roles y permisos
 
-| Acceso | Permisos y consultas implementados (cobertura automatizada en F09) |
+La sesión del frontend se mantiene en memoria; al recargar la página puede ser necesario iniciar sesión nuevamente.
+
+| Acceso | Funciones verificadas |
 | --- | --- |
-| Visitante | Consultar catálogo y ejemplares activos; no puede usar operaciones administrativas |
-| Lector autenticado | Consultar catálogo y únicamente sus préstamos propios |
-| Bibliotecario autenticado | Administrar usuarios, autores, categorías, libros y ejemplares; registrar préstamos y devoluciones |
+| Visitante | Consultar el catálogo, buscar libros, visualizar fichas bibliográficas y solicitar una cuenta |
+| Lector autenticado | Consultar el catálogo, sus propios préstamos, reservas y notificaciones |
+| Bibliotecario autenticado | Gestionar libros, ejemplares, lectores, préstamos, devoluciones, reservas, solicitudes de registro y fichas bibliográficas |
 
 La autenticación de la API utiliza HTTP Basic con contraseñas almacenadas mediante BCrypt. La autorización se comprueba en el backend, no solamente ocultando botones en el frontend. **Para un despliegue público será necesario utilizar HTTPS y revisar el mecanismo de autenticación y la configuración de producción.**
 
-## Registros manuales anteriores
+## Pruebas manuales de integración
 
-El README de entregas anteriores registró las operaciones siguientes como verificadas en su entorno local. La verificación adicional de F09 está desglosada por escenario en [docs/VERIFICACION_MVP.md](docs/VERIFICACION_MVP.md):
+En el entorno local se verificaron estas operaciones:
 
 1. Registrar un libro.
 2. Registrar un ejemplar asociado al libro.
@@ -697,8 +735,91 @@ El README de entregas anteriores registró las operaciones siguientes como verif
 6. Registrar la devolución y recuperar la disponibilidad.
 7. Desactivar al lector mediante baja lógica.
 
-La verificación actual de navegador, MySQL, historial de rutas y pruebas automatizadas se detalla por criterio en [docs/VERIFICACION_MVP.md](docs/VERIFICACION_MVP.md). La sesión frontend está en memoria: al recargar, ambos roles deben iniciar sesión otra vez.
+También se comprobó la visualización diferenciada de menús para visitantes, lectores y bibliotecarios, y el historial de navegación de React Router.
 
 ## Repositorio
 
 [GitHub - TRABAJO-FINAL---GRUPO-205](https://github.com/LuMendez7/TRABAJO-FINAL---GRUPO-205)
+
+---
+
+# Funcionalidades de la versión actual
+
+## Catálogo bibliográfico
+
+- Catálogo público de libros activos.
+- Búsqueda por título, autor, editorial, ISBN y código de inventario.
+- Filtros por categoría y disponibilidad.
+- Ordenamiento y paginación de resultados.
+- Visualización de fichas bibliográficas.
+- Portadas originales cuando están disponibles.
+- Portadas alternativas generadas visualmente para los libros sin imagen original.
+- Edición de descripciones y carga, sustitución o eliminación de portadas por el bibliotecario.
+
+## Usuarios y seguridad
+
+- Registro de lectores mediante solicitud de cuenta.
+- Aprobación o rechazo de solicitudes por el bibliotecario.
+- Inicio y cierre de sesión.
+- Acceso diferenciado para visitantes, lectores y bibliotecarios.
+- Contraseñas protegidas mediante BCrypt.
+- Autorización de operaciones mediante Spring Security.
+- Baja lógica de usuarios.
+
+## Circulación de materiales
+
+- Registro y consulta de préstamos.
+- Registro de devoluciones.
+- Actualización de disponibilidad de ejemplares.
+- Consulta de préstamos propios por el lector.
+- Buscadores de lectores y ejemplares para agilizar el registro de préstamos.
+
+## Reservas
+
+- Solicitud de reservas por lectores autenticados.
+- Gestión de solicitudes por el bibliotecario.
+- Seguimiento del estado de las reservas.
+- Control de vencimientos y disponibilidad de ejemplares.
+
+## Notificaciones internas
+
+- Centro de notificaciones integrado en la aplicación.
+- Avisos relacionados con reservas.
+- Recordatorios de próximas devoluciones.
+- Avisos de préstamos vencidos.
+- Procesamiento automático de eventos mediante tareas programadas.
+
+Las notificaciones se gestionan dentro de BiblioGest. No se implementó el envío por correo electrónico ni mensajería externa.
+
+## Modelo de datos actualizado
+
+La implementación utiliza diez tablas:
+
+- usuario
+- categoria
+- autor
+- libro
+- libro_autor
+- ejemplar
+- prestamo
+- ficha_bibliografica
+- reserva
+- notificacion
+
+La editorial se almacena como atributo del libro. Las devoluciones se registran sobre los préstamos.
+
+## Documentación técnica
+
+- [Módulos del sistema](docs/modulos.md)
+- [Documentación de base de datos](database/README.md)
+- [Esquema SQL](database/schema.sql)
+- [Modelo editable de MySQL Workbench](database/BiblioGest-Modelo-MySQL.mwb)
+- [Diagrama Entidad-Relación](database/DER-BiblioGest.png)
+
+## Consideraciones de implementación
+
+El sistema se ejecuta actualmente en un entorno local. El esquema SQL permite preparar una base nueva sin incluir credenciales ni información personal de los usuarios.
+
+Las imágenes alternativas del catálogo son representaciones visuales generadas por la aplicación y no reproducciones de las portadas editoriales originales.
+
+Antes de un despliegue público se deberán revisar HTTPS, configuración de producción, gestión de credenciales, respaldos y protección de datos personales.

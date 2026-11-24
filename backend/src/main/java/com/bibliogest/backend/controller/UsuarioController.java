@@ -7,6 +7,10 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(origins = {
+        "http://localhost:5173",
+        "http://localhost:5174"
+})
 @RestController
 @RequestMapping("/api/usuarios")
 public class UsuarioController {
@@ -49,5 +53,20 @@ public class UsuarioController {
     @GetMapping("/activos")
     public List<Usuario> listarActivos() {
         return usuarioService.listarActivos();
+    }
+
+    @GetMapping("/pendientes")
+    public List<Usuario> listarPendientes() {
+        return usuarioService.listarPendientes();
+    }
+
+    @PutMapping("/{id}/aprobar")
+    public Usuario aprobar(@PathVariable Long id) {
+        return usuarioService.aprobar(id);
+    }
+
+    @PutMapping("/{id}/rechazar")
+    public Usuario rechazar(@PathVariable Long id) {
+        return usuarioService.rechazar(id);
     }
 }

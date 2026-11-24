@@ -1,7 +1,5 @@
 package com.bibliogest.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonSetter;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -36,16 +34,6 @@ public class Libro {
 
     @Column(nullable = false)
     private Boolean activo = true;
-
-    @Transient
-    @JsonIgnore
-    private boolean activoEnviado;
-
-    @JsonSetter("activo")
-    public void setActivo(Boolean activo) {
-        this.activo = activo;
-        this.activoEnviado = true;
-    }
 
     @ManyToOne
     @JoinColumn(name = "id_categoria", nullable = false)

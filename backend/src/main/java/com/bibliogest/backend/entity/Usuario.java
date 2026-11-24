@@ -36,4 +36,7 @@ public class Usuario {
 
     @Column(nullable = false)
     private Boolean activo = true;
+
+    @Column(name = "estado_cuenta", nullable = false, length = 20)
+    private String estadoCuenta = "APROBADO";
 }
