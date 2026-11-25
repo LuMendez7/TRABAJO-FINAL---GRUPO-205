@@ -15,6 +15,11 @@ import java.util.Optional;
 public interface EjemplarRepository
         extends JpaRepository<Ejemplar, Long> {
 
+    @Override
+    @Query("SELECT DISTINCT e FROM Ejemplar e JOIN FETCH e.libro l JOIN FETCH l.categoria LEFT JOIN FETCH l.autores")
+    List<Ejemplar> findAll();
+
+    @Query("SELECT DISTINCT e FROM Ejemplar e JOIN FETCH e.libro l JOIN FETCH l.categoria LEFT JOIN FETCH l.autores WHERE e.activo = true")
     List<Ejemplar> findByActivoTrue();
 
     List<Ejemplar>
