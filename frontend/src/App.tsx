@@ -84,25 +84,95 @@ function AppContenido() {
         navigate(rutas[nuevaVista])
     }
     const [sesion, setSesion] = useState<Sesion | null>(null)
+    const [verificandoSesion, setVerificandoSesion] = useState(true)
+
+    useEffect(() => {
+        let cancelado = false
+
+        const recuperarSesion = async () => {
+            try {
+                const token = sessionStorage.getItem('bibliogest_token')
+
+                if (!token) return
+
+                const autorizacion = `Bearer ${token}`
+
+                const respuesta = await fetch(
+                    `${API_BASE_URL}/api/auth/me`,
+                    { headers: { Authorization: autorizacion } }
+                )
+
+                if (cancelado) return
+
+                if (respuesta.status === 401 || respuesta.status === 403) {
+                    sessionStorage.removeItem('bibliogest_token')
+                    return
+                }
+
+                if (!respuesta.ok) {
+                    throw new Error('No se pudo verificar la sesion.')
+                }
+
+                const usuario = await respuesta.json()
+
+                if (cancelado) return
+
+                if (!['LECTOR', 'BIBLIOTECARIO'].includes(usuario.rol)) {
+                    sessionStorage.removeItem('bibliogest_token')
+                    return
+                }
+
+                setSesion({
+                    email: usuario.email,
+                    rol: usuario.rol,
+                    autorizacion
+                })
+            } catch {
+                // Conservar el token ante fallos temporales de conexion.
+            } finally {
+                if (!cancelado) setVerificandoSesion(false)
+            }
+        }
+
+        void recuperarSesion()
+
+        return () => { cancelado = true }
+    }, [])
     const [revisionDatos, setRevisionDatos] = useState(0)
     const esBibliotecario = sesion?.rol === 'BIBLIOTECARIO'
     const esLector = sesion?.rol === 'LECTOR'
     // La URL identifica la pantalla. Las rutas administrativas se restringen por rol.
     useEffect(() => {
+        if (verificandoSesion) return
+
         if (rutaActual !== rutas[vista] ||
             ((vista === 'prestamos' || vista === 'usuarios' || vista === 'solicitudes' || vista === 'reservas') && !esBibliotecario) ||
             ((vista === 'mis-prestamos' || vista === 'mis-reservas') && !esLector) ||
             ((vista === 'login' || vista === 'registro') && sesion)) {
             navigate('/', { replace: true })
         }
-    }, [rutaActual, vista, esBibliotecario, esLector, sesion, navigate])
+    }, [rutaActual, vista, esBibliotecario, esLector, sesion, navigate, verificandoSesion])
     const iniciarSesion = (nuevaSesion: Sesion) => {
         setMisPrestamos([])
         setErrorMisPrestamos('')
+        sessionStorage.setItem(
+            'bibliogest_token',
+            nuevaSesion.autorizacion.substring(7)
+        )
         setSesion(nuevaSesion)
         setVista('inicio')
     }
     const cerrarSesion = () => {
+        sessionStorage.removeItem('bibliogest_token')
+
+        if (sesion) {
+            void fetch(`${API_BASE_URL}/api/auth/logout`, {
+                method: 'POST',
+                headers: {
+                    Authorization: sesion.autorizacion
+                }
+            }).catch(() => {})
+        }
         setSesion(null)
         setUsuarios([])
         setPrestamos([])
@@ -1374,7 +1444,11 @@ function AppContenido() {
             </section>
         )
     }
-    return (
+    if (verificandoSesion) {
+        return <p role="status">Verificando sesion...</p>
+    }
+
+return (
         <div className="app">
             <header className="encabezado">
                 <div>

@@ -2,6 +2,8 @@ package com.bibliogest.backend.controller;
 
 import com.bibliogest.backend.entity.Usuario;
 import com.bibliogest.backend.service.UsuarioService;
+import com.bibliogest.backend.security.SesionTokenService;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -13,9 +15,13 @@ import java.util.Map;
 public class AuthController {
 
     private final UsuarioService usuarioService;
+    private final SesionTokenService tokens;
 
-    public AuthController(UsuarioService usuarioService) {
+    public AuthController(
+            UsuarioService usuarioService,
+            SesionTokenService tokens) {
         this.usuarioService = usuarioService;
+        this.tokens = tokens;
     }
 
     @GetMapping("/me")
@@ -34,6 +40,38 @@ public class AuthController {
                 "email", authentication.getName(),
                 "rol", rol
         );
+    }
+
+    @PostMapping("/login")
+    public Map<String, String> iniciarSesion(
+            Authentication authentication) {
+
+        Map<String, String> usuario =
+                usuarioActual(authentication);
+
+        String token = tokens.crear(
+                authentication.getName()
+        );
+
+        return Map.of(
+                "email", usuario.get("email"),
+                "rol", usuario.get("rol"),
+                "token", token
+        );
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void cerrarSesion(
+            @RequestHeader(
+                value = "Authorization",
+                required = false
+            ) String autorizacion) {
+
+        if (autorizacion != null
+                && autorizacion.startsWith("Bearer ")) {
+            tokens.invalidar(autorizacion.substring(7));
+        }
     }
 
     @PostMapping("/registro")

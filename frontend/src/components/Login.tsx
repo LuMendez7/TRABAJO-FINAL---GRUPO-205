@@ -41,9 +41,9 @@ export default function Login({ onLogin }: LoginProps) {
       const autorizacion = `Basic ${btoa(binario)}`
 
       const respuesta = await fetch(
-        `${API_BASE_URL}/api/auth/me`,
+        `${API_BASE_URL}/api/auth/login`,
         {
-          method: 'GET',
+          method: 'POST',
           headers: {
             Authorization: autorizacion,
           },
@@ -58,7 +58,7 @@ export default function Login({ onLogin }: LoginProps) {
         throw new Error('No se pudo iniciar sesión.')
       }
 
-      const usuario: { email: string; rol: string } =
+      const usuario: { email: string; rol: string; token: string } =
         await respuesta.json()
 
       if (!['BIBLIOTECARIO', 'LECTOR'].includes(usuario.rol)) {
@@ -68,7 +68,7 @@ export default function Login({ onLogin }: LoginProps) {
       onLogin({
         email: usuario.email,
         rol: usuario.rol,
-        autorizacion,
+        autorizacion: `Bearer ${usuario.token}`,
       })
 
       setPassword('')

@@ -1,6 +1,10 @@
 package com.bibliogest.backend.config;
 
 import jakarta.servlet.DispatcherType;
+import com.bibliogest.backend.security.SesionTokenService;
+import com.bibliogest.backend.security.SesionTokenFilter;
+import com.bibliogest.backend.security.BibliogestUserDetailsService;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
@@ -22,7 +26,10 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain securityFilterChain(HttpSecurity http)
+    public SecurityFilterChain securityFilterChain(
+            HttpSecurity http,
+            SesionTokenService tokens,
+            BibliogestUserDetailsService usuarios)
             throws Exception {
 
         http
@@ -91,7 +98,7 @@ public class SecurityConfig {
 
                         // Usuario autenticado.
                         .requestMatchers(
-                                "/api/auth/me"
+                                "/api/auth/me", "/api/auth/login", "/api/auth/logout"
                         ).authenticated()
 
                         // Consulta de prestamos propios.
@@ -136,6 +143,10 @@ public class SecurityConfig {
                         ).hasRole("BIBLIOTECARIO")
 
                         .anyRequest().denyAll()
+                )
+                .addFilterBefore(
+                        new SesionTokenFilter(tokens, usuarios),
+                        BasicAuthenticationFilter.class
                 )
                 .httpBasic(basic -> {});
 

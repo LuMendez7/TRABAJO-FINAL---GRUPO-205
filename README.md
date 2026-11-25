@@ -13,13 +13,13 @@ Proyecto desarrollado en el marco del Trabajo Final Integrador de la Tecnicatura
 ---
 ## Estado actual de implementación (noviembre de 2026)
 
-BiblioGest cuenta con una versión funcional en entorno local, desarrollada como Trabajo Final Integrador de la Tecnicatura Universitaria en Programación.
+BiblioGest cuenta con una versión funcional en entorno local y online, desarrollada como Trabajo Final Integrador de la Tecnicatura Universitaria en Programación.
 
 ### Tecnologías utilizadas
 
 - Frontend: React, TypeScript, Vite y React Router.
 - Backend: Java 17, Spring Boot, Spring Security y Maven.
-- Persistencia: MySQL, JPA e Hibernate.
+- Persistencia: MySQL, TiDB Cloud, JPA e Hibernate.
 - Control de versiones: Git y GitHub.
 
 ### Funcionalidades implementadas
@@ -47,9 +47,9 @@ Como antecedente, la entrega F09 registró 70 pruebas automatizadas del backend,
 
 Se realizaron pruebas manuales en entorno local sobre los principales flujos de acceso, administración bibliotecaria, circulación, registro de lectores, reservas y notificaciones.
 
-La aplicación utiliza una base de datos MySQL local. Las credenciales deben configurarse mediante variables de entorno. No se deben publicar datos personales de los usuarios ni credenciales reales.
+La aplicación utiliza MySQL local y TiDB Cloud online. Las credenciales deben configurarse mediante variables de entorno. No se deben publicar datos personales de los usuarios ni credenciales reales.
 
-La versión actual está destinada a la demostración académica. El despliegue público y la validación automatizada integral de esta versión requieren verificaciones adicionales.
+La versión actual está destinada a la demostración académica. El despliegue público está operativo. La validación automatizada integral de la versión ampliada permanece pendiente.
 
 ---
 
@@ -303,9 +303,9 @@ Como herramientas de apoyo se utilizarán:
 Estas herramientas serán utilizadas para programación, administración de la base de datos, pruebas de la API y control de versiones, por lo que no se consideran tecnologías adicionales del sistema.
 
 ## Plataforma y despliegue
-BiblioGest se desarrolla como una aplicación web y actualmente se ejecuta en un entorno local.
+BiblioGest se desarrolla como una aplicación web y actualmente se ejecuta en entorno local y online.
 
-El despliegue público todavía no está confirmado. Como alternativa a evaluar se contempla Vercel para el frontend y servicios compatibles con Java y MySQL para el backend y la base de datos. La elección dependerá de la disponibilidad y compatibilidad de los servicios.
+El frontend y el backend están desplegados en Render. La base de datos online utiliza TiDB Cloud Starter.
 
 ---
 # Arquitectura propuesta
@@ -638,9 +638,9 @@ Contendrá diagramas, documentación técnica, informes y material relacionado c
 
 ---
 # Estado del proyecto
-El proyecto superó la etapa de diseño y cuenta con una versión funcional integrada en entorno local. Se completaron el modelo de datos inicial, el Diagrama Entidad-Relación, el desarrollo de la API REST con Spring Boot, la conexión a MySQL, el frontend con React, el inicio de sesión por roles y las principales operaciones de gestión bibliotecaria.
+El proyecto superó la etapa de diseño y cuenta con una versión funcional integrada en entorno local y online. Se completaron el modelo de datos inicial, el Diagrama Entidad-Relación, el desarrollo de la API REST con Spring Boot, la conexión a MySQL, el frontend con React, el inicio de sesión por roles y las principales operaciones de gestión bibliotecaria.
 
-La versión actual incorpora las funcionalidades principales del MVP y ampliaciones relacionadas con reservas, notificaciones internas, registro de lectores y fichas bibliográficas. El sistema funciona en entorno local. Se encuentra en etapa de cierre, verificación final y preparación de la presentación académica.
+La versión actual incorpora las funcionalidades principales del MVP y ampliaciones relacionadas con reservas, notificaciones internas, registro de lectores y fichas bibliográficas. El sistema funciona en entorno local y online. Se encuentra en etapa de cierre, verificación final y preparación de la presentación académica.
 
 ---
 ## Repositorio del proyecto
@@ -713,7 +713,7 @@ npm run build
 
 ## Roles y permisos
 
-La sesión del frontend se mantiene en memoria; al recargar la página puede ser necesario iniciar sesión nuevamente.
+La sesión se conserva mediante tokens temporales almacenados en sessionStorage. La recuperación de la sesión al actualizar la página se valida contra el backend.
 
 | Acceso | Funciones verificadas |
 | --- | --- |
@@ -721,7 +721,7 @@ La sesión del frontend se mantiene en memoria; al recargar la página puede ser
 | Lector autenticado | Consultar el catálogo, sus propios préstamos, reservas y notificaciones |
 | Bibliotecario autenticado | Gestionar libros, ejemplares, lectores, préstamos, devoluciones, reservas, solicitudes de registro y fichas bibliográficas |
 
-La autenticación de la API utiliza HTTP Basic con contraseñas almacenadas mediante BCrypt. La autorización se comprueba en el backend, no solamente ocultando botones en el frontend. **Para un despliegue público será necesario utilizar HTTPS y revisar el mecanismo de autenticación y la configuración de producción.**
+La autenticación inicial utiliza HTTP Basic con contraseñas protegidas mediante BCrypt. Posteriormente se utilizan tokens Bearer temporales con una duración máxima de ocho horas. La autorización se comprueba en el backend, no solamente ocultando botones en el frontend. El despliegue online utiliza HTTPS. Los tokens se almacenan en memoria del backend y se invalidan al reiniciar el servidor.
 
 ## Pruebas manuales de integración
 
@@ -818,8 +818,49 @@ La editorial se almacena como atributo del libro. Las devoluciones se registran 
 
 ## Consideraciones de implementación
 
-El sistema se ejecuta actualmente en un entorno local. El esquema SQL permite preparar una base nueva sin incluir credenciales ni información personal de los usuarios.
+El sistema se ejecuta en entorno local y online. El esquema SQL permite preparar una base nueva sin incluir credenciales ni información personal de los usuarios.
 
 Las imágenes alternativas del catálogo son representaciones visuales generadas por la aplicación y no reproducciones de las portadas editoriales originales.
 
-Antes de un despliegue público se deberán revisar HTTPS, configuración de producción, gestión de credenciales, respaldos y protección de datos personales.
+Antes de una puesta en producción institucional se deberán revisar la seguridad, la gestión de credenciales, los respaldos y la protección de datos personales.
+
+---
+
+# Despliegue online
+
+## Enlaces de acceso
+
+- Aplicación web: https://bibliogest-frontend.onrender.com
+- Backend: https://bibliogest-backend.onrender.com
+- Repositorio: https://github.com/LuMendez7/TRABAJO-FINAL---GRUPO-205
+
+## Infraestructura
+
+- Frontend: React, TypeScript y Render Static Site.
+- Backend: Java 17, Spring Boot y Docker en Render.
+- Base de datos local: MySQL.
+- Base de datos online: TiDB Cloud Starter.
+- Seguridad: Spring Security, BCrypt, HTTPS y tokens Bearer.
+
+## Verificaciones online
+
+- Catálogo público y disponibilidad de ejemplares.
+- Inicio de sesión como lector y bibliotecario.
+- Solicitud y aprobación de reservas.
+- Retiro de ejemplares y generación de préstamos.
+- Devoluciones y restitución de disponibilidad.
+- Notificaciones internas.
+
+## Consideraciones técnicas
+
+Se incorporó TiDBCompatibleDialect para garantizar la compatibilidad de los bloqueos pesimistas de Hibernate con TiDB Cloud en las operaciones verificadas.
+
+La persistencia de sesión mediante tokens temporales fue verificada localmente. Su comprobación online queda pendiente de esta actualización.
+
+Los tokens tienen una duración máxima de ocho horas y se invalidan al reiniciar el backend. La contraseña no se almacena en el navegador. Los tokens requieren protección frente a ataques XSS.
+
+El cierre de sesión solicita la invalidación del token al servidor. Si falla la solicitud, el token puede permanecer vigente hasta su vencimiento.
+
+Los servicios gratuitos de Render pueden suspenderse por inactividad.
+
+El despliegue está orientado a la demostración académica del Trabajo Final Integrador.
