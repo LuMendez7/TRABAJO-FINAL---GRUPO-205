@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../apiConfig'
 import { useState } from 'react'
 
 type Props = {
@@ -23,7 +24,7 @@ export default function BotonReserva({
 
         try {
             const respuesta = await fetch(
-                'http://localhost:8080/api/reservas/solicitar',
+                `${API_BASE_URL}/api/reservas/solicitar`,
                 {
                     method: 'POST',
                     headers: {

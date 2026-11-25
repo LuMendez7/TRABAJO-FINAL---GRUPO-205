@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../apiConfig'
 import { useEffect, useState } from 'react'
 
 type Props = {
@@ -130,7 +131,7 @@ export default function PortadaLibro(props: Props) {
             try {
 
                 const api =
-                    `http://localhost:8080/api/fichas/${idLibro}`
+                    `${API_BASE_URL}/api/fichas/${idLibro}`
 
                 const respuesta = await fetch(api, { signal })
 

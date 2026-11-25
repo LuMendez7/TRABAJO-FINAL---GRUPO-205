@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../apiConfig'
 import { useCallback, useEffect, useState } from 'react'
 
 interface Solicitud {
@@ -15,7 +16,7 @@ interface SolicitudesPendientesProps {
     onCambio?: () => void
 }
 
-const API = 'http://localhost:8080/api'
+const API = `${API_BASE_URL}/api`
 
 export default function SolicitudesPendientes({
     autorizacion,

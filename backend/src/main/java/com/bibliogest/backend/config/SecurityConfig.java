@@ -29,10 +29,18 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(request -> {
                     CorsConfiguration config = new CorsConfiguration();
 
-                    config.setAllowedOrigins(List.of(
+                    List<String> origenes = new java.util.ArrayList<>(List.of(
                             "http://localhost:5173",
                             "http://localhost:5174"
                     ));
+
+                    String frontendUrl = System.getenv("FRONTEND_URL");
+
+                    if (frontendUrl != null && !frontendUrl.isBlank()) {
+                        origenes.add(frontendUrl.trim().replaceAll("/+$", ""));
+                    }
+
+                    config.setAllowedOrigins(origenes);
 
                     config.setAllowedMethods(List.of(
                             "GET", "POST", "PUT", "DELETE", "OPTIONS"

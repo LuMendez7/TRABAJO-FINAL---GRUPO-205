@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../apiConfig'
 import { useState } from 'react'
 import type { FormEvent } from 'react'
 
@@ -47,7 +48,7 @@ export default function Registro({ onVolverLogin }: RegistroProps) {
 
         try {
             const respuesta = await fetch(
-                'http://localhost:8080/api/auth/registro',
+                `${API_BASE_URL}/api/auth/registro`,
                 {
                     method: 'POST',
                     headers: {

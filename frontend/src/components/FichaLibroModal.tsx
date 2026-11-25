@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../apiConfig'
 import BotonReserva from './BotonReserva'
 import EditorFichaLibro from './EditorFichaLibro'
 import { useEffect, useRef, useState } from 'react'
@@ -62,7 +63,7 @@ export default function FichaLibroModal({
         const cargarDescripcion = async () => {
             try {
                 const respuesta = await fetch(
-                    `http://localhost:8080/api/fichas/${idLibro}`,
+                    `${API_BASE_URL}/api/fichas/${idLibro}`,
                     { signal: controlador.signal }
                 )
 

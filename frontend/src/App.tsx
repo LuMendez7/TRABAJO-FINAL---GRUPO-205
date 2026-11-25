@@ -1,3 +1,4 @@
+import { API_BASE_URL } from './apiConfig'
 import BuscadorSeleccion from './components/BuscadorSeleccion'
 import CentroNotificaciones from './components/CentroNotificaciones'
 import Reservas from './components/Reservas'
@@ -177,10 +178,10 @@ function AppContenido() {
             try {
                 const [respuestaLibros, respuestaEjemplares,
                     respuestaCategorias, respuestaAutores] = await Promise.all([
-                    fetch('http://localhost:8080/api/libros/activos'),
-                    fetch('http://localhost:8080/api/ejemplares/activos'),
-                    fetch('http://localhost:8080/api/categorias'),
-                    fetch('http://localhost:8080/api/autores'),
+                    fetch(`${API_BASE_URL}/api/libros/activos`),
+                    fetch(`${API_BASE_URL}/api/ejemplares/activos`),
+                    fetch(`${API_BASE_URL}/api/categorias`),
+                    fetch(`${API_BASE_URL}/api/autores`),
                 ])
                 if (
                     !respuestaLibros.ok ||
@@ -202,12 +203,12 @@ function AppContenido() {
                 if (sesion?.rol === 'BIBLIOTECARIO') {
                     const [respuestaUsuarios, respuestaPrestamos] =
                         await Promise.all([
-                            fetch('http://localhost:8080/api/usuarios/activos', {
+                            fetch(`${API_BASE_URL}/api/usuarios/activos`, {
                                 headers: {
                                     Authorization: sesion.autorizacion,
                                 },
                             }),
-                            fetch('http://localhost:8080/api/prestamos', {
+                            fetch(`${API_BASE_URL}/api/prestamos`, {
                                 headers: {
                                     Authorization: sesion.autorizacion,
                                 },
@@ -254,7 +255,7 @@ function AppContenido() {
             setCargandoMisPrestamos(true)
             setErrorMisPrestamos('')
             try {
-                const respuesta = await fetch('http://localhost:8080/api/prestamos/mis-prestamos', {
+                const respuesta = await fetch(`${API_BASE_URL}/api/prestamos/mis-prestamos`, {
                     headers: { Authorization: sesion.autorizacion },
                     signal: controlador.signal,
                 })
@@ -340,7 +341,7 @@ function AppContenido() {
                     },
                 ],
             }
-            const respuesta = await fetch('http://localhost:8080/api/libros', {
+            const respuesta = await fetch(`${API_BASE_URL}/api/libros`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -352,7 +353,7 @@ function AppContenido() {
                 throw new Error('No se pudo guardar el libro')
             }
             const respuestaLibros = await fetch(
-                'http://localhost:8080/api/libros/activos'
+                `${API_BASE_URL}/api/libros/activos`
             )
             if (!respuestaLibros.ok) {
                 throw new Error('El libro se guardó, pero no se pudo actualizar el catálogo')
@@ -392,7 +393,7 @@ function AppContenido() {
                     idLibro: Number(nuevoEjemplar.idLibro),
                 },
             }
-            const respuesta = await fetch('http://localhost:8080/api/ejemplares', {
+            const respuesta = await fetch(`${API_BASE_URL}/api/ejemplares`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -404,7 +405,7 @@ function AppContenido() {
                 throw new Error('No se pudo guardar el ejemplar')
             }
             const respuestaEjemplares = await fetch(
-                'http://localhost:8080/api/ejemplares/activos'
+                `${API_BASE_URL}/api/ejemplares/activos`
             )
             if (!respuestaEjemplares.ok) {
                 throw new Error(
@@ -687,7 +688,7 @@ function AppContenido() {
                 rol: 'LECTOR',
                 activo: true,
             }
-            const respuesta = await fetch('http://localhost:8080/api/usuarios', {
+            const respuesta = await fetch(`${API_BASE_URL}/api/usuarios`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -703,7 +704,7 @@ function AppContenido() {
                 )
             }
             const respuestaUsuarios = await fetch(
-                'http://localhost:8080/api/usuarios/activos',
+                `${API_BASE_URL}/api/usuarios/activos`,
                 {
                     headers: {
                         Authorization: sesion?.autorizacion ?? '',
@@ -760,7 +761,7 @@ function AppContenido() {
         setMensajeUsuario('')
         try {
             const respuesta = await fetch(
-                `http://localhost:8080/api/usuarios/${usuarioEditando}`,
+                `${API_BASE_URL}/api/usuarios/${usuarioEditando}`,
                 {
                     method: 'PUT',
                     headers: {
@@ -783,7 +784,7 @@ function AppContenido() {
                 )
             }
             const respuestaUsuarios = await fetch(
-                'http://localhost:8080/api/usuarios/activos',
+                `${API_BASE_URL}/api/usuarios/activos`,
                 {
                     headers: {
                         Authorization: sesion?.autorizacion ?? '',
@@ -819,7 +820,7 @@ function AppContenido() {
         setMensajeUsuario('')
         try {
             const respuesta = await fetch(
-                `http://localhost:8080/api/usuarios/${idUsuario}/desactivar`,
+                `${API_BASE_URL}/api/usuarios/${idUsuario}/desactivar`,
                 {
                     method: 'PUT',
                     headers: {
@@ -831,7 +832,7 @@ function AppContenido() {
                 throw new Error('No se pudo desactivar el lector.')
             }
             const respuestaUsuarios = await fetch(
-                'http://localhost:8080/api/usuarios/activos',
+                `${API_BASE_URL}/api/usuarios/activos`,
                 {
                     headers: {
                         Authorization: sesion?.autorizacion ?? '',
@@ -1086,7 +1087,7 @@ function AppContenido() {
                 fechaPrestamo,
                 fechaDevolucionPrevista: nuevoPrestamo.fechaDevolucionPrevista,
             }
-            const respuesta = await fetch('http://localhost:8080/api/prestamos', {
+            const respuesta = await fetch(`${API_BASE_URL}/api/prestamos`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -1101,12 +1102,12 @@ function AppContenido() {
                 throw new Error('No se pudo registrar el préstamo.')
             }
             const [respuestaPrestamos, respuestaEjemplares] = await Promise.all([
-                fetch('http://localhost:8080/api/prestamos', {
+                fetch(`${API_BASE_URL}/api/prestamos`, {
                     headers: {
                         Authorization: sesion?.autorizacion ?? '',
                     },
                 }),
-                fetch('http://localhost:8080/api/ejemplares/activos'),
+                fetch(`${API_BASE_URL}/api/ejemplares/activos`),
             ])
             if (!respuestaPrestamos.ok || !respuestaEjemplares.ok) {
                 throw new Error(
@@ -1144,7 +1145,7 @@ function AppContenido() {
         setMensajePrestamo('')
         try {
             const respuesta = await fetch(
-                `http://localhost:8080/api/prestamos/${idPrestamo}/devolver`,
+                `${API_BASE_URL}/api/prestamos/${idPrestamo}/devolver`,
                 {
                     method: 'PUT',
                     headers: {
@@ -1159,12 +1160,12 @@ function AppContenido() {
                 throw new Error('No se pudo registrar la devolución.')
             }
             const [respuestaPrestamos, respuestaEjemplares] = await Promise.all([
-                fetch('http://localhost:8080/api/prestamos', {
+                fetch(`${API_BASE_URL}/api/prestamos`, {
                     headers: {
                         Authorization: sesion?.autorizacion ?? '',
                     },
                 }),
-                fetch('http://localhost:8080/api/ejemplares/activos'),
+                fetch(`${API_BASE_URL}/api/ejemplares/activos`),
             ])
             if (!respuestaPrestamos.ok || !respuestaEjemplares.ok) {
                 throw new Error(

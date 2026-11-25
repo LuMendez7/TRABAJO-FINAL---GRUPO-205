@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../apiConfig'
 import { useCallback, useEffect, useRef, useState } from 'react'
 
 type Notificacion = {
@@ -13,7 +14,7 @@ type Props = {
     autorizacion: string
 }
 
-const API = 'http://localhost:8080/api/notificaciones'
+const API = `${API_BASE_URL}/api/notificaciones`
 
 function IconoCampana() {
     return (

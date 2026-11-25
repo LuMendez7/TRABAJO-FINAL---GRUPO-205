@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../apiConfig'
 import { useEffect, useState } from 'react'
 
 type Reserva = {
@@ -31,7 +32,7 @@ type Props = {
     onCambio: () => void
 }
 
-const API = 'http://localhost:8080/api/reservas'
+const API = `${API_BASE_URL}/api/reservas`
 
 const estados = [
     'PENDIENTE',

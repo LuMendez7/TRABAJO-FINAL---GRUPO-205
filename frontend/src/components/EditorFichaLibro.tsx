@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../apiConfig'
 import { useEffect, useState } from 'react'
 
 type Props = {
@@ -23,7 +24,7 @@ export default function EditorFichaLibro({
     const [guardando, setGuardando] = useState(false)
     const [error, setError] = useState('')
 
-    const api = `http://localhost:8080/api/fichas/${idLibro}`
+    const api = `${API_BASE_URL}/api/fichas/${idLibro}`
 
     useEffect(() => {
         if (!archivo) {

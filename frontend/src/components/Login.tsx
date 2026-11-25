@@ -1,3 +1,4 @@
+import { API_BASE_URL } from '../apiConfig'
 
 import { useState } from 'react'
 import type { FormEvent } from 'react'
@@ -40,7 +41,7 @@ export default function Login({ onLogin }: LoginProps) {
       const autorizacion = `Basic ${btoa(binario)}`
 
       const respuesta = await fetch(
-        'http://localhost:8080/api/auth/me',
+        `${API_BASE_URL}/api/auth/me`,
         {
           method: 'GET',
           headers: {
