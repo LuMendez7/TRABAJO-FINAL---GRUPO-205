@@ -855,7 +855,7 @@ Antes de una puesta en producción institucional se deberán revisar la segurida
 
 Se incorporó TiDBCompatibleDialect para garantizar la compatibilidad de los bloqueos pesimistas de Hibernate con TiDB Cloud en las operaciones verificadas.
 
-La persistencia de sesión mediante tokens temporales fue verificada localmente. Su comprobación online queda pendiente de esta actualización.
+La persistencia de sesión mediante tokens temporales fue verificada tanto en el entorno local como online, comprobando la conservación de la sesión al actualizar la página.
 
 Los tokens tienen una duración máxima de ocho horas y se invalidan al reiniciar el backend. La contraseña no se almacena en el navegador. Los tokens requieren protección frente a ataques XSS.
 
